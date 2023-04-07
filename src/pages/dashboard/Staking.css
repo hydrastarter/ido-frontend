@@ -1,0 +1,18 @@
+.staking {
+  width: 100%;
+  animation: staking-appear 0.4s;
+}
+
+@keyframes staking-appear {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+.staking__bonds {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 50% 50%;
+  grid-gap: 25px;
+}
