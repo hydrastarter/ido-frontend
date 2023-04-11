@@ -6,9 +6,8 @@ import './Nav.css';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import Uik from '@reef-defi/ui-kit';
 import { saveSignerLocalPointer } from '../store/internalStore';
-import { BONDS_URL, CREATE_ERC20_TOKEN_URL, DASHBOARD_URL } from '../urls';
+import { DASHBOARD_URL } from '../urls';
 import { appAvailableNetworks } from '../environment';
-import HideBalance from '../context/HideBalance';
 import NetworkSwitch from '../context/NetworkSwitch';
 
 export interface Nav {
@@ -24,12 +23,7 @@ const Nav = ({ display }: Nav): JSX.Element => {
   const mainnetSelected = network == null || network?.rpcUrl === availableNetworks.mainnet.rpcUrl;
   const menuItems = [
     { title: 'Dashboard', url: DASHBOARD_URL },
-    // { title: 'Pools', url: POOLS_URL },
-    { title: 'Bonds', url: BONDS_URL },
-    { title: 'Creator', url: CREATE_ERC20_TOKEN_URL },
   ];
-
-  const hideBalance = useContext(HideBalance);
   const networkSwitch = useContext(NetworkSwitch);
 
   const selectAccount = (index: number): void => {
@@ -92,8 +86,6 @@ const Nav = ({ display }: Nav): JSX.Element => {
               selectAccount={selectAccount}
               onNetworkSelect={selectNetwork}
               selectedNetwork={selectedNetwork}
-              isBalanceHidden={hideBalance.isHidden}
-              showBalance={hideBalance.toggle}
             />
             )}
           </nav>

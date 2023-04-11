@@ -7,8 +7,7 @@ import { REEF_EXTENSION_IDENT } from '@reef-defi/extension-inject';
 import { InjectedExtension } from '@reef-defi/extension-inject/types';
 import { ERC20 } from '../abis/ERC20';
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const HelloWorld = () => {
+const HelloWorld = () : JSX.Element => {
   const [account, setAccount] = useState<null | string>(null);
   const [provider, setProvider] = useState<null | Provider>(null);
   const [extensionSigner, setExtension] = useState<null | InjectedExtension>(
@@ -30,6 +29,7 @@ const HelloWorld = () => {
         const balance = await contract.balanceOf(signerAddress);
         const symbol = await contract.symbol();
         const decimals = await contract.decimals();
+        console.log('balance: ', balance.toString());
         console.log({
           signerAddress,
           balance: balance.toString(),
@@ -83,15 +83,15 @@ const HelloWorld = () => {
   }, []);
 
   return (
-    <>
-      <h1>
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
+      <p>
         Connected Account:
         {account}
-      </h1>
+      </p>
 
       <hr />
 
-      <h3>Create Signer</h3>
+      <p>Create Signer</p>
       {/* eslint-disable-next-line react/button-has-type */}
       <button onClick={createSigner}>Create Signer</button>
       <p>
@@ -109,7 +109,7 @@ const HelloWorld = () => {
         {' '}
         <b>{process.env.VERSION}</b>
       </p>
-    </>
+    </div>
   );
 };
 
