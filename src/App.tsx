@@ -31,10 +31,10 @@ const App = (): JSX.Element => {
       <div className="App d-flex w-100 h-100">
         <div className="w-100 main-content">
           {!loading && !error && (
-            <>
-              <Nav display={!loading && !error} />
-              <ContentRouter />
-            </>
+          <>
+            <Nav display={!loading && !error} />
+            <ContentRouter />
+          </>
           )}
 
           <NetworkSwitching isOpen={isNetworkSwitching} />

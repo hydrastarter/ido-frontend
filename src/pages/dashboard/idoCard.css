@@ -1,0 +1,22 @@
+.ido-card {
+    max-width: 430px;
+    margin: 10px;
+}
+
+.ido-card-avatar-box {
+    margin-bottom: 20px;
+}
+
+.ido-card-name-box {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+
+.ido-card-name_symbol {
+    margin-left: 5px;
+}
+
+.ido-card-slider-box {
+    margin: 30px 0 30px 0;
+}
