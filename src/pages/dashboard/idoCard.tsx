@@ -7,7 +7,7 @@ export const IdoCard = ({ ido } : {ido: idoType}): JSX.Element => {
   const value = Math.floor(Math.random() * (100 - 1 + 1) + 1);
 
   return (
-    <Uik.Card key={ido.name} className="ido-card">
+    <Uik.Card className="ido-card">
       <div className="ido-card-avatar-box">
         <Uik.Avatar image={ido.image} size="large" />
       </div>
