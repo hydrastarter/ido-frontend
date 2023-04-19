@@ -7,7 +7,6 @@ import ContentRouter from './pages/ContentRouter';
 import NoAccount from './pages/error/NoAccount';
 import NoExtension from './pages/error/NoExtension';
 import NetworkSwitch, { setSwitching } from './context/NetworkSwitch';
-import Bind from './common/Bind/Bind';
 import NetworkSwitching from './common/NetworkSwitching';
 
 const App = (): JSX.Element => {
@@ -52,7 +51,6 @@ const App = (): JSX.Element => {
             pauseOnFocusLoss={false}
             pauseOnHover={false}
           />
-          <Bind />
         </div>
       </div>
     </NetworkSwitch.Provider>

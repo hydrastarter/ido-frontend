@@ -1,0 +1,19 @@
+.admin-container {
+    width: 100%;
+    max-width: 700px;
+    margin: 50px auto;
+}
+
+.admin-headline {
+    text-align: center;
+}
+
+.delete-icon-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.delete-icon {
+    max-width: 20px;
+}
