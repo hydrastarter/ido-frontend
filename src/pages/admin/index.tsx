@@ -82,7 +82,9 @@ export const Admin: React.FC = () => {
   const [endTimeInUTC, setEndTimeInUTC] = useState(
     new Date(Date.now() + 24 * 60 * 60 * 1000),
   );
-  const [amountOfTokensToSell, setAmountOfTokensToSell] = useState('1');
+  const [amountOfTokensToSell, setAmountOfTokensToSell] = useState('1000');
+  const [softcap, setSoftcap] = useState('900');
+  const [maxUserAllocation, setMaxUserAllocation] = useState('10');
   const [whitelistedAddresses, setWhitelistedAddress] = useState('');
   const [zoneHover, setZoneHover] = useState(false);
   const [removeHoverColor, setRemoveHoverColor] = useState(
@@ -275,10 +277,23 @@ export const Admin: React.FC = () => {
 
         <Uik.Input
           type="number"
-          label="Amount of tokens to sell"
-          min={1}
+          label="Amount of tokens to sell (Hardcap)"
           value={amountOfTokensToSell}
           onChange={(e) => setAmountOfTokensToSell(e.target.value)}
+        />
+
+        <Uik.Input
+          type="number"
+          label="Softcap"
+          value={softcap}
+          onChange={(e) => setSoftcap(e.target.value)}
+        />
+
+        <Uik.Input
+          type="number"
+          label="Max user allocation"
+          value={maxUserAllocation}
+          onChange={(e) => setMaxUserAllocation(e.target.value)}
         />
 
         <Uik.Toggle
