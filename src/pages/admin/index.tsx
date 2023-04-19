@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import Uik from '@reef-defi/ui-kit';
 import './index.css';
 import { faTrashCan } from '@fortawesome/free-solid-svg-icons';
+// @ts-ignore
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 // import { create } from 'ifps-http-client';
 
 // const auth = `Basic ${Buffer.from(
@@ -31,17 +34,23 @@ export const Admin: React.FC = () => {
     },
   ]);
   const [enableWhitelisting, setEnableWhitelisting] = useState(false);
-  const [startTimeInUTC, setStartTimeInUTC] = useState('2018-06-12T19:30');
-  const [endTimeInUTC, setEndTimeInUTC] = useState('2018-06-12T19:30');
+  const [startTimeInUTC, setStartTimeInUTC] = useState(new Date(Date.now()));
+  const [endTimeInUTC, setEndTimeInUTC] = useState(
+    new Date(Date.now() + 24 * 60 * 60 * 1000),
+  );
   const [amountOfTokensToSell, setAmountOfTokensToSell] = useState('1');
   const [whitelistedAddresses, setWhitelistedAddress] = useState('');
   // eslint-disable-next-line
-  const [vestingStartTimeInUTC, setVestingStartTimeInUTC] =
-    useState('2018-06-12T19:30');
+  const [vestingStartTimeInUTC, setVestingStartTimeInUTC] = useState(
+    new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
+  );
   // eslint-disable-next-line
-  const [vestingEndTimeInUTC, setVestingEndTimeInUTC] =
-    useState('2018-06-12T19:30');
-  const [cliffPeriodInUTC, setCliffPeriodInUTC] = useState('2018-06-12T19:30');
+  const [vestingEndTimeInUTC, setVestingEndTimeInUTC] = useState(
+    new Date(Date.now() + 4 * 24 * 60 * 60 * 1000),
+  );
+  const [cliffPeriodInUTC, setCliffPeriodInUTC] = useState(
+    new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+  );
   const [enableCliffPeriod, setEnableCliffPeriod] = useState(false);
   const [isCreatingIDO] = useState(false);
 
@@ -81,6 +90,19 @@ export const Admin: React.FC = () => {
       (eachToken) => eachToken.tokenAddress !== tokenAddress,
     );
     setInputTokens(updatedTokens);
+  };
+
+  const formatUTC = (dateInt: number | Date, addOffset = false) => {
+    const date = !dateInt || dateInt.toString().length < 1
+      ? new Date()
+      : new Date(dateInt);
+
+    const offset = addOffset
+      ? date.getTimezoneOffset()
+      : -date.getTimezoneOffset();
+    const offsetDate = new Date();
+    offsetDate.setTime(date.getTime() + offset * 60000);
+    return offsetDate;
   };
 
   // const handleFileUpload = async (
@@ -159,18 +181,28 @@ export const Admin: React.FC = () => {
 
         <Uik.Divider text="Token sale details" />
         <Uik.Container>
-          <Uik.Input
-            type="datetime-local"
-            label="Start time"
-            value={startTimeInUTC}
-            onChange={(e) => setStartTimeInUTC(e.target.value)}
+          <DatePicker
+            selected={formatUTC(startTimeInUTC, true)}
+            wrapperClassName="display-flex"
+            showTimeSelect
+            minDate={startTimeInUTC}
+            timeFormat="HH:mm"
+            timeIntervals={15}
+            dateFormat="dd/MM/yyyy HH:mm"
+            onChange={(date: Date) => setStartTimeInUTC(() => formatUTC(date))}
+            customInput={<Uik.Input label="Start time" />}
           />
 
-          <Uik.Input
-            type="datetime-local"
-            label="End time"
-            value={endTimeInUTC}
-            onChange={(e) => setEndTimeInUTC(e.target.value)}
+          <DatePicker
+            selected={formatUTC(endTimeInUTC, true)}
+            wrapperClassName="display-flex"
+            showTimeSelect
+            minDate={endTimeInUTC}
+            timeFormat="HH:mm"
+            timeIntervals={15}
+            dateFormat="dd/MM/yyyy HH:mm"
+            onChange={(date: Date) => setEndTimeInUTC(() => formatUTC(date))}
+            customInput={<Uik.Input label="End time" />}
           />
         </Uik.Container>
 
@@ -200,18 +232,28 @@ export const Admin: React.FC = () => {
 
         <Uik.Divider text="Vesting details" />
         <Uik.Container>
-          <Uik.Input
-            type="datetime-local"
-            label="Vesting start time"
-            value={vestingStartTimeInUTC}
-            onChange={(e) => setVestingStartTimeInUTC(e.target.value)}
+          <DatePicker
+            selected={formatUTC(vestingStartTimeInUTC, true)}
+            wrapperClassName="display-flex"
+            showTimeSelect
+            minDate={vestingStartTimeInUTC}
+            timeFormat="HH:mm"
+            timeIntervals={15}
+            dateFormat="dd/MM/yyyy HH:mm"
+            onChange={(date: Date) => setVestingStartTimeInUTC(() => formatUTC(date))}
+            customInput={<Uik.Input label="Vesting start time" />}
           />
 
-          <Uik.Input
-            type="datetime-local"
-            label="Vesting end time"
-            value={vestingEndTimeInUTC}
-            onChange={(e) => setVestingEndTimeInUTC(e.target.value)}
+          <DatePicker
+            selected={formatUTC(vestingEndTimeInUTC, true)}
+            wrapperClassName="display-flex"
+            showTimeSelect
+            minDate={vestingEndTimeInUTC}
+            timeFormat="HH:mm"
+            timeIntervals={15}
+            dateFormat="dd/MM/yyyy HH:mm"
+            onChange={(date: Date) => setVestingEndTimeInUTC(() => formatUTC(date))}
+            customInput={<Uik.Input label="Vesting end time" />}
           />
         </Uik.Container>
 
@@ -224,11 +266,16 @@ export const Admin: React.FC = () => {
             onChange={() => setEnableCliffPeriod(!enableCliffPeriod)}
           />
           {enableCliffPeriod && (
-            <Uik.Input
-              type="datetime-local"
-              label="Cliff Period"
-              value={cliffPeriodInUTC}
-              onChange={(e) => setCliffPeriodInUTC(e.target.value)}
+            <DatePicker
+              selected={formatUTC(cliffPeriodInUTC, true)}
+              wrapperClassName="display-flex"
+              showTimeSelect
+              minDate={cliffPeriodInUTC}
+              timeFormat="HH:mm"
+              timeIntervals={15}
+              dateFormat="dd/MM/yyyy HH:mm"
+              onChange={(date: Date) => setCliffPeriodInUTC(() => formatUTC(date))}
+              customInput={<Uik.Input label="Cliff period" />}
             />
           )}
         </Uik.Container>
