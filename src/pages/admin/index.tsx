@@ -10,6 +10,7 @@ import {
   lightenDarkenColor,
   formatFileSize,
 } from 'react-papaparse';
+// import { appState, hooks, ReefSigner } from '@reef-defi/react-lib';
 // import { create } from 'ifps-http-client';
 
 // const auth = `Basic ${Buffer.from(
@@ -33,7 +34,7 @@ const REMOVE_HOVER_COLOR_LIGHT = lightenDarkenColor(
   40,
 );
 const GREY_DIM = '#686868';
-const csvstyles = {
+const CSVStyles = {
   size: {
     backgroundColor: GREY_LIGHT,
     borderRadius: 3,
@@ -100,6 +101,10 @@ export const Admin: React.FC = () => {
   const [isCreatingIDO] = useState(false);
 
   const { CSVReader } = useCSVReader();
+
+  // const selectedSigner: ReefSigner|undefined | null = hooks.useObservableState(appState.selectedSigner$);
+  // const accounts: ReefSigner[] | undefined | null = hooks.useObservableState(appState.signers$);
+  // const provider = hooks.useObservableState(appState.currentProvider$);
 
   const handleInputTokenChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -184,6 +189,7 @@ export const Admin: React.FC = () => {
   //   }));
   // };
   //
+
   return (
     <Uik.Card condensed className="admin-container">
       <Uik.Text
@@ -317,7 +323,7 @@ export const Admin: React.FC = () => {
                     {...getRootProps()}
                     className="upload-container"
                     style={{
-                      ...(zoneHover && csvstyles.zoneHover),
+                      ...(zoneHover && CSVStyles.zoneHover),
                     }}
                   >
                     {acceptedFile ? (
@@ -336,7 +342,7 @@ export const Admin: React.FC = () => {
                           <div
                             // eslint-disable-next-line react/jsx-props-no-spreading
                             {...getRemoveFileProps()}
-                            // className="csvstyles-remove"
+                            // className="CSVStyles-remove"
                             onMouseOver={(event: Event) => {
                               event.preventDefault();
                               setRemoveHoverColor(REMOVE_HOVER_COLOR_LIGHT);
