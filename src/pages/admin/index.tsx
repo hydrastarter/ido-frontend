@@ -19,7 +19,7 @@ import { faTrashCan } from '@fortawesome/free-solid-svg-icons';
 
 export const Admin: React.FC = () => {
   const [projectTokenAddress, setProjectTokenAddress] = useState('');
-  const [projectTokenImage, setProjectTokenImage] = useState({
+  const [projectTokenImage] = useState({
     previewImgUrl: '',
     ipfsImgUrl: '',
     uploadingFile: false,
@@ -43,19 +43,17 @@ export const Admin: React.FC = () => {
     useState('2018-06-12T19:30');
   const [cliffPeriodInUTC, setCliffPeriodInUTC] = useState('2018-06-12T19:30');
   const [enableCliffPeriod, setEnableCliffPeriod] = useState(false);
-  const [isCreatingIDO, setIsCreatingIDO] = useState(false);
+  const [isCreatingIDO] = useState(false);
 
   const handleInputTokenChange = (
     event: React.ChangeEvent<HTMLInputElement>,
     index: number,
   ) => {
     const inputTokenDetails = inputTokens;
-    console.log('number: ', index);
     if (inputTokenDetails[index]) {
       inputTokenDetails[index].tokenAddress = event.target.value;
       setInputTokens(() => inputTokenDetails);
     }
-    console.log('new input token details: ', inputTokenDetails);
   };
   const handleInputTokenRateChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -64,7 +62,7 @@ export const Admin: React.FC = () => {
     const inputTokenDetails = inputTokens;
     if (inputTokenDetails[index]) {
       inputTokenDetails[index].tokenRate = event.target.value;
-      setInputTokens(inputTokenDetails);
+      setInputTokens(() => inputTokenDetails);
     }
   };
   const addToken = async () => {
@@ -134,21 +132,23 @@ export const Admin: React.FC = () => {
         </Uik.Container>
 
         <Uik.Divider text="Input token details" />
-        {inputTokens.map((token, index) => (
-          <Uik.Container key={token.tokenAddress}>
+        {inputTokens.map((eachInputToken, index) => (
+          <Uik.Container key={eachInputToken.tokenAddress}>
             <Uik.Input
               label="Input token address"
-              value={token.tokenAddress}
-              onChange={(e) => handleInputTokenChange(e, index)}
+              value={eachInputToken.tokenAddress}
+              onInput={(e) => handleInputTokenChange(e, index)}
             />
             <Uik.Container>
               <Uik.Input
                 label="Input token rate"
-                value={token.tokenRate}
-                onChange={(e) => handleInputTokenRateChange(e, index)}
+                value={eachInputToken.tokenRate}
+                onInput={(e) => handleInputTokenRateChange(e, index)}
               />
               {index > 0 && (
-                <span onClick={() => removeInputToken(token.tokenAddress)}>
+                <span
+                  onClick={() => removeInputToken(eachInputToken.tokenAddress)}
+                >
                   <Uik.Icon icon={faTrashCan} className="delete-icon" />
                 </span>
               )}
