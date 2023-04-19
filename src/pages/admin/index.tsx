@@ -1,10 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, CSSProperties } from 'react';
 import Uik from '@reef-defi/ui-kit';
 import './index.css';
 import { faTrashCan } from '@fortawesome/free-solid-svg-icons';
 // @ts-ignore
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import {
+  useCSVReader,
+  lightenDarkenColor,
+  formatFileSize,
+} from 'react-papaparse';
 // import { create } from 'ifps-http-client';
 
 // const auth = `Basic ${Buffer.from(
@@ -19,6 +24,44 @@ import 'react-datepicker/dist/react-datepicker.css';
 //     authorization: auth,
 //   },
 // });
+
+const GREY = '#CCC';
+const GREY_LIGHT = 'rgba(255, 255, 255, 0.4)';
+const DEFAULT_REMOVE_HOVER_COLOR = '#A01919';
+const REMOVE_HOVER_COLOR_LIGHT = lightenDarkenColor(
+  DEFAULT_REMOVE_HOVER_COLOR,
+  40,
+);
+const GREY_DIM = '#686868';
+const csvstyles = {
+  size: {
+    backgroundColor: GREY_LIGHT,
+    borderRadius: 3,
+    marginBottom: '0.5em',
+    justifyContent: 'center',
+    display: 'flex',
+  } as CSSProperties,
+  progressBar: {
+    bottom: 14,
+    position: 'absolute',
+    width: '100%',
+    paddingLeft: 10,
+    paddingRight: 10,
+  } as CSSProperties,
+  zoneHover: {
+    borderColor: GREY_DIM,
+  } as CSSProperties,
+  default: {
+    borderColor: GREY,
+  } as CSSProperties,
+  remove: {
+    height: 23,
+    position: 'absolute',
+    right: 6,
+    top: 6,
+    width: 23,
+  } as CSSProperties,
+};
 
 export const Admin: React.FC = () => {
   const [projectTokenAddress, setProjectTokenAddress] = useState('');
@@ -40,6 +83,10 @@ export const Admin: React.FC = () => {
   );
   const [amountOfTokensToSell, setAmountOfTokensToSell] = useState('1');
   const [whitelistedAddresses, setWhitelistedAddress] = useState('');
+  const [zoneHover, setZoneHover] = useState(false);
+  const [removeHoverColor, setRemoveHoverColor] = useState(
+    DEFAULT_REMOVE_HOVER_COLOR,
+  );
   const [vestingStartTimeInUTC, setVestingStartTimeInUTC] = useState(
     new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
   );
@@ -51,6 +98,8 @@ export const Admin: React.FC = () => {
   );
   const [enableCliffPeriod, setEnableCliffPeriod] = useState(false);
   const [isCreatingIDO] = useState(false);
+
+  const { CSVReader } = useCSVReader();
 
   const handleInputTokenChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -101,6 +150,19 @@ export const Admin: React.FC = () => {
     const offsetDate = new Date();
     offsetDate.setTime(date.getTime() + offset * 60000);
     return offsetDate;
+  };
+
+  const bulkUpload = (results: any) => {
+    if (results && results.data && results.data.length > 0) {
+      const importData: any[] = [];
+      results.data.slice(1).forEach((eachUser: any) => {
+        if (eachUser[0].length > 0) {
+          importData.push(eachUser[0]);
+        }
+      });
+      setEnableWhitelisting(() => true);
+      setWhitelistedAddress(() => importData.join());
+    }
   };
 
   // const handleFileUpload = async (
@@ -221,14 +283,90 @@ export const Admin: React.FC = () => {
           onChange={() => setEnableWhitelisting(!enableWhitelisting)}
         />
         {enableWhitelisting && (
-          <Uik.Input
-            value={whitelistedAddresses}
-            onChange={(e) => setWhitelistedAddress(e.target.value)}
-            label="Enter addresses to whitelist"
-            textarea
-          />
-        )}
+          <>
+            <Uik.Input
+              value={whitelistedAddresses}
+              onChange={(e) => setWhitelistedAddress(e.target.value)}
+              label="Enter addresses to whitelist"
+              textarea
+            />
 
+            <CSVReader
+              onUploadAccepted={(results: any) => {
+                bulkUpload(results);
+              }}
+              onDragOver={(event: DragEvent) => {
+                event.preventDefault();
+                setZoneHover(true);
+              }}
+              onDragLeave={(event: DragEvent) => {
+                event.preventDefault();
+                setZoneHover(false);
+              }}
+            >
+              {({
+                getRootProps,
+                acceptedFile,
+                ProgressBar,
+                getRemoveFileProps,
+                Remove,
+              }: any) => (
+                <>
+                  <div
+                    // eslint-disable-next-line react/jsx-props-no-spreading
+                    {...getRootProps()}
+                    className="upload-container"
+                    style={{
+                      ...(zoneHover && csvstyles.zoneHover),
+                    }}
+                  >
+                    {acceptedFile ? (
+                      <>
+                        <div className="file-container">
+                          <div>
+                            <Uik.Text>
+                              {formatFileSize(acceptedFile.size)}
+                            </Uik.Text>
+                            <Uik.Text>{acceptedFile.name}</Uik.Text>
+                          </div>
+                          <div className="progress-bar">
+                            <ProgressBar />
+                          </div>
+                          {/* eslint-disable-next-line jsx-a11y/mouse-events-have-key-events */}
+                          <div
+                            // eslint-disable-next-line react/jsx-props-no-spreading
+                            {...getRemoveFileProps()}
+                            // className="csvstyles-remove"
+                            onMouseOver={(event: Event) => {
+                              event.preventDefault();
+                              setRemoveHoverColor(REMOVE_HOVER_COLOR_LIGHT);
+                            }}
+                            onMouseOut={(event: Event) => {
+                              event.preventDefault();
+                              setRemoveHoverColor(DEFAULT_REMOVE_HOVER_COLOR);
+                            }}
+                          >
+                            <Remove color={removeHoverColor} />
+                          </div>
+                        </div>
+                      </>
+                    ) : (
+                      'Drop CSV file here or click to upload'
+                    )}
+                  </div>
+                </>
+              )}
+            </CSVReader>
+            <Uik.Container className="csv-footer">
+              <Uik.Text type="mini">
+                Accepted: CSV / Excel
+              </Uik.Text>
+              <Uik.Text type="mini">
+                <a href="/files/whitelist.csv">Get Example</a>
+              </Uik.Text>
+            </Uik.Container>
+          </>
+        )}
         <Uik.Divider text="Vesting details" />
         <Uik.Container>
           <DatePicker
