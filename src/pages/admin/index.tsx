@@ -40,11 +40,9 @@ export const Admin: React.FC = () => {
   );
   const [amountOfTokensToSell, setAmountOfTokensToSell] = useState('1');
   const [whitelistedAddresses, setWhitelistedAddress] = useState('');
-  // eslint-disable-next-line
   const [vestingStartTimeInUTC, setVestingStartTimeInUTC] = useState(
     new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
   );
-  // eslint-disable-next-line
   const [vestingEndTimeInUTC, setVestingEndTimeInUTC] = useState(
     new Date(Date.now() + 4 * 24 * 60 * 60 * 1000),
   );
@@ -168,6 +166,7 @@ export const Admin: React.FC = () => {
                 onInput={(e) => handleInputTokenRateChange(e, index)}
               />
               {index > 0 && (
+                // eslint-disable-next-line jsx-a11y/no-static-element-interactions
                 <span
                   onClick={() => removeInputToken(eachInputToken.tokenAddress)}
                 >
