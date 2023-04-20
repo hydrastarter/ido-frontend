@@ -1,3 +1,5 @@
+/* eslint-disable react/no-array-index-key */
+/* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState, CSSProperties } from 'react';
 import Uik from '@reef-defi/ui-kit';
 import './index.css';
@@ -16,7 +18,7 @@ import {
 // const auth = `Basic ${Buffer.from(
 //   `${process.env.REACT_APP_INFURA_PROJECT_ID}:${process.env.REACT_APP_INFURA_API_SECRET}`,
 // ).toString('base64')}`;
-//
+
 // const client = create({
 //   host: 'ipfs.infura.io',
 //   port: 5001,
@@ -112,20 +114,18 @@ export const Admin: React.FC = () => {
     event: React.ChangeEvent<HTMLInputElement>,
     index: number,
   ) => {
-    const inputTokenDetails = inputTokens;
-    if (inputTokenDetails[index]) {
-      inputTokenDetails[index].tokenAddress = event.target.value;
-      setInputTokens(() => inputTokenDetails);
-    }
+    const newArr = [...inputTokens];
+    newArr[index].tokenAddress = event.target.value;
+    setInputTokens([...newArr]);
   };
   const handleInputTokenRateChange = (
     event: React.ChangeEvent<HTMLInputElement>,
     index: number,
   ) => {
-    const inputTokenDetails = inputTokens;
+    const inputTokenDetails = [...inputTokens];
     if (inputTokenDetails[index]) {
       inputTokenDetails[index].tokenRate = event.target.value;
-      setInputTokens(() => inputTokenDetails);
+      setInputTokens([...inputTokenDetails]);
     }
   };
   const addToken = async () => {
@@ -172,25 +172,25 @@ export const Admin: React.FC = () => {
     }
   };
 
-  // const handleFileUpload = async (
-  //   event: React.ChangeEvent<HTMLInputElement>,
-  // ) => {
-  //   if (!event.target.files) return;
-  //
-  //   const imageUrl = URL.createObjectURL(event.target.files[0]);
-  //   setProjectTokenImage(() => ({
-  //     ...projectTokenImage,
-  //     previewImgUrl: imageUrl,
-  //     uploadingFile: true,
-  //   }));
-  //   const added = await client.add(event.target.files[0]);
-  //   setProjectTokenImage(() => ({
-  //     previewImgUrl: imageUrl,
-  //     ipfsImgUrl: `${process.env.REACT_APP_INFURA_SUBDOMAIN_LINK}/${added.path}`,
-  //     uploadingFile: false,
-  //   }));
-  // };
-  //
+  const handleFileUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    if (!event.target.files) return;
+
+    const imageUrl = URL.createObjectURL(event.target.files[0]);
+    console.log({ imageUrl });
+    // setProjectTokenImage(() => ({
+    //   ...projectTokenImage,
+    //   previewImgUrl: imageUrl,
+    //   uploadingFile: true,
+    // }));
+    // const added = await client.add(event.target.files[0]);
+    // setProjectTokenImage(() => ({
+    //   previewImgUrl: imageUrl,
+    //   ipfsImgUrl: `${process.env.REACT_APP_INFURA_SUBDOMAIN_LINK}/${added.path}`,
+    //   uploadingFile: false,
+    // }));
+  };
 
   return (
     <Uik.Card condensed className="admin-container">
@@ -215,23 +215,27 @@ export const Admin: React.FC = () => {
               width="40px"
             />
           )}
-          <Uik.Button loading={projectTokenImage.uploadingFile}>
-            Upload token image
-            {/* <Uik.Input type="file" onChange={handleFileUpload} /> */}
-          </Uik.Button>
+          <label className="uik-button">
+            <input type="file" hidden disabled={projectTokenImage.uploadingFile} onChange={handleFileUpload} />
+            {projectTokenImage.uploadingFile ? 'Uploading...' : 'Upload token image'}
+          </label>
+          {/* </Uik.Button> */}
         </Uik.Container>
 
         <Uik.Divider text="Input token details" />
         {inputTokens.map((eachInputToken, index) => (
-          <Uik.Container key={eachInputToken.tokenAddress}>
+          <Uik.Container key={`inputToken+${index}`}>
             <Uik.Input
               label="Input token address"
+              key={`inputTokenField+${index}`}
               value={eachInputToken.tokenAddress}
               onInput={(e) => handleInputTokenChange(e, index)}
             />
             <Uik.Container>
               <Uik.Input
                 label="Input token rate"
+                type="number"
+                key={`inputTokenRateField+${index}`}
                 value={eachInputToken.tokenRate}
                 onInput={(e) => handleInputTokenRateChange(e, index)}
               />
