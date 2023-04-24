@@ -44,7 +44,7 @@ export const Dashboard: React.FC = () => {
         />
       </div>
       <div className="idos-container">
-        {idos.map((ido) => (
+        {idos.slice(0, 1).map((ido) => (
           <IdoCard key={ido.name} ido={ido} />
         ))}
       </div>

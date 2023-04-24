@@ -206,19 +206,6 @@ export const LaunchPadFactory: ContractInterface = [
     type: 'function',
   },
   {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: '_version',
-        type: 'uint256',
-      },
-    ],
-    name: 'initialize',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
     inputs: [],
     name: 'isFeeManagerEnabled',
     outputs: [
@@ -423,19 +410,6 @@ export const LaunchPadFactory: ContractInterface = [
     name: 'updateReferralManagerMode',
     outputs: [],
     stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'version',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
     type: 'function',
   },
   {

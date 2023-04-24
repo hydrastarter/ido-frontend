@@ -1,22 +1,50 @@
 .ido-card {
-    max-width: 430px;
-    margin: 10px;
+  max-width: 430px;
+  margin: 10px;
+  cursor: pointer;
 }
 
 .ido-card-avatar-box {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 .ido-card-name-box {
-    display: flex;
-    justify-content: start;
-    align-items: center;
+  display: flex;
+  justify-content: start;
+  align-items: center;
 }
 
 .ido-card-name_symbol {
-    margin-left: 5px;
+  margin-left: 5px;
 }
 
 .ido-card-slider-box {
-    margin: 30px 0 30px 0;
+  margin: 30px 0 30px 0;
+}
+
+.no-wrap {
+  white-space: nowrap;
+}
+
+.white {
+  color: white
+}
+
+.divider-line {
+  border: none;
+  margin-top: 10px;
+  background: linear-gradient(rgb(108, 23, 159), rgb(142, 30, 113));
+  height: 3px;
+  border-radius: 10px;
+}
+
+.divider-text {
+  margin-top: 0px !important;
+}
+
+.divider-text>.uik-divider__text {
+  border: 1px solid;
+  border-radius: 15px;
+  padding: 5px 20px;
+  border-color: hsl(var(--bg--h), calc(var(--bg--s) - 15%), calc(var(--bg--l) - 25%));
 }

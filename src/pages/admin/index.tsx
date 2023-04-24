@@ -2,6 +2,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState, CSSProperties } from 'react';
 import Uik from '@reef-defi/ui-kit';
+import { Contract, constants, ethers } from 'ethers';
 import './index.css';
 import { faTrashCan } from '@fortawesome/free-solid-svg-icons';
 // @ts-ignore
@@ -12,21 +13,26 @@ import {
   lightenDarkenColor,
   formatFileSize,
 } from 'react-papaparse';
-// import { appState, hooks, ReefSigner } from '@reef-defi/react-lib';
-// import { create } from 'ifps-http-client';
+import { Buffer } from 'buffer';
+import { appState, hooks, ReefSigner } from '@reef-defi/react-lib';
+import { create } from 'ipfs-http-client';
+import BigNumber from 'bignumber.js';
+import { LAUNCHPAD_FACTORY_ADDRESS } from '../../config';
+import { LaunchPadFactory } from '../../abis/LaunchPadFactory';
+import { ERC20 } from '../../abis/ERC20';
 
-// const auth = `Basic ${Buffer.from(
-//   `${process.env.REACT_APP_INFURA_PROJECT_ID}:${process.env.REACT_APP_INFURA_API_SECRET}`,
-// ).toString('base64')}`;
+const auth = `Basic ${Buffer.from(
+  `${process.env.REACT_APP_INFURA_PROJECT_ID}:${process.env.REACT_APP_INFURA_API_SECRET}`,
+).toString('base64')}`;
 
-// const client = create({
-//   host: 'ipfs.infura.io',
-//   port: 5001,
-//   protocol: 'https',
-//   headers: {
-//     authorization: auth,
-//   },
-// });
+const client = create({
+  host: 'ipfs.infura.io',
+  port: 5001,
+  protocol: 'https',
+  headers: {
+    authorization: auth,
+  },
+});
 
 const GREY = '#CCC';
 const GREY_LIGHT = 'rgba(255, 255, 255, 0.4)';
@@ -68,7 +74,8 @@ const CSVStyles = {
 
 export const Admin: React.FC = () => {
   const [projectTokenAddress, setProjectTokenAddress] = useState('');
-  const [projectTokenImage] = useState({
+  const [inputTokenRate, setInputTokenRate] = useState('0');
+  const [projectTokenImage, setProjectTokenImage] = useState({
     previewImgUrl: '',
     ipfsImgUrl: '',
     uploadingFile: false,
@@ -76,15 +83,16 @@ export const Admin: React.FC = () => {
   const [inputTokens, setInputTokens] = useState([
     {
       tokenAddress: '',
-      tokenRate: '',
     },
   ]);
   const [enableWhitelisting, setEnableWhitelisting] = useState(false);
+  const [approveLoading, setApproveLoading] = useState(false);
+  const [allowence, setAllowence] = useState(new BigNumber(0));
   const [startTimeInUTC, setStartTimeInUTC] = useState(new Date(Date.now()));
   const [endTimeInUTC, setEndTimeInUTC] = useState(
     new Date(Date.now() + 24 * 60 * 60 * 1000),
   );
-  const [amountOfTokensToSell, setAmountOfTokensToSell] = useState('1000');
+  const [amountOfTokensToSell, setAmountOfTokensToSell] = useState('0');
   const [softcap, setSoftcap] = useState('900');
   const [maxUserAllocation, setMaxUserAllocation] = useState('10');
   const [whitelistedAddresses, setWhitelistedAddress] = useState('');
@@ -102,14 +110,13 @@ export const Admin: React.FC = () => {
     new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
   );
   const [enableCliffPeriod, setEnableCliffPeriod] = useState(false);
-  const [isCreatingIDO] = useState(false);
+  const [isCreatingIDO, setIsCreatingIdo] = useState(false);
 
   const { CSVReader } = useCSVReader();
 
-  // const selectedSigner: ReefSigner|undefined | null = hooks.useObservableState(appState.selectedSigner$);
+  const selectedSigner: ReefSigner | undefined | null = hooks.useObservableState(appState.selectedSigner$);
   // const accounts: ReefSigner[] | undefined | null = hooks.useObservableState(appState.signers$);
   // const provider = hooks.useObservableState(appState.currentProvider$);
-
   const handleInputTokenChange = (
     event: React.ChangeEvent<HTMLInputElement>,
     index: number,
@@ -117,16 +124,6 @@ export const Admin: React.FC = () => {
     const newArr = [...inputTokens];
     newArr[index].tokenAddress = event.target.value;
     setInputTokens([...newArr]);
-  };
-  const handleInputTokenRateChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    index: number,
-  ) => {
-    const inputTokenDetails = [...inputTokens];
-    if (inputTokenDetails[index]) {
-      inputTokenDetails[index].tokenRate = event.target.value;
-      setInputTokens([...inputTokenDetails]);
-    }
   };
   const addToken = async () => {
     const newToken = {
@@ -179,19 +176,119 @@ export const Admin: React.FC = () => {
 
     const imageUrl = URL.createObjectURL(event.target.files[0]);
     console.log({ imageUrl });
-    // setProjectTokenImage(() => ({
-    //   ...projectTokenImage,
-    //   previewImgUrl: imageUrl,
-    //   uploadingFile: true,
-    // }));
-    // const added = await client.add(event.target.files[0]);
-    // setProjectTokenImage(() => ({
-    //   previewImgUrl: imageUrl,
-    //   ipfsImgUrl: `${process.env.REACT_APP_INFURA_SUBDOMAIN_LINK}/${added.path}`,
-    //   uploadingFile: false,
-    // }));
+    setProjectTokenImage(() => ({
+      ...projectTokenImage,
+      previewImgUrl: imageUrl,
+      uploadingFile: true,
+    }));
+    const added = await client.add(event.target.files[0]);
+    setProjectTokenImage(() => ({
+      previewImgUrl: imageUrl,
+      ipfsImgUrl: `${process.env.REACT_APP_INFURA_SUBDOMAIN_LINK}/${added.path}`,
+      uploadingFile: false,
+    }));
   };
-
+  const checkAllowence = async () => {
+    try {
+      if (selectedSigner) {
+        console.log(selectedSigner);
+        const erc20Contract = new Contract(projectTokenAddress, ERC20, selectedSigner.signer);
+        const allowenceAmount = await erc20Contract.allowance(selectedSigner.evmAddress, LAUNCHPAD_FACTORY_ADDRESS);
+        console.log(allowenceAmount.toString());
+        setAllowence(new BigNumber(allowenceAmount.toString()));
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const approveProjectToken = async () => {
+    try {
+      setApproveLoading(true);
+      if (selectedSigner) {
+        console.log(selectedSigner);
+        const erc20Contract = new Contract(projectTokenAddress, ERC20, selectedSigner.signer);
+        const approvalTx = await erc20Contract.approve(LAUNCHPAD_FACTORY_ADDRESS, constants.MaxUint256);
+        await approvalTx.wait();
+        console.log(approvalTx);
+        const allowenceAmount = await erc20Contract.allowance(selectedSigner.evmAddress, LAUNCHPAD_FACTORY_ADDRESS);
+        setAllowence(new BigNumber(allowenceAmount.toString()));
+      }
+      setApproveLoading(false);
+    } catch (error) {
+      setApproveLoading(false);
+      console.error(error);
+    }
+  };
+  const createIdo = async () => {
+    try {
+      setIsCreatingIdo(true);
+      if (selectedSigner) {
+        const differenceEpochTime = new Date(vestingStartTimeInUTC).valueOf() - new Date(cliffPeriodInUTC).valueOf();
+        let whitelistedAddressesArray: any = [];
+        if (whitelistedAddresses) {
+          whitelistedAddressesArray = whitelistedAddresses.split(',');
+        }
+        const arrOfInputTokenAddress = inputTokens.map(
+          (inputToken) => inputToken.tokenAddress,
+        );
+        const erc20Contract = new Contract(projectTokenAddress, ERC20, selectedSigner.signer);
+        const factoryContract = new Contract(LAUNCHPAD_FACTORY_ADDRESS, LaunchPadFactory, selectedSigner.signer);
+        const tokenDecimals = await erc20Contract.decimals();
+        const amountAllocation = ethers.utils.parseUnits(
+          amountOfTokensToSell,
+          tokenDecimals.toString(),
+        );
+        const softcapAmount = ethers.utils.parseUnits(
+          softcap,
+          tokenDecimals.toString(),
+        );
+        const crowdSaleTimings = ethers.utils.defaultAbiCoder.encode(
+          ['uint128', 'uint128', 'uint128', 'uint128', 'uint128'],
+          [
+            new Date(startTimeInUTC).valueOf(),
+            new Date(endTimeInUTC).valueOf(),
+            new Date(vestingStartTimeInUTC).valueOf(),
+            new Date(vestingEndTimeInUTC).valueOf(),
+            enableCliffPeriod ? differenceEpochTime : '0',
+          ],
+        );
+        const whitelist = ethers.utils.defaultAbiCoder.encode(
+          ['bool', 'address[]'],
+          [enableWhitelisting, whitelistedAddressesArray],
+        );
+        const launchCrowdSaleData = ethers.utils.defaultAbiCoder.encode(
+          ['address', 'uint256', 'address[]', 'uint256', 'bytes', 'bytes', 'address', 'string', 'uint256'],
+          [
+            projectTokenAddress,
+            amountAllocation,
+            arrOfInputTokenAddress,
+            new BigNumber(inputTokenRate)
+              .multipliedBy(new BigNumber(10).pow(18))
+              .toJSON(),
+            crowdSaleTimings,
+            whitelist,
+            selectedSigner.evmAddress,
+            projectTokenImage,
+            softcapAmount,
+          ],
+        );
+        const txObject = await factoryContract.launchCrowdsale(
+          0,
+          launchCrowdSaleData,
+          '0x00',
+        );
+        await txObject.wait();
+      }
+      setIsCreatingIdo(false);
+    } catch (error) {
+      setIsCreatingIdo(false);
+      console.error(error);
+    }
+  };
+  let disbaleCreateButton = true;
+  if (projectTokenAddress && projectTokenAddress.length > 0 && inputTokens && inputTokens.length > 0 && inputTokens[0].tokenAddress && inputTokens[0].tokenAddress.length > 0 && amountOfTokensToSell.toString().length > 0 && startTimeInUTC < endTimeInUTC && parseFloat(amountOfTokensToSell.toString()) > 0 && parseFloat(amountOfTokensToSell.toString()) > parseFloat(softcap.toString())) {
+    disbaleCreateButton = false;
+  }
   return (
     <Uik.Card condensed className="admin-container">
       <Uik.Text
@@ -205,6 +302,7 @@ export const Admin: React.FC = () => {
           label="Project token address"
           value={projectTokenAddress}
           onInput={(e) => setProjectTokenAddress(e.target.value)}
+          onBlur={checkAllowence}
         />
 
         <Uik.Container>
@@ -223,6 +321,13 @@ export const Admin: React.FC = () => {
         </Uik.Container>
 
         <Uik.Divider text="Input token details" />
+        <Uik.Input
+          label="Input token rate"
+          type="number"
+          key="inputTokenRateField"
+          value={inputTokenRate}
+          onInput={(e) => setInputTokenRate(e.target.value)}
+        />
         {inputTokens.map((eachInputToken, index) => (
           <Uik.Container key={`inputToken+${index}`}>
             <Uik.Input
@@ -231,23 +336,15 @@ export const Admin: React.FC = () => {
               value={eachInputToken.tokenAddress}
               onInput={(e) => handleInputTokenChange(e, index)}
             />
-            <Uik.Container>
-              <Uik.Input
-                label="Input token rate"
-                type="number"
-                key={`inputTokenRateField+${index}`}
-                value={eachInputToken.tokenRate}
-                onInput={(e) => handleInputTokenRateChange(e, index)}
-              />
-              {index > 0 && (
-                // eslint-disable-next-line jsx-a11y/no-static-element-interactions
-                <span
-                  onClick={() => removeInputToken(eachInputToken.tokenAddress)}
-                >
-                  <Uik.Icon icon={faTrashCan} className="delete-icon" />
-                </span>
-              )}
-            </Uik.Container>
+            {index > 0 && (
+            // eslint-disable-next-line jsx-a11y/no-static-element-interactions
+            <span
+              onClick={() => removeInputToken(eachInputToken.tokenAddress)}
+            >
+              <Uik.Icon icon={faTrashCan} className="delete-icon" />
+            </span>
+            )}
+
           </Uik.Container>
         ))}
         <Uik.Button onClick={addToken}>Add new token</Uik.Button>
@@ -441,10 +538,25 @@ export const Admin: React.FC = () => {
             />
           )}
         </Uik.Container>
-
-        <Uik.Button type="submit" size="large" fill loading={isCreatingIDO}>
-          Create IDO
-        </Uik.Button>
+        <Uik.Container flow="stretch">
+          <Uik.Button
+            disabled={allowence.isGreaterThan(amountOfTokensToSell)}
+            size="large"
+            loading={approveLoading}
+            onClick={approveProjectToken}
+          >
+            Approve
+          </Uik.Button>
+          <Uik.Button
+            disabled={disbaleCreateButton || isCreatingIDO || allowence.isLessThan(amountOfTokensToSell)}
+            onClick={createIdo}
+            size="large"
+            fill
+            loading={isCreatingIDO}
+          >
+            Create IDO
+          </Uik.Button>
+        </Uik.Container>
       </Uik.Form>
     </Uik.Card>
   );
