@@ -27,7 +27,7 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   },
 }));
 export const IdoCard = ({ ido }: { ido: idoType }): JSX.Element => {
-  const [isOpen, setOpen] = useState(true);
+  const [isOpen, setOpen] = useState(false);
   const [showMoreVesting, setshowMoreVesting] = useState(true);
   const [showMorePoolInfo, setshowMorePoolInfo] = useState(true);
   const value = Math.floor(Math.random() * (100 - 1 + 1) + 1);

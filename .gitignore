@@ -8,10 +8,10 @@
 /node_modules
 /.pnp
 .pnp.js
-
+/build
 # testing
 /coverage
-
+netlify.toml
 # production
 /public/*.js
 /public/*.cjs
@@ -38,3 +38,5 @@ yarn-error.log*
 
 /.yalc
 yalc.lock
+# Local Netlify folder
+.netlify

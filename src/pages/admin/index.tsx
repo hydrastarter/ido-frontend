@@ -74,6 +74,12 @@ const CSVStyles = {
 
 export const Admin: React.FC = () => {
   const [projectTokenAddress, setProjectTokenAddress] = useState('');
+  const [txHash, setTxHash] = useState(null);
+  const [projectTokenDetails, setProjectTokenDetails] = useState({
+    name: '',
+    decimals: '',
+    symbol: '',
+  });
   const [inputTokenRate, setInputTokenRate] = useState('0');
   const [projectTokenImage, setProjectTokenImage] = useState({
     previewImgUrl: '',
@@ -86,6 +92,12 @@ export const Admin: React.FC = () => {
     },
   ]);
   const [enableWhitelisting, setEnableWhitelisting] = useState(false);
+  const [twitterUrl, setTwitterUrl] = useState('');
+  const [isOpen, setOpen] = useState(false);
+  const [telegramUrl, setTelegramUrl] = useState('');
+  const [websiteUrl, setWebsiteUrl] = useState('');
+  const [miscellaneousUrl, setMiscellaneousUrl] = useState('');
+  const [description, setDescription] = useState('');
   const [approveLoading, setApproveLoading] = useState(false);
   const [allowence, setAllowence] = useState(new BigNumber(0));
   const [startTimeInUTC, setStartTimeInUTC] = useState(new Date(Date.now()));
@@ -194,7 +206,16 @@ export const Admin: React.FC = () => {
         console.log(selectedSigner);
         const erc20Contract = new Contract(projectTokenAddress, ERC20, selectedSigner.signer);
         const allowenceAmount = await erc20Contract.allowance(selectedSigner.evmAddress, LAUNCHPAD_FACTORY_ADDRESS);
-        console.log(allowenceAmount.toString());
+        const tokenDecimals = await erc20Contract.decimals();
+        const tokenName = await erc20Contract.name();
+        const tokenSymbol = await erc20Contract.symbol();
+        setProjectTokenDetails((token) => (
+          {
+            ...token,
+            name: tokenName,
+            decimals: tokenDecimals.toString(),
+            symbol: tokenSymbol,
+          }));
         setAllowence(new BigNumber(allowenceAmount.toString()));
       }
     } catch (error) {
@@ -268,7 +289,7 @@ export const Admin: React.FC = () => {
             crowdSaleTimings,
             whitelist,
             selectedSigner.evmAddress,
-            projectTokenImage,
+            projectTokenImage.ipfsImgUrl,
             softcapAmount,
           ],
         );
@@ -278,6 +299,18 @@ export const Admin: React.FC = () => {
           '0x00',
         );
         await txObject.wait();
+        setTxHash(txObject.hash);
+        setOpen(true);
+        // const username = 'adminUser';
+        // const password = 'password';
+        // const token = btoa(`${username}:${password}`);
+        // console.log('token: ', token);
+        // const resp = await fetch('http://54.227.136.157/crowdsale', {
+        //   headers: {
+        //     Authorization: `Basic ${btoa(`${username}:${password}`)}`,
+        //   },
+        // });
+        // console.log('resp: ', resp);
       }
       setIsCreatingIdo(false);
     } catch (error) {
@@ -296,30 +329,52 @@ export const Admin: React.FC = () => {
         text="Create an IDO"
         className="admin-headline"
       />
+      <Uik.Modal
+        title="IDO Creation Successfull"
+        isOpen={isOpen}
+        onClose={() => setOpen(false)}
+        footer={(
+          <>
+            <Uik.Button text="Close" onClick={() => setOpen(false)} />
+            <Uik.Button text="Check Transcations" success fill onClick={() => window.open(`https://reefscan.com/extrinsic/${txHash}`, '_blank')} />
+          </>
+        )}
+      >
+        <Uik.Text type="title" text="Your Last Transcation was Successfull !!" className="success-color" />
+      </Uik.Modal>
       <Uik.Form>
         <Uik.Divider text="Project token details" />
-        <Uik.Input
-          label="Project token address"
-          value={projectTokenAddress}
-          onInput={(e) => setProjectTokenAddress(e.target.value)}
-          onBlur={checkAllowence}
-        />
-
-        <Uik.Container>
-          {projectTokenImage.previewImgUrl && (
-            <img
-              src={projectTokenImage.previewImgUrl}
-              alt="project token"
-              width="40px"
+        <Uik.Container className="algin-top">
+          <div>
+            <Uik.Input
+              label="Project token address"
+              value={projectTokenAddress}
+              onInput={(e) => setProjectTokenAddress(e.target.value)}
+              onBlur={checkAllowence}
             />
-          )}
-          <label className="uik-button">
-            <input type="file" hidden disabled={projectTokenImage.uploadingFile} onChange={handleFileUpload} />
-            {projectTokenImage.uploadingFile ? 'Uploading...' : 'Upload token image'}
-          </label>
-          {/* </Uik.Button> */}
+            <label className="uik-button" style={{ marginTop: '20px' }}>
+              <input type="file" hidden disabled={projectTokenImage.uploadingFile} onChange={handleFileUpload} />
+              {projectTokenImage.uploadingFile ? 'Uploading...' : 'Upload token image'}
+            </label>
+          </div>
+          <div>
+            <Uik.Label text="Project Token Details" />
+            <Uik.Container className="margin10 flex-column">
+              {projectTokenImage.previewImgUrl && (
+                <img
+                  src={projectTokenImage.previewImgUrl}
+                  alt="project token"
+                  style={{ width: '30px', marginBottom: '10px' }}
+                />
+              )}
+              {projectTokenDetails.name && <Uik.Text type="headline" text={projectTokenDetails.name} className="font20 margin10" />}
+              <Uik.Container className="margin10">
+                {projectTokenDetails.symbol && <Uik.Text text={`( ${projectTokenDetails.symbol} )`} type="lead" />}
+                {projectTokenDetails.decimals && <Uik.Text text={`${projectTokenDetails.decimals} Decimals`} type="lead" className="text-center" />}
+              </Uik.Container>
+            </Uik.Container>
+          </div>
         </Uik.Container>
-
         <Uik.Divider text="Input token details" />
         <Uik.Input
           label="Input token rate"
@@ -337,12 +392,12 @@ export const Admin: React.FC = () => {
               onInput={(e) => handleInputTokenChange(e, index)}
             />
             {index > 0 && (
-            // eslint-disable-next-line jsx-a11y/no-static-element-interactions
-            <span
-              onClick={() => removeInputToken(eachInputToken.tokenAddress)}
-            >
-              <Uik.Icon icon={faTrashCan} className="delete-icon" />
-            </span>
+              // eslint-disable-next-line jsx-a11y/no-static-element-interactions
+              <span
+                onClick={() => removeInputToken(eachInputToken.tokenAddress)}
+              >
+                <Uik.Icon icon={faTrashCan} className="delete-icon" />
+              </span>
             )}
 
           </Uik.Container>
@@ -538,6 +593,37 @@ export const Admin: React.FC = () => {
             />
           )}
         </Uik.Container>
+        <Uik.Divider text="IDO Details" />
+        <Uik.Container>
+          <Uik.Input
+            label="Twitter Url"
+            value={twitterUrl}
+            onChange={(e) => setTwitterUrl(e.target.value)}
+          />
+          <Uik.Input
+            label="Telegram Url"
+            value={telegramUrl}
+            onChange={(e) => setTelegramUrl(e.target.value)}
+          />
+        </Uik.Container>
+        <Uik.Container>
+          <Uik.Input
+            label="Website Url"
+            value={websiteUrl}
+            onChange={(e) => setWebsiteUrl(e.target.value)}
+          />
+          <Uik.Input
+            label="Miscellaneous Url"
+            value={miscellaneousUrl}
+            onChange={(e) => setMiscellaneousUrl(e.target.value)}
+          />
+        </Uik.Container>
+        <Uik.Input
+          label="Description"
+          textarea
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
         <Uik.Container flow="stretch">
           <Uik.Button
             disabled={allowence.isGreaterThan(amountOfTokensToSell)}
