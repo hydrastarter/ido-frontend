@@ -3718,27 +3718,6 @@
     "@reef-defi/api-derive" "^1.1.0"
     "@reef-defi/types" "^1.1.0"
 
-"@reef-defi/evm-provider@^1.0.10":
-  version "1.0.10"
-  resolved "https://registry.yarnpkg.com/@reef-defi/evm-provider/-/evm-provider-1.0.10.tgz#f2d755f37950f8ca2c6942e13ceb29974b6e1f54"
-  integrity sha512-IQl1imac+YXt4hOi2Q8qrwRt+4TjZPTC8SxfNK3vILaBW7N+SRA07lh5cvZ0htHvY6PErRoKNNKV+c6sKHTB1g==
-  dependencies:
-    "@open-web3/dev-config" "0.1.13"
-    "@open-web3/scanner" "1.0.1"
-    "@polkadot/api" "~6.4.2"
-    "@polkadot/keyring" "~7.9.2"
-    "@polkadot/rpc-provider" "~6.4.2"
-    "@polkadot/types" "~6.4.2"
-    "@polkadot/util" "~7.9.2"
-    "@polkadot/util-crypto" "~7.9.2"
-    "@reef-defi/api" "^1.0.4"
-    "@reef-defi/api-derive" "^1.0.4"
-    "@reef-defi/type-definitions" "^1.0.4"
-    "@reef-defi/types" "^1.0.4"
-    "@typescript-eslint/eslint-plugin" "4.8.1"
-    blakejs "~1.1.0"
-    ethers "~5.5.0"
-
 "@reef-defi/evm-provider@^1.0.9":
   version "1.0.10"
   resolved "https://registry.npmjs.org/@reef-defi/evm-provider/-/evm-provider-1.0.10.tgz"
