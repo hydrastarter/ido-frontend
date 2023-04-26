@@ -1,7 +1,6 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useState } from "react";
 import Uik from "@reef-defi/ui-kit";
-import "./idoCard.css";
+import "../idoCard.css";
 import { Link } from "react-router-dom";
 import IconButton from "@mui/material/IconButton";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
@@ -10,10 +9,13 @@ import { styled } from "@mui/material/styles";
 import LinearProgress, {
   linearProgressClasses,
 } from "@mui/material/LinearProgress";
-import { idoType } from "../../assets/ido";
-import twitterICon from "../../assets/images/twitter.png";
-import telegramICon from "../../assets/images/telegram.png";
-import websiteICon from "../../assets/images/chain.png";
+import { idoType } from "../../../assets/ido";
+// @ts-ignore
+import twitterICon from "../../../assets/images/twitter.png";
+// @ts-ignore
+import telegramICon from "../../../assets/images/telegram.png";
+// @ts-ignore
+import websiteICon from "../../../assets/images/chain.png";
 
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   height: 18,
@@ -29,12 +31,13 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
     backgroundColor: "#898E9C",
   },
 }));
-export const IdoCard = ({ ido }: { ido: idoType }): JSX.Element => {
+
+export const UpcomingPresaleCard = ({ ido }: { ido: idoType }): JSX.Element => {
   const [isOpen, setOpen] = useState(false);
-  const [showMoreVesting, setshowMoreVesting] = useState(true);
-  const [showMorePoolInfo, setshowMorePoolInfo] = useState(true);
+  const [showMoreVesting, setShowMoreVesting] = useState(true);
+  const [showMorePoolInfo, setShowMorePoolInfo] = useState(true);
   const value = Math.floor(Math.random() * (100 - 1 + 1) + 1);
-  console.log({ ido });
+
   return (
     <>
       <Uik.Modal
@@ -102,7 +105,7 @@ export const IdoCard = ({ ido }: { ido: idoType }): JSX.Element => {
           <div style={{ width: "100%", marginBottom: "20px" }}>
             <Uik.Container flow="spaceBetween">
               <Uik.Text text="Vesting Info" type="light" />
-              <IconButton onClick={() => setshowMoreVesting(!showMoreVesting)}>
+              <IconButton onClick={() => setShowMoreVesting(!showMoreVesting)}>
                 {showMoreVesting ? <ExpandLessIcon /> : <ExpandMoreIcon />}
               </IconButton>
             </Uik.Container>
@@ -138,7 +141,7 @@ export const IdoCard = ({ ido }: { ido: idoType }): JSX.Element => {
             <Uik.Container flow="spaceBetween">
               <Uik.Text text="Pool Info" type="light" />
               <IconButton
-                onClick={() => setshowMorePoolInfo(!showMorePoolInfo)}
+                onClick={() => setShowMorePoolInfo(!showMorePoolInfo)}
               >
                 {showMorePoolInfo ? <ExpandLessIcon /> : <ExpandMoreIcon />}
               </IconButton>

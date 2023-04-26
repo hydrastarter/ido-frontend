@@ -3,7 +3,7 @@ import Uik from "@reef-defi/ui-kit";
 import "./index.css";
 import { useQuery } from "@tanstack/react-query";
 import { idos } from "../../assets/ido";
-import { IdoCard } from "./idoCard";
+import { ActivePresaleCard } from "./Cards/ActivePresaleCard";
 
 const getAllIdos = async () => {
   const username = "adminUser";
@@ -45,7 +45,7 @@ export const Dashboard: React.FC = () => {
         {isError && <Uik.Alert type="danger" text="An error has occurred." />}
         {!isLoading && !isError && data && <div>YES</div>}
         {idos.slice(0, 1).map((ido) => (
-          <IdoCard key={ido.name} ido={ido} />
+          <ActivePresaleCard key={ido.name} ido={ido} />
         ))}
       </div>
     </div>
