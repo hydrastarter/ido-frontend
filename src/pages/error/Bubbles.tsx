@@ -1,6 +1,7 @@
-import React from 'react';
+import React from "react";
 
-const random = (min: number, max: number): number => Math.random() * (max - min) + min;
+const random = (min: number, max: number): number =>
+  Math.random() * (max - min) + min;
 
 const Bubbles = (): JSX.Element => {
   const bubbles = Array.from({ length: 20 }, (_, i) => (
@@ -16,11 +17,7 @@ const Bubbles = (): JSX.Element => {
     />
   ));
 
-  return (
-    <div className="bubbles">
-      {bubbles}
-    </div>
-  );
+  return <div className="bubbles">{bubbles}</div>;
 };
 
 export default Bubbles;

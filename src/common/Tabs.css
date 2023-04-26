@@ -58,7 +58,8 @@
 
 .tabs__tab--selected {
   background-color: white;
-  box-shadow: 0 0 10px -10px rgb(15 35 63 / 50%), 0 5px 10px -5px rgb(15 35 63 / 25%);
+  box-shadow: 0 0 10px -10px rgb(15 35 63 / 50%),
+    0 5px 10px -5px rgb(15 35 63 / 25%);
 }
 
 .tabs__tab-notification {

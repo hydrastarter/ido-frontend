@@ -27,7 +27,7 @@
 }
 
 .white {
-  color: white
+  color: white;
 }
 
 .divider-line {
@@ -42,9 +42,13 @@
   margin-top: 0px !important;
 }
 
-.divider-text>.uik-divider__text {
+.divider-text > .uik-divider__text {
   border: 1px solid;
   border-radius: 15px;
   padding: 5px 20px;
-  border-color: hsl(var(--bg--h), calc(var(--bg--s) - 15%), calc(var(--bg--l) - 25%));
+  border-color: hsl(
+    var(--bg--h),
+    calc(var(--bg--s) - 15%),
+    calc(var(--bg--l) - 25%)
+  );
 }

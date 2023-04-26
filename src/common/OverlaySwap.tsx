@@ -1,12 +1,16 @@
 import {
-  appState, Components, hooks, store, Token,
-} from '@reef-defi/react-lib';
-import React, { useContext, useReducer, useState } from 'react';
-import PoolContext from '../context/PoolContext';
-import TokenContext from '../context/TokenContext';
-import TokenPricesContext from '../context/TokenPricesContext';
-import { notify } from '../utils/utils';
-import './overlay-swap.css';
+  appState,
+  Components,
+  hooks,
+  store,
+  Token,
+} from "@reef-defi/react-lib";
+import React, { useContext, useReducer, useState } from "react";
+import PoolContext from "../context/PoolContext";
+import TokenContext from "../context/TokenContext";
+import TokenPricesContext from "../context/TokenPricesContext";
+import { notify } from "../utils/utils";
+import "./overlay-swap.css";
 
 const { Trade, OverlayAction, Finalizing } = Components;
 
@@ -22,7 +26,7 @@ const OverlaySwap = ({
   onClose,
 }: OverlaySwap): JSX.Element => {
   const [address1, setAddress1] = useState(tokenAddress);
-  const [address2, setAddress2] = useState('0x');
+  const [address2, setAddress2] = useState("0x");
   const { tokens } = useContext(TokenContext);
   const tokenPrices = useContext(TokenPricesContext);
   const [finalized, setFinalized] = useState(true);
@@ -34,7 +38,7 @@ const OverlaySwap = ({
   // Trade
   const [tradeState, tradeDispatch] = useReducer(
     store.swapReducer,
-    store.initialSwapState,
+    store.initialSwapState
   );
 
   hooks.useSwapState({
@@ -75,26 +79,27 @@ const OverlaySwap = ({
       className="overlay-swap"
     >
       <div className="uik-pool-actions pool-actions">
-        {
-          finalized
-            ? (
-              <Trade
-                pools={pools}
-                tokens={tokens}
-                state={tradeState}
-                actions={{
-                  onSwap,
-                  onSwitch,
-                  selectToken1: (token: Token): void => setAddress1(token.address),
-                  selectToken2: (token: Token): void => setAddress2(token.address),
-                  setPercentage: (amount: number) => tradeDispatch(store.setPercentageAction(amount)),
-                  setToken1Amount: (amount: string): void => tradeDispatch(store.setToken1AmountAction(amount)),
-                  setToken2Amount: (amount: string): void => tradeDispatch(store.setToken2AmountAction(amount)),
-                }}
-              />
-            )
-            : <Finalizing />
-        }
+        {finalized ? (
+          <Trade
+            pools={pools}
+            tokens={tokens}
+            state={tradeState}
+            actions={{
+              onSwap,
+              onSwitch,
+              selectToken1: (token: Token): void => setAddress1(token.address),
+              selectToken2: (token: Token): void => setAddress2(token.address),
+              setPercentage: (amount: number) =>
+                tradeDispatch(store.setPercentageAction(amount)),
+              setToken1Amount: (amount: string): void =>
+                tradeDispatch(store.setToken1AmountAction(amount)),
+              setToken2Amount: (amount: string): void =>
+                tradeDispatch(store.setToken2AmountAction(amount)),
+            }}
+          />
+        ) : (
+          <Finalizing />
+        )}
       </div>
     </OverlayAction>
   );

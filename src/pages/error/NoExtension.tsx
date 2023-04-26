@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unknown-property */
-import React from 'react';
-import Bubbles from './Bubbles';
-import './css/index.css';
+import React from "react";
+import Bubbles from "./Bubbles";
+import "./css/index.css";
 
 const NoExtension = (): JSX.Element => (
   <div className="no-extension">
@@ -12,7 +12,8 @@ const NoExtension = (): JSX.Element => (
           <h1 className="header__title">Chain Extension</h1>
         </div>
         <div className="header__sub-content">
-          App uses browser extension to get accounts and securely sign transactions.
+          App uses browser extension to get accounts and securely sign
+          transactions.
           <br />
           Please install the extension and refresh the page.
         </div>
@@ -97,8 +98,7 @@ const NoExtension = (): JSX.Element => (
 
     <footer className="footer">
       <p className="text">
-        The code is open-source and available on
-        {' '}
+        The code is open-source and available on{" "}
         <a
           href="https://github.com/reef-defi/browser-extension"
           target="_blank"

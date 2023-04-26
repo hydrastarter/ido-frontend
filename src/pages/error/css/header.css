@@ -16,11 +16,10 @@
   }
 }
 
-.header__content { 
+.header__content {
   animation: header-content 0.5s 0.55s backwards ease-out;
   margin: 3rem 0;
 }
-
 
 .header__main-content {
   display: flex;

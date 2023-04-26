@@ -1,4 +1,4 @@
-import { availableNetworks } from '@reef-defi/react-lib';
+import { availableNetworks } from "@reef-defi/react-lib";
 
 /* {
   name: 'testnet',
@@ -9,4 +9,7 @@ import { availableNetworks } from '@reef-defi/react-lib';
   graphqlUrl: 'http://localhost:8080/v1/graphql',
 } as Network; */
 
-export const appAvailableNetworks = [availableNetworks.mainnet, availableNetworks.testnet];
+export const appAvailableNetworks = [
+  availableNetworks.mainnet,
+  availableNetworks.testnet,
+];

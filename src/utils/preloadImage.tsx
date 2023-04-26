@@ -1,11 +1,14 @@
 type CbFunction = () => void;
 
 export interface Arguments {
-  url: string,
-  callback?: CbFunction
+  url: string;
+  callback?: CbFunction;
 }
 
-const preloadImage = (url: string, callback: CbFunction): Arguments|undefined => {
+const preloadImage = (
+  url: string,
+  callback: CbFunction
+): Arguments | undefined => {
   if (!url) return;
 
   const img = new Image();

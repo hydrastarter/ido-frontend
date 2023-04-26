@@ -1,16 +1,17 @@
-import React, { useMemo, useState } from 'react';
-import {
-  appState, hooks, ReefSigner, Components,
-} from '@reef-defi/react-lib';
-import Uik from '@reef-defi/ui-kit';
-import './bind.css';
-import { TxStatusUpdate } from '@reef-defi/react-lib/dist/utils';
+import React, { useMemo, useState } from "react";
+import { appState, hooks, ReefSigner, Components } from "@reef-defi/react-lib";
+import Uik from "@reef-defi/ui-kit";
+import "./bind.css";
+import { TxStatusUpdate } from "@reef-defi/react-lib/dist/utils";
 
 const { EvmBindComponent } = Components;
 
 const Bind = (): JSX.Element => {
-  const selectedSigner: ReefSigner|undefined | null = hooks.useObservableState(appState.selectedSigner$);
-  const accounts: ReefSigner[] | undefined | null = hooks.useObservableState(appState.signers$);
+  const selectedSigner: ReefSigner | undefined | null =
+    hooks.useObservableState(appState.selectedSigner$);
+  const accounts: ReefSigner[] | undefined | null = hooks.useObservableState(
+    appState.signers$
+  );
 
   const onTxUpdate = (state: TxStatusUpdate): void => {
     let updateActions: appState.UpdateAction[] = [];
@@ -29,16 +30,23 @@ const Bind = (): JSX.Element => {
           } as appState.UpdateAction);
         });
       } else {
-        updateActions = [{ type: appState.UpdateDataType.ACCOUNT_EVM_BINDING }, { type: appState.UpdateDataType.ACCOUNT_NATIVE_BALANCE }];
+        updateActions = [
+          { type: appState.UpdateDataType.ACCOUNT_EVM_BINDING },
+          { type: appState.UpdateDataType.ACCOUNT_NATIVE_BALANCE },
+        ];
       }
     } else {
       // transaction
-      updateActions = state.addresses && state.addresses.length
-        ? state.addresses.map((address) => ({
-          address,
-          type: appState.UpdateDataType.ACCOUNT_NATIVE_BALANCE,
-        } as appState.UpdateAction))
-        : [{ type: appState.UpdateDataType.ACCOUNT_NATIVE_BALANCE }];
+      updateActions =
+        state.addresses && state.addresses.length
+          ? state.addresses.map(
+              (address) =>
+                ({
+                  address,
+                  type: appState.UpdateDataType.ACCOUNT_NATIVE_BALANCE,
+                } as appState.UpdateAction)
+            )
+          : [{ type: appState.UpdateDataType.ACCOUNT_NATIVE_BALANCE }];
     }
 
     appState.onTxUpdateResetSigners(state, updateActions);
@@ -46,7 +54,10 @@ const Bind = (): JSX.Element => {
 
   const [show, setShow] = useState(false);
 
-  const isBound = useMemo(() => !selectedSigner || selectedSigner?.isEvmClaimed, [selectedSigner]);
+  const isBound = useMemo(
+    () => !selectedSigner || selectedSigner?.isEvmClaimed,
+    [selectedSigner]
+  );
 
   useMemo(() => {
     if (!isBound) setShow(true);
@@ -70,9 +81,7 @@ const Bind = (): JSX.Element => {
         />
       </Uik.Modal>
 
-      {
-        !isBound
-        && (
+      {!isBound && (
         <div className="evm-bind__alert">
           <Uik.Alert
             type="info"
@@ -85,8 +94,7 @@ const Bind = (): JSX.Element => {
             />
           </Uik.Alert>
         </div>
-        )
-      }
+      )}
     </div>
   );
 };
