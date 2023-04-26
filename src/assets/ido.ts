@@ -1,6 +1,8 @@
 export type idoType = {
   projectTokenAddress: string;
   inputTokens: {
+    name: string;
+    symbol: string;
     address: string;
     decimals: number;
   }[];
@@ -30,12 +32,28 @@ export const idos: idoType[] = [
     projectTokenAddress: "",
     inputTokens: [
       {
-        address: "",
-        decimals: 18,
-      },
-      {
+        name: "USD Coin",
+        symbol: "USDC",
         address: "",
         decimals: 6,
+      },
+      {
+        name: "USDT coin",
+        symbol: "USDT",
+        address: "",
+        decimals: 8,
+      },
+      {
+        name: "DAI coin",
+        symbol: "DAI",
+        address: "",
+        decimals: 8,
+      },
+      {
+        name: "BUSD coin",
+        symbol: "BUSD",
+        address: "",
+        decimals: 8,
       },
     ],
     inputTokenRate: "1.2",
@@ -63,12 +81,16 @@ export const idos: idoType[] = [
     projectTokenAddress: "",
     inputTokens: [
       {
+        name: "DAI coin",
+        symbol: "DAI",
         address: "",
-        decimals: 18,
+        decimals: 8,
       },
       {
+        name: "BUSD coin",
+        symbol: "BUSD",
         address: "",
-        decimals: 6,
+        decimals: 8,
       },
     ],
     inputTokenRate: "1.2",
@@ -96,12 +118,16 @@ export const idos: idoType[] = [
     projectTokenAddress: "",
     inputTokens: [
       {
+        name: "DAI coin",
+        symbol: "DAI",
         address: "",
-        decimals: 18,
+        decimals: 8,
       },
       {
+        name: "BUSD coin",
+        symbol: "BUSD",
         address: "",
-        decimals: 6,
+        decimals: 8,
       },
     ],
     inputTokenRate: "1.2",
@@ -129,12 +155,16 @@ export const idos: idoType[] = [
     projectTokenAddress: "",
     inputTokens: [
       {
+        name: "DAI coin",
+        symbol: "DAI",
         address: "",
-        decimals: 18,
+        decimals: 8,
       },
       {
+        name: "BUSD coin",
+        symbol: "BUSD",
         address: "",
-        decimals: 6,
+        decimals: 8,
       },
     ],
     inputTokenRate: "1.2",
@@ -162,12 +192,16 @@ export const idos: idoType[] = [
     projectTokenAddress: "",
     inputTokens: [
       {
+        name: "DAI coin",
+        symbol: "DAI",
         address: "",
-        decimals: 18,
+        decimals: 8,
       },
       {
+        name: "BUSD coin",
+        symbol: "BUSD",
         address: "",
-        decimals: 6,
+        decimals: 8,
       },
     ],
     inputTokenRate: "1.2",

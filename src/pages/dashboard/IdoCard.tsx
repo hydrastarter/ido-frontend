@@ -77,22 +77,52 @@ export const IdoCard = ({ ido }: { ido: idoType }): JSX.Element => {
   const [showMorePoolInfo, setShowMorePoolInfo] = useState(true);
   const value = Math.floor(Math.random() * (100 - 1 + 1) + 1);
 
+  const [investValue, setInvestValue] = useState("0");
+  const [isInvesting, setIsInvesting] = useState(false);
+  const [isSelectorOpen, setSelectorOpen] = useState(false);
+  const [selectedInputToken, setSelectedInputToken] = useState(
+    ido.inputTokens[0]
+  );
+
   const selectedSigner: ReefSigner | undefined | null =
     hooks.useObservableState(appState.selectedSigner$);
 
-  let canfetchContractDetails = false;
+  let canFetchContractDetails = false;
   if (selectedSigner) {
-    canfetchContractDetails = true;
+    canFetchContractDetails = true;
   }
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["getContractDetails", ido.projectTokenAddress, selectedSigner],
     queryFn: () =>
       getAllContractDetails(ido.projectTokenAddress, selectedSigner!),
-    enabled: canfetchContractDetails,
+    enabled: canFetchContractDetails,
   });
 
   console.log("data: ", data);
+
+  const handleInvest = async () => {
+    Uik.notify.info("Processing your deposit request");
+    setIsInvesting(() => true);
+
+    const crowdsaleContractAddress = ido.projectTokenAddress;
+
+    try {
+      if (selectedSigner) {
+        const crowdsaleContract = new Contract(
+          crowdsaleContractAddress,
+          Crowdsale,
+          selectedSigner.signer
+        );
+        Uik.notify.success("You have successfully invested in the IDO");
+        setIsInvesting(() => false);
+      }
+    } catch (e) {
+      console.log("Error in handleInvest: ", e);
+      Uik.notify.danger("An error has occurred");
+      setIsInvesting(() => false);
+    }
+  };
 
   return (
     <>
@@ -100,12 +130,7 @@ export const IdoCard = ({ ido }: { ido: idoType }): JSX.Element => {
         // title="Title"
         isOpen={isOpen}
         onClose={() => setOpen(false)}
-        footer={
-          <>
-            <Uik.Button text="Close" onClick={() => setOpen(false)} />
-            <Uik.Button text="Invest" fill onClick={() => setOpen(false)} />
-          </>
-        }
+        footer={<></>}
       >
         <div className="ido-card-avatar-box">
           <Uik.Avatar image={ido.image} size="extra-large" />
@@ -231,6 +256,42 @@ export const IdoCard = ({ ido }: { ido: idoType }): JSX.Element => {
               </div>
             </div>
           )}
+        </div>
+        <div>
+          <Uik.Container>
+            <Uik.Input
+              type="number"
+              value={investValue}
+              onInput={(e) => setInvestValue(e.target.value)}
+            />
+            <Uik.Button
+              size="large"
+              text={selectedInputToken.symbol}
+              onClick={() => setSelectorOpen(!isSelectorOpen)}
+            />
+            <Uik.Dropdown
+              isOpen={isSelectorOpen}
+              onClose={() => setSelectorOpen(false)}
+              position="topLeft"
+            >
+              {ido.inputTokens.map((inputToken) => (
+                <Uik.DropdownItem
+                  text={inputToken.symbol}
+                  onClick={() => setSelectedInputToken(() => inputToken)}
+                />
+              ))}
+            </Uik.Dropdown>
+          </Uik.Container>
+          <Uik.Container>
+            <Uik.Button
+              text="Invest"
+              fill
+              size="large"
+              onClick={handleInvest}
+              loading={isInvesting}
+              className="invest-submit-btn"
+            />
+          </Uik.Container>
         </div>
       </Uik.Modal>
       <Uik.Card className="ido-card">

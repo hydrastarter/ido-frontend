@@ -39,7 +39,7 @@
 }
 
 .divider-text {
-  margin-top: 0px !important;
+  margin-top: 0 !important;
 }
 
 .divider-text > .uik-divider__text {
@@ -51,4 +51,9 @@
     calc(var(--bg--s) - 15%),
     calc(var(--bg--l) - 25%)
   );
+}
+
+.invest-submit-btn{
+  width: 100%;
+  margin-top: 10px;
 }
