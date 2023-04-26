@@ -3,7 +3,7 @@ import Uik from "@reef-defi/ui-kit";
 import "./index.css";
 import { useQuery } from "@tanstack/react-query";
 import { idos } from "../../assets/ido";
-import { ActivePresaleCard } from "./Cards/ActivePresaleCard";
+import { IdoCard } from "./IdoCard";
 
 const getAllIdos = async () => {
   const username = "adminUser";
@@ -24,8 +24,6 @@ export const Dashboard: React.FC = () => {
     queryFn: getAllIdos,
   });
 
-  console.log("data: ", data);
-
   return (
     <div className="dashboard-container">
       <div className="tabs-container">
@@ -43,10 +41,10 @@ export const Dashboard: React.FC = () => {
       <div className="idos-container">
         {isLoading && <Uik.Loading text="Loading ..." />}
         {isError && <Uik.Alert type="danger" text="An error has occurred." />}
-        {!isLoading && !isError && data && <div>YES</div>}
-        {idos.slice(0, 1).map((ido) => (
-          <ActivePresaleCard key={ido.name} ido={ido} />
-        ))}
+        {!isLoading &&
+          !isError &&
+          data &&
+          idos.slice(0, 1).map((ido) => <IdoCard key={ido.name} ido={ido} />)}
       </div>
     </div>
   );
