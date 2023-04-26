@@ -1,4 +1,10 @@
 export type idoType = {
+  projectTokenAddress: string;
+  inputTokens: {
+    address: string;
+    decimals: number;
+  }[];
+  inputTokenRate: string;
   image: string;
   name: string;
   symbol: string;
@@ -21,6 +27,18 @@ export type idoType = {
 
 export const idos: idoType[] = [
   {
+    projectTokenAddress: "",
+    inputTokens: [
+      {
+        address: "",
+        decimals: 18,
+      },
+      {
+        address: "",
+        decimals: 6,
+      },
+    ],
+    inputTokenRate: "1.2",
     image: "https://picsum.photos/id/237/200/300",
     name: "Cryption Network",
     symbol: "CNT",
@@ -42,6 +60,18 @@ export const idos: idoType[] = [
   },
 
   {
+    projectTokenAddress: "",
+    inputTokens: [
+      {
+        address: "",
+        decimals: 18,
+      },
+      {
+        address: "",
+        decimals: 6,
+      },
+    ],
+    inputTokenRate: "1.2",
     image: "https://picsum.photos/id/237/200/300",
     name: "Apple",
     symbol: "APPLE",
@@ -63,6 +93,18 @@ export const idos: idoType[] = [
   },
 
   {
+    projectTokenAddress: "",
+    inputTokens: [
+      {
+        address: "",
+        decimals: 18,
+      },
+      {
+        address: "",
+        decimals: 6,
+      },
+    ],
+    inputTokenRate: "1.2",
     image: "https://picsum.photos/id/237/200/300",
     name: "Binance",
     symbol: "BNB",
@@ -84,6 +126,18 @@ export const idos: idoType[] = [
   },
 
   {
+    projectTokenAddress: "",
+    inputTokens: [
+      {
+        address: "",
+        decimals: 18,
+      },
+      {
+        address: "",
+        decimals: 6,
+      },
+    ],
+    inputTokenRate: "1.2",
     image: "https://picsum.photos/id/237/200/300",
     name: "Polkadot",
     symbol: "PLK",
@@ -105,6 +159,18 @@ export const idos: idoType[] = [
   },
 
   {
+    projectTokenAddress: "",
+    inputTokens: [
+      {
+        address: "",
+        decimals: 18,
+      },
+      {
+        address: "",
+        decimals: 6,
+      },
+    ],
+    inputTokenRate: "1.2",
     image: "https://picsum.photos/id/237/200/300",
     name: "Ethereum",
     symbol: "ETH",

@@ -16,6 +16,10 @@ import twitterICon from "../../../assets/images/twitter.png";
 import telegramICon from "../../../assets/images/telegram.png";
 // @ts-ignore
 import websiteICon from "../../../assets/images/chain.png";
+import { appState, hooks, ReefSigner } from "@reef-defi/react-lib";
+import { Contract } from "ethers";
+import { Crowdsale } from "../../../abis/Crowdsale";
+import { useQuery } from "@tanstack/react-query";
 
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   height: 18,
@@ -32,11 +36,62 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   },
 }));
 
+const getAllContractDetails = async (
+  crowdsaleContractAddress: string,
+  selectedSigner: ReefSigner
+) => {
+  const crowdsaleContract = new Contract(
+    crowdsaleContractAddress,
+    Crowdsale,
+    selectedSigner.signer
+  );
+
+  const tokensRemainingForSale = crowdsaleContract.tokenRemainingForSale();
+
+  const vestingScheduleForBeneficiary =
+    crowdsaleContract.vestingScheduleForBeneficiary();
+
+  const amount = vestingScheduleForBeneficiary[0]; // total invested
+  const totalDrawn = vestingScheduleForBeneficiary[1]; // claimed
+  // const lastDrawnAt = vestingScheduleForBeneficiary[2]; // not needed
+  const remainingBalance = vestingScheduleForBeneficiary[3]; // yet to claim
+  const availableForDrawDown = vestingScheduleForBeneficiary[4]; // claimable
+
+  return {
+    tokensRemainingForSale: tokensRemainingForSale
+      ? tokensRemainingForSale.toString()
+      : "0",
+    amount: amount ? amount.toString() : "0",
+    totalDrawn: totalDrawn ? totalDrawn.toString() : "0",
+    remainingBalance: remainingBalance ? remainingBalance.toString() : "0",
+    availableForDrawDown: availableForDrawDown
+      ? availableForDrawDown.toString()
+      : "0",
+  };
+};
+
 export const ActivePresaleCard = ({ ido }: { ido: idoType }): JSX.Element => {
   const [isOpen, setOpen] = useState(false);
   const [showMoreVesting, setShowMoreVesting] = useState(true);
   const [showMorePoolInfo, setShowMorePoolInfo] = useState(true);
   const value = Math.floor(Math.random() * (100 - 1 + 1) + 1);
+
+  const selectedSigner: ReefSigner | undefined | null =
+    hooks.useObservableState(appState.selectedSigner$);
+
+  let canfetchContractDetails = false;
+  if (selectedSigner) {
+    canfetchContractDetails = true;
+  }
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["getContractDetails", ido.projectTokenAddress, selectedSigner],
+    queryFn: () =>
+      getAllContractDetails(ido.projectTokenAddress, selectedSigner!),
+    enabled: canfetchContractDetails,
+  });
+
+  console.log("data: ", data);
 
   return (
     <>
