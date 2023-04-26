@@ -1,5 +1,9 @@
 import { hooks } from '@reef-defi/react-lib';
 import React, { useEffect, useState } from 'react';
+import {
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Nav from './common/Nav';
@@ -8,6 +12,8 @@ import NoAccount from './pages/error/NoAccount';
 import NoExtension from './pages/error/NoExtension';
 import NetworkSwitch, { setSwitching } from './context/NetworkSwitch';
 import NetworkSwitching from './common/NetworkSwitching';
+
+const queryClient = new QueryClient();
 
 const App = (): JSX.Element => {
   const { loading, error } = hooks.useInitReefState(
@@ -32,7 +38,9 @@ const App = (): JSX.Element => {
           {!loading && !error && (
           <>
             <Nav display={!loading && !error} />
-            <ContentRouter />
+            <QueryClientProvider client={queryClient}>
+              <ContentRouter />
+            </QueryClientProvider>
           </>
           )}
 
