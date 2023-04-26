@@ -22,6 +22,7 @@
       "react-hooks"
   ],
   "rules": {
+    "quotes": [1, "double", { "avoidEscape": true }],
     "no-use-before-define": "off",
     "no-mixed-operators": "off",
     "jsx-a11y/interactive-supports-focus": "warn",
