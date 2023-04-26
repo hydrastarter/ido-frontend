@@ -1,38 +1,57 @@
 .admin-container {
-  width: 100%;
-  max-width: 700px;
-  margin: 50px auto;
+    width: 100%;
+    max-width: 700px;
+    margin: 50px auto;
 }
 
 .admin-headline {
-  text-align: center;
+    text-align: center;
 }
 
 .delete-icon-button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .delete-icon {
-  max-width: 20px;
+    max-width: 20px;
 }
 
 .upload-container {
-  align-items: center;
-  border: 2px dashed #ccc;
-  border-radius: 20px;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  justify-content: center;
-  padding: 20px;
-  margin-top: 20px;
+    align-items: center;
+    border: 2px dashed #ccc;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: center;
+    padding: 20px;
+    margin-top: 20px;
 }
 
 .csv-footer {
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    text-align: center;
+}
+
+.algin-top {
+  align-items: flex-start;
+}
+.font20 {
+  font-size: 20px;
+}
+.margin10 {
+  margin-bottom: 10px;
+}
+.flex-column {
+flex-direction: column;
+}
+.text-center {
   text-align: center;
+}
+.success-color {
+  color: #34C57D;
 }
