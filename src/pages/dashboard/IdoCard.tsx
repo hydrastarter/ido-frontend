@@ -71,7 +71,17 @@ const getAllContractDetails = async (
   };
 };
 
-export const IdoCard = ({ ido }: { ido: idoType }): JSX.Element => {
+export const IdoCard = ({
+  ido,
+  typeOfPresale,
+}: {
+  ido: idoType;
+  typeOfPresale:
+    | "Active Presales"
+    | "Upcoming Presales"
+    | "Completed Presales"
+    | "My Crowdsale";
+}): JSX.Element => {
   const [isOpen, setOpen] = useState(false);
   const [showMoreVesting, setShowMoreVesting] = useState(true);
   const [showMorePoolInfo, setShowMorePoolInfo] = useState(true);
