@@ -94,6 +94,8 @@ export const IdoCard = ({
     ido.inputTokens[0]
   );
 
+  const [isClaiming, setIsClaiming] = useState(false);
+
   const selectedSigner: ReefSigner | undefined | null =
     hooks.useObservableState(appState.selectedSigner$);
 
@@ -110,6 +112,29 @@ export const IdoCard = ({
   });
 
   console.log("data: ", data);
+
+  const handleClaim = async () => {
+    Uik.notify.info("Processing your claim request");
+    setIsClaiming(() => true);
+
+    const crowdsaleContractAddress = ido.projectTokenAddress;
+
+    try {
+      if (selectedSigner) {
+        const crowdsaleContract = new Contract(
+          crowdsaleContractAddress,
+          Crowdsale,
+          selectedSigner.signer
+        );
+        Uik.notify.success("You have successfully claimed in the IDO");
+        setIsClaiming(() => false);
+      }
+    } catch (e) {
+      console.log("Error in handleInvest: ", e);
+      Uik.notify.danger("An error has occurred");
+      setIsClaiming(() => false);
+    }
+  };
 
   const handleInvest = async () => {
     Uik.notify.info("Processing your deposit request");
@@ -267,42 +292,66 @@ export const IdoCard = ({
             </div>
           )}
         </div>
-        <div>
-          <Uik.Container>
-            <Uik.Input
-              type="number"
-              value={investValue}
-              onInput={(e) => setInvestValue(e.target.value)}
-            />
-            <Uik.Button
-              size="large"
-              text={selectedInputToken.symbol}
-              onClick={() => setSelectorOpen(!isSelectorOpen)}
-            />
-            <Uik.Dropdown
-              isOpen={isSelectorOpen}
-              onClose={() => setSelectorOpen(false)}
-              position="topLeft"
-            >
-              {ido.inputTokens.map((inputToken) => (
-                <Uik.DropdownItem
-                  text={inputToken.symbol}
-                  onClick={() => setSelectedInputToken(() => inputToken)}
-                />
-              ))}
-            </Uik.Dropdown>
-          </Uik.Container>
-          <Uik.Container>
-            <Uik.Button
-              text="Invest"
-              fill
-              size="large"
-              onClick={handleInvest}
-              loading={isInvesting}
-              className="invest-submit-btn"
-            />
-          </Uik.Container>
-        </div>
+        {typeOfPresale === "Active Presales" && (
+          <div>
+            <Uik.Container>
+              <Uik.Input
+                type="number"
+                value={investValue}
+                onInput={(e) => setInvestValue(e.target.value)}
+              />
+              <Uik.Button
+                size="large"
+                text={selectedInputToken.symbol}
+                onClick={() => setSelectorOpen(!isSelectorOpen)}
+              />
+              <Uik.Dropdown
+                isOpen={isSelectorOpen}
+                onClose={() => setSelectorOpen(false)}
+                position="topLeft"
+              >
+                {ido.inputTokens.map((inputToken) => (
+                  <Uik.DropdownItem
+                    text={inputToken.symbol}
+                    onClick={() => setSelectedInputToken(() => inputToken)}
+                  />
+                ))}
+              </Uik.Dropdown>
+            </Uik.Container>
+            <Uik.Container>
+              <Uik.Button
+                text="Invest"
+                fill
+                size="large"
+                onClick={handleInvest}
+                loading={isInvesting}
+                className="invest-submit-btn"
+              />
+            </Uik.Container>
+          </div>
+        )}
+        {typeOfPresale === "Completed Presales" && (
+          <div>
+            <Uik.Container>
+              <Uik.Text>Total Invested: {data?.amount}</Uik.Text>
+            </Uik.Container>
+            <Uik.Container>
+              <Uik.Text>Locked: {data?.remainingBalance}</Uik.Text>
+              <Uik.Text>Claimable: {data?.availableForDrawDown}</Uik.Text>
+              <Uik.Text>Claimed: {data?.totalDrawn}</Uik.Text>
+            </Uik.Container>
+            <Uik.Container>
+              <Uik.Button
+                text="Claim"
+                fill
+                size="large"
+                onClick={handleClaim}
+                loading={isClaiming}
+                className="invest-submit-btn"
+              />
+            </Uik.Container>
+          </div>
+        )}
       </Uik.Modal>
       <Uik.Card className="ido-card">
         <div onClick={() => setOpen(!isOpen)}>
