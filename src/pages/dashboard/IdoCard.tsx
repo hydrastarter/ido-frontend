@@ -317,9 +317,15 @@ export const IdoCard = ({
               <Uik.Text text={`(${ido.tokenSymbol})`} className="no-wrap" />
             </Uik.Container>
             <Uik.Container flow="start">
-              <img src={twitterIcon} alt="twitter" width="30px" />
-              <img src={telegramIcon} alt="twitter" width="30px" />
-              <img src={websiteIcon} alt="twitter" width="30px" />
+              <a href={`//${ido.twitterUrl}`} target="_blank">
+                <img src={twitterIcon} alt="twitter" width="30px" />
+              </a>
+              <a href={`//${ido.telegramUrl}`} target="_blank">
+                <img src={telegramIcon} alt="telegram" width="30px" />
+              </a>
+              <a href={`//${ido.websiteUrl}`} target="_blank">
+                <img src={websiteIcon} alt="project website" width="30px" />
+              </a>
             </Uik.Container>
           </Uik.Container>
           <Link to="/" target="_blank" style={{ whiteSpace: "nowrap" }}>
