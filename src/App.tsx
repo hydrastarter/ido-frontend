@@ -9,6 +9,7 @@ import NoAccount from "./pages/error/NoAccount";
 import NoExtension from "./pages/error/NoExtension";
 import NetworkSwitch, { setSwitching } from "./context/NetworkSwitch";
 import NetworkSwitching from "./common/NetworkSwitching";
+import Bind from "./common/Bind/Bind";
 
 const queryClient = new QueryClient();
 
@@ -57,6 +58,7 @@ const App = (): JSX.Element => {
             pauseOnFocusLoss={false}
             pauseOnHover={false}
           />
+          <Bind />
         </div>
       </div>
     </NetworkSwitch.Provider>
