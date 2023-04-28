@@ -417,10 +417,14 @@ export const IdoCard = ({
                   justifyContent: "flex-start",
                 }}
               >
-                <Uik.Text
-                  text={`Cliff Duration: ${cliffDuration} Days`}
-                  className="white"
-                />
+                {parseFloat(ido.cliffDuration) === 0 ? (
+                  <Uik.Text text={`Cliff Duration: 0 Days`} className="white" />
+                ) : (
+                  <Uik.Text
+                    text={`Cliff Duration: ${cliffDuration} Days`}
+                    className="white"
+                  />
+                )}
               </div>
             </div>
           )}
