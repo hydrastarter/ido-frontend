@@ -354,7 +354,7 @@ export const IdoCard = ({
                 }}
               >
                 <Uik.Text
-                  text={`Soft Cap: 1000 ${ido.softcap} ${ido.projectTokenSymbol}`}
+                  text={`Soft Cap: ${ido.softcap} ${ido.projectTokenSymbol}`}
                   className="white"
                 />
               </div>
