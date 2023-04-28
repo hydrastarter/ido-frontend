@@ -115,7 +115,7 @@ const TabsData = ({ allIdos }: { allIdos: idoType[] }) => {
         console.log("Error in sortAllIdos: ", e);
       });
     }
-  }, [allIdos]);
+  }, [allIdos, selectedSigner]);
 
   return (
     <div className="dashboard-container">
