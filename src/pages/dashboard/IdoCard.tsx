@@ -60,15 +60,11 @@ const getAllContractDetails = async (
   const availableForDrawDown = vestingScheduleForBeneficiary[4]; // claimable
 
   return {
-    tokensRemainingForSale: tokensRemainingForSale
-      ? tokensRemainingForSale.toString()
-      : "0",
-    amount: amount ? amount.toString() : "0",
-    totalDrawn: totalDrawn ? totalDrawn.toString() : "0",
-    remainingBalance: remainingBalance ? remainingBalance.toString() : "0",
-    availableForDrawDown: availableForDrawDown
-      ? availableForDrawDown.toString()
-      : "0",
+    tokensRemainingForSale: tokensRemainingForSale.toString(),
+    amount: amount.toString(),
+    totalDrawn: totalDrawn.toString(),
+    remainingBalance: remainingBalance.toString(),
+    availableForDrawDown: availableForDrawDown.toString(),
   };
 };
 
@@ -126,6 +122,23 @@ export const IdoCard = ({
       ),
     enabled: canFetchContractDetails,
   });
+
+  let tokensRemainingForSale = "0";
+  let amount = "0";
+  let totalDrawn = "0";
+  let remainingBalance = "0";
+  let availableForDrawDown = "0";
+
+  if (data) {
+    tokensRemainingForSale = data.tokensRemainingForSale;
+    amount = data.amount;
+    totalDrawn = data.totalDrawn;
+    remainingBalance = data.remainingBalance;
+    availableForDrawDown = data.availableForDrawDown;
+  }
+
+  const tokensThatAreNotRemainingForSale =
+    parseFloat(ido.hardcap) - parseFloat(tokensRemainingForSale);
 
   const handleClaim = async () => {
     Uik.notify.info("Processing your claim request");
@@ -187,11 +200,11 @@ export const IdoCard = ({
         <Uik.Container flow="spaceBetween">
           <Uik.Container flow="start">
             <Uik.Container flow="start">
+              <Uik.Text text={ido.projectTokenName} className="no-wrap" />
               <Uik.Text
-                text={`[ ${ido.projectTokenSymbol} ]`}
+                text={`(${ido.projectTokenSymbol})`}
                 className="no-wrap"
               />
-              <Uik.Text text={ido.projectTokenName} className="no-wrap" />
             </Uik.Container>
             <Uik.Container flow="start">
               <img src={twitterICon} alt="twitter" width="30px" />
@@ -199,16 +212,15 @@ export const IdoCard = ({
               <img src={websiteICon} alt="twitter" width="30px" />
             </Uik.Container>
           </Uik.Container>
-          <Link
-            to="https://www.google.com"
-            target="_blank"
-            style={{ whiteSpace: "nowrap" }}
-          >
+          <Link to="/" target="_blank" style={{ whiteSpace: "nowrap" }}>
             <Uik.Text text="Apply For a Verified Tag" type="mini" />
           </Link>
         </Uik.Container>
         <div style={{ position: "relative" }}>
-          <BorderLinearProgress variant="determinate" value={50} />
+          <BorderLinearProgress
+            variant="determinate"
+            value={tokensThatAreNotRemainingForSale}
+          />
           <div
             style={{
               position: "absolute",
@@ -216,7 +228,10 @@ export const IdoCard = ({
               top: "1px",
             }}
           >
-            <Uik.Text text="0/2000" type="mini" />
+            <Uik.Text
+              text={`${tokensThatAreNotRemainingForSale}/${ido.hardcap}`}
+              type="mini"
+            />
           </div>
         </div>
         <div
@@ -350,12 +365,12 @@ export const IdoCard = ({
         {typeOfPresale === "Completed Presales" && (
           <div>
             <Uik.Container>
-              <Uik.Text>Total Invested: {data?.amount}</Uik.Text>
+              <Uik.Text>Total Invested: {amount}</Uik.Text>
             </Uik.Container>
             <Uik.Container>
-              <Uik.Text>Locked: {data?.remainingBalance}</Uik.Text>
-              <Uik.Text>Claimable: {data?.availableForDrawDown}</Uik.Text>
-              <Uik.Text>Claimed: {data?.totalDrawn}</Uik.Text>
+              <Uik.Text>Locked: {remainingBalance}</Uik.Text>
+              <Uik.Text>Claimable: {availableForDrawDown}</Uik.Text>
+              <Uik.Text>Claimed: {totalDrawn}</Uik.Text>
             </Uik.Container>
             <Uik.Container>
               <Uik.Button
