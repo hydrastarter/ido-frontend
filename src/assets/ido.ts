@@ -1,4 +1,5 @@
 export type idoType = {
+  crowdsaleAddress: string;
   projectTokenAddress: string;
   projectTokenImage: string;
   projectTokenName: string;
@@ -35,6 +36,7 @@ export type idoType = {
 
 export const idos: idoType[] = [
   {
+    crowdsaleAddress: "",
     projectTokenAddress: "",
     projectTokenImage: "https://picsum.photos/id/237/200/300",
     projectTokenDecimals: 18,
@@ -90,6 +92,7 @@ export const idos: idoType[] = [
   },
 
   {
+    crowdsaleAddress: "",
     projectTokenAddress: "",
     projectTokenDecimals: 18,
     projectTokenImage: "https://picsum.photos/id/237/200/300",
@@ -133,6 +136,7 @@ export const idos: idoType[] = [
   },
 
   {
+    crowdsaleAddress: "",
     projectTokenAddress: "",
     projectTokenDecimals: 6,
     projectTokenImage: "https://picsum.photos/id/237/200/300",
@@ -176,6 +180,7 @@ export const idos: idoType[] = [
   },
 
   {
+    crowdsaleAddress: "",
     projectTokenAddress: "",
     projectTokenDecimals: 18,
     projectTokenImage: "https://picsum.photos/id/237/200/300",
@@ -219,6 +224,7 @@ export const idos: idoType[] = [
   },
 
   {
+    crowdsaleAddress: "",
     projectTokenAddress: "",
     projectTokenDecimals: 18,
     projectTokenImage: "https://picsum.photos/id/237/200/300",

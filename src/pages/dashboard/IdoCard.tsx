@@ -21,6 +21,7 @@ import { Contract } from "ethers";
 import { Crowdsale } from "../../abis/Crowdsale";
 import { useQuery } from "@tanstack/react-query";
 import Countdown from "react-countdown";
+import BigNumber from "bignumber.js";
 
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   height: 18,
@@ -181,13 +182,13 @@ export const IdoCard = ({
   const { data, isLoading, isError } = useQuery({
     queryKey: [
       "getContractDetails",
-      ido.projectTokenAddress,
+      ido.crowdsaleAddress,
       selectedSigner,
       selectedAccount,
     ],
     queryFn: () =>
       getAllContractDetails(
-        ido.projectTokenAddress,
+        ido.crowdsaleAddress,
         selectedSigner!,
         selectedAccount
       ),
@@ -239,7 +240,7 @@ export const IdoCard = ({
     Uik.notify.info("Processing your claim request");
     setIsClaiming(() => true);
 
-    const crowdsaleContractAddress = ido.projectTokenAddress;
+    const crowdsaleContractAddress = ido.crowdsaleAddress;
 
     try {
       if (selectedSigner) {
@@ -248,6 +249,9 @@ export const IdoCard = ({
           Crowdsale,
           selectedSigner.signer
         );
+
+        await crowdsaleContract.drawDown();
+
         Uik.notify.success("You have successfully claimed in the IDO");
         setIsClaiming(() => false);
       }
@@ -271,6 +275,15 @@ export const IdoCard = ({
           Crowdsale,
           selectedSigner.signer
         );
+        const investValueInWei = new BigNumber(investValue).multipliedBy(
+          new BigNumber(10).pow(selectedInputToken.decimals)
+        );
+
+        await crowdsaleContract.purchaseToken(
+          selectedInputToken.address,
+          investValueInWei
+        );
+
         Uik.notify.success("You have successfully invested in the IDO");
         setIsInvesting(() => false);
       }
