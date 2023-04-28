@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Uik from "@reef-defi/ui-kit";
 import "./index.css";
 import { useQuery } from "@tanstack/react-query";
-import { idoType } from "../../assets/ido";
+import { idos, idoType } from "../../assets/ido";
 import { IdoCard } from "./IdoCard";
 
 const getAllIdos = async () => {
@@ -24,9 +24,10 @@ export const Dashboard: React.FC = () => {
 
   return (
     <div>
-      {isLoading && <Uik.Loading text="Loading ..." />}
-      {isError && <Uik.Alert type="danger" text="An error has occurred." />}
-      {!isLoading && !isError && data && <TabsData allIdos={data} />}
+      {/*{isLoading && <Uik.Loading text="Loading ..." />}*/}
+      {/*{isError && <Uik.Alert type="danger" text="An error has occurred." />}*/}
+      {/*{!isLoading && !isError && data && <TabsData allIdos={data} />}*/}
+      {<TabsData allIdos={idos} />}
     </div>
   );
 };
@@ -99,22 +100,38 @@ const TabsData = ({ allIdos }: { allIdos: idoType[] }) => {
           <div className="idos-container">
             {firstTab === Tab1 &&
               activePresales.map((ido) => (
-                <IdoCard key={ido.name} ido={ido} typeOfPresale={Tab1} />
+                <IdoCard
+                  key={ido.projectTokenName}
+                  ido={ido}
+                  typeOfPresale={Tab1}
+                />
               ))}
 
             {firstTab === Tab2 &&
               upcomingPresales.map((ido) => (
-                <IdoCard key={ido.name} ido={ido} typeOfPresale={Tab2} />
+                <IdoCard
+                  key={ido.projectTokenName}
+                  ido={ido}
+                  typeOfPresale={Tab2}
+                />
               ))}
 
             {firstTab === Tab3 &&
               completedPresales.map((ido) => (
-                <IdoCard key={ido.name} ido={ido} typeOfPresale={Tab3} />
+                <IdoCard
+                  key={ido.projectTokenName}
+                  ido={ido}
+                  typeOfPresale={Tab3}
+                />
               ))}
 
             {firstTab === Tab4 &&
               myCrowdsales.map((ido) => (
-                <IdoCard key={ido.name} ido={ido} typeOfPresale={Tab4} />
+                <IdoCard
+                  key={ido.projectTokenName}
+                  ido={ido}
+                  typeOfPresale={Tab4}
+                />
               ))}
           </div>
         </>

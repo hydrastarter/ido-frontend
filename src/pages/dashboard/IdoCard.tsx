@@ -111,8 +111,6 @@ export const IdoCard = ({
     enabled: canFetchContractDetails,
   });
 
-  console.log("data: ", data);
-
   const handleClaim = async () => {
     Uik.notify.info("Processing your claim request");
     setIsClaiming(() => true);
@@ -168,13 +166,16 @@ export const IdoCard = ({
         footer={<></>}
       >
         <div className="ido-card-avatar-box">
-          <Uik.Avatar image={ido.image} size="extra-large" />
+          <Uik.Avatar image={ido.projectTokenImage} size="extra-large" />
         </div>
         <Uik.Container flow="spaceBetween">
           <Uik.Container flow="start">
             <Uik.Container flow="start">
-              <Uik.Text text={`[ ${ido.symbol} ]`} className="no-wrap" />
-              <Uik.Text text={ido.name} className="no-wrap" />
+              <Uik.Text
+                text={`[ ${ido.projectTokenSymbol} ]`}
+                className="no-wrap"
+              />
+              <Uik.Text text={ido.projectTokenName} className="no-wrap" />
             </Uik.Container>
             <Uik.Container flow="start">
               <img src={twitterICon} alt="twitter" width="30px" />
@@ -285,7 +286,7 @@ export const IdoCard = ({
                 }}
               >
                 <Uik.Text
-                  text={`Soft Cap: 1000 ${ido.softcap} ${ido.symbol}`}
+                  text={`Soft Cap: 1000 ${ido.softcap} ${ido.projectTokenSymbol}`}
                   className="white"
                 />
               </div>
@@ -356,12 +357,12 @@ export const IdoCard = ({
       <Uik.Card className="ido-card">
         <div onClick={() => setOpen(!isOpen)}>
           <div className="ido-card-avatar-box">
-            <Uik.Avatar image={ido.image} size="large" />
+            <Uik.Avatar image={ido.projectTokenImage} size="large" />
           </div>
           <div className="ido-card-name-box">
-            <Uik.Text type="title">{ido.name}</Uik.Text>
+            <Uik.Text type="title">{ido.projectTokenName}</Uik.Text>
             <Uik.Text type="light" className="ido-card-name_symbol">
-              {ido.symbol}
+              {ido.projectTokenSymbol}
             </Uik.Text>
           </div>
           <div className="ido-card-slider-box">
@@ -381,7 +382,7 @@ export const IdoCard = ({
             <Uik.Text type="light">Hardcap: </Uik.Text>
             <Uik.Text type="lead" className="ido-card-name_symbol">
               {ido.hardcap}
-              {ido.symbol}
+              {ido.projectTokenSymbol}
             </Uik.Text>
           </div>
         </div>
