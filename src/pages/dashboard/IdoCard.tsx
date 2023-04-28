@@ -344,6 +344,7 @@ export const IdoCard = ({
               >
                 {ido.inputTokens.map((inputToken) => (
                   <Uik.DropdownItem
+                    key={inputToken.symbol}
                     text={inputToken.symbol}
                     onClick={() => setSelectedInputToken(() => inputToken)}
                   />
