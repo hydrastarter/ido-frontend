@@ -38,7 +38,8 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
 
 const getAllContractDetails = async (
   crowdsaleContractAddress: string,
-  selectedSigner: ReefSigner
+  selectedSigner: ReefSigner,
+  selectedAccount: string
 ) => {
   const crowdsaleContract = new Contract(
     crowdsaleContractAddress,
@@ -50,7 +51,7 @@ const getAllContractDetails = async (
     await crowdsaleContract.tokenRemainingForSale();
 
   const vestingScheduleForBeneficiary =
-    await crowdsaleContract.vestingScheduleForBeneficiary();
+    await crowdsaleContract.vestingScheduleForBeneficiary(selectedAccount);
 
   const amount = vestingScheduleForBeneficiary[0]; // total invested
   const totalDrawn = vestingScheduleForBeneficiary[1]; // claimed
@@ -98,16 +99,31 @@ export const IdoCard = ({
 
   const selectedSigner: ReefSigner | undefined | null =
     hooks.useObservableState(appState.selectedSigner$);
+  const accounts: ReefSigner[] | undefined | null = hooks.useObservableState(
+    appState.signers$
+  );
 
+  let selectedAccount = "";
   let canFetchContractDetails = false;
-  if (selectedSigner) {
+
+  if (selectedSigner && accounts) {
+    selectedAccount = accounts[0].address;
     canFetchContractDetails = true;
   }
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["getContractDetails", ido.projectTokenAddress, selectedSigner],
+    queryKey: [
+      "getContractDetails",
+      ido.projectTokenAddress,
+      selectedSigner,
+      selectedAccount,
+    ],
     queryFn: () =>
-      getAllContractDetails(ido.projectTokenAddress, selectedSigner!),
+      getAllContractDetails(
+        ido.projectTokenAddress,
+        selectedSigner!,
+        selectedAccount
+      ),
     enabled: canFetchContractDetails,
   });
 
