@@ -36,6 +36,24 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   },
 }));
 
+/**
+ * Take the difference between the dates and divide by milliseconds per day.
+ * Round to nearest whole number to deal with DST.
+ * first date < second date
+ */
+function datediff(first: any, second: any) {
+  return Math.round((second - first) / (1000 * 60 * 60 * 24));
+}
+
+/**
+ * new Date("dateString") is browser-dependent and discouraged, so we'll write
+ * a simple parse function for U.S. date format (which does no error checking)
+ */
+function parseDate(str: any) {
+  var mdy = str.split("/");
+  return new Date(mdy[2], mdy[0] - 1, mdy[1]);
+}
+
 const getAllContractDetails = async (
   crowdsaleContractAddress: string,
   selectedSigner: ReefSigner,
@@ -128,6 +146,25 @@ export const IdoCard = ({
   let totalDrawn = "0";
   let remainingBalance = "0";
   let availableForDrawDown = "0";
+
+  let idoStartDate = new Date(
+    parseFloat(ido.idoStart) * 1000
+  ).toLocaleDateString();
+  let idoEndDate = new Date(parseFloat(ido.idoEnd) * 1000).toLocaleDateString();
+
+  const poolInfoDiff = datediff(parseDate(idoStartDate), parseDate(idoEndDate));
+
+  let idoVestingStart = new Date(
+    parseFloat(ido.vestingStart) * 1000
+  ).toLocaleDateString();
+  let idoVestingEnd = new Date(
+    parseFloat(ido.vestingEnd) * 1000
+  ).toLocaleDateString();
+
+  const vestingInfoDiff = datediff(
+    parseDate(idoVestingStart),
+    parseDate(idoVestingEnd)
+  );
 
   if (data) {
     tokensRemainingForSale = data.tokensRemainingForSale;
@@ -262,12 +299,12 @@ export const IdoCard = ({
           {showMoreVesting && (
             <div>
               <Uik.Container flow="start">
-                <Uik.Text text={new Date().toLocaleDateString()} />
-                <Uik.Divider text="7 Days" className="divider-text" />
-                <Uik.Text
-                  text={new Date().toLocaleDateString()}
+                <Uik.Text text={idoVestingStart} />
+                <Uik.Divider
+                  text={`${vestingInfoDiff} Days`}
                   className="divider-text"
                 />
+                <Uik.Text text={idoVestingEnd} className="divider-text" />
               </Uik.Container>
               <div
                 style={{
@@ -299,12 +336,12 @@ export const IdoCard = ({
           {showMorePoolInfo && (
             <div>
               <Uik.Container flow="start">
-                <Uik.Text text={new Date().toLocaleDateString()} />
-                <Uik.Divider text="7 Days" className="divider-text" />
-                <Uik.Text
-                  text={new Date().toLocaleDateString()}
+                <Uik.Text text={idoStartDate} />
+                <Uik.Divider
+                  text={`${poolInfoDiff} Days`}
                   className="divider-text"
                 />
+                <Uik.Text text={idoEndDate} className="divider-text" />
               </Uik.Container>
               <div
                 style={{
