@@ -482,7 +482,8 @@ export const IdoCard = ({
             </div>
           )}
         </div>
-        {typeOfPresale === "Active Presales" && (
+        {(typeOfPresale === "Active Presales" ||
+          typeOfPresale === "My Crowdsale") && (
           <div>
             <Uik.Container>
               <Uik.Input
@@ -517,11 +518,13 @@ export const IdoCard = ({
                 onClick={handleInvest}
                 loading={isInvesting}
                 className="invest-submit-btn"
+                loader="fish"
               />
             </Uik.Container>
           </div>
         )}
-        {typeOfPresale === "Completed Presales" && (
+        {(typeOfPresale === "Completed Presales" ||
+          typeOfPresale === "My Crowdsale") && (
           <div className="all-box-container">
             <div className="one-box-container">
               <div className="box box1">
