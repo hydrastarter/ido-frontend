@@ -19,6 +19,7 @@ import websiteIcon from "../../assets/images/chain.png";
 import { appState, hooks, ReefSigner } from "@reef-defi/react-lib";
 import { Contract } from "ethers";
 import { Crowdsale } from "../../abis/Crowdsale";
+import { ERC20 } from "../../abis/ERC20";
 import { useQuery } from "@tanstack/react-query";
 import Countdown from "react-countdown";
 import BigNumber from "bignumber.js";
@@ -280,9 +281,18 @@ export const IdoCard = ({
           Crowdsale,
           selectedSigner.signer
         );
+
+        const erc20Contract = new Contract(
+          selectedInputToken.inputTokenAddress,
+          ERC20,
+          selectedSigner.signer
+        );
+
         const investValueInWei = new BigNumber(investValue).multipliedBy(
           new BigNumber(10).pow(selectedInputToken.inputTokenDecimals)
         );
+
+        await erc20Contract.approve(crowdsaleContractAddress, investValueInWei);
 
         await crowdsaleContract.purchaseToken(
           selectedInputToken.inputTokenAddress,
