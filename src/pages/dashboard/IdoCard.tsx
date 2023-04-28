@@ -340,7 +340,7 @@ export const IdoCard = ({
           }}
         >
           <Uik.Text className="white">
-            {typeOfPresale === "Completed Presales" && (
+            {typeOfPresale === "Upcoming Presales" && (
               // @ts-ignore
               <Countdown
                 date={parseFloat(ido.idoStart) * 1000}
@@ -355,6 +355,8 @@ export const IdoCard = ({
                 renderer={PresaleEndsInCountdown}
               />
             )}
+
+            {typeOfPresale === "Completed Presales" && "Presale is completed"}
           </Uik.Text>
         </div>
         <div>
