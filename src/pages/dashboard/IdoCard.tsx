@@ -563,6 +563,7 @@ export const IdoCard = ({
                 onClick={handleClaim}
                 loading={isClaiming}
                 className="invest-submit-btn"
+                disabled={new BigNumber(availableForDrawDown).isEqualTo(0)}
               />
             </Uik.Container>
           </div>
