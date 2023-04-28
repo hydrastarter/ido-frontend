@@ -455,6 +455,22 @@ export const IdoCard = ({
                   className="white"
                 />
               </div>
+
+              <div
+                style={{
+                  margin: "20px 0px",
+                  background: "#898E9C",
+                  padding: "5px 20px",
+                  borderRadius: "20px",
+                  display: "flex",
+                  justifyContent: "flex-start",
+                }}
+              >
+                <Uik.Text
+                  text={`User limit: ${ido.maxUserAllocation} ${ido.tokenSymbol}`}
+                  className="white"
+                />
+              </div>
             </div>
           )}
         </div>
@@ -498,15 +514,37 @@ export const IdoCard = ({
           </div>
         )}
         {typeOfPresale === "Completed Presales" && (
-          <div>
-            <Uik.Container>
-              <Uik.Text>Total Invested: {amount}</Uik.Text>
-            </Uik.Container>
-            <Uik.Container>
-              <Uik.Text>Locked: {remainingBalance}</Uik.Text>
-              <Uik.Text>Claimable: {availableForDrawDown}</Uik.Text>
-              <Uik.Text>Claimed: {totalDrawn}</Uik.Text>
-            </Uik.Container>
+          <div className="all-box-container">
+            <div className="one-box-container">
+              <div className="box box1">
+                <Uik.Text type="lead" className="total-invested-text">
+                  Total Invested :
+                </Uik.Text>
+                <Uik.Text>
+                  {amount} {ido.tokenSymbol}
+                </Uik.Text>
+              </div>
+            </div>
+            <div className="three-box-container">
+              <div className="box box2">
+                <Uik.Text type="lead">Locked</Uik.Text>
+                <Uik.Text>
+                  {remainingBalance} {ido.tokenSymbol}
+                </Uik.Text>
+              </div>
+              <div className="box box3">
+                <Uik.Text type="lead">Claimable</Uik.Text>
+                <Uik.Text>
+                  {availableForDrawDown} {ido.tokenSymbol}
+                </Uik.Text>
+              </div>
+              <div className="box box4">
+                <Uik.Text type="lead">Claimed</Uik.Text>
+                <Uik.Text>
+                  {totalDrawn} {ido.tokenSymbol}
+                </Uik.Text>
+              </div>
+            </div>
             <Uik.Container>
               <Uik.Button
                 text="Claim"
@@ -519,6 +557,12 @@ export const IdoCard = ({
             </Uik.Container>
           </div>
         )}
+        <Uik.Container className="display-user-rate">
+          <Uik.Text>
+            You will receive {ido.inputTokenRate} {ido.tokenSymbol} for 1{" "}
+            {selectedInputToken.inputTokenSymbol}
+          </Uik.Text>
+        </Uik.Container>
       </Uik.Modal>
       <Uik.Card className="ido-card">
         <div onClick={() => setOpen(!isOpen)}>
