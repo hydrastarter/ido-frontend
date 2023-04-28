@@ -54,9 +54,6 @@ const TabsData = ({ allIdos }: { allIdos: idoType[] }) => {
 
   const selectedSigner: ReefSigner | undefined | null =
     hooks.useObservableState(appState.selectedSigner$);
-  const accounts: ReefSigner[] | undefined | null = hooks.useObservableState(
-    appState.signers$
-  );
 
   const sortAllIdos = async (
     allTypesOfIdos: idoType[],
@@ -112,7 +109,7 @@ const TabsData = ({ allIdos }: { allIdos: idoType[] }) => {
   };
 
   useEffect(() => {
-    if (selectedSigner && accounts) {
+    if (selectedSigner) {
       sortAllIdos(allIdos, selectedSigner).catch((e) => {
         setIsSorting(() => false);
         console.log("Error in sortAllIdos: ", e);
