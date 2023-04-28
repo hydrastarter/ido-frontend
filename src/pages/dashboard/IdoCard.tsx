@@ -20,6 +20,7 @@ import { appState, hooks, ReefSigner } from "@reef-defi/react-lib";
 import { Contract } from "ethers";
 import { Crowdsale } from "../../abis/Crowdsale";
 import { useQuery } from "@tanstack/react-query";
+import Countdown from "react-countdown";
 
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   height: 18,
@@ -53,6 +54,58 @@ function parseDate(str: any) {
   var mdy = str.split("/");
   return new Date(mdy[2], mdy[0] - 1, mdy[1]);
 }
+
+const PresaleStartsInCountdown = ({
+  // @ts-ignore
+  days,
+  // @ts-ignore
+  hours,
+  // @ts-ignore
+  minutes,
+  // @ts-ignore
+  seconds,
+  // @ts-ignore
+  completed,
+}) => {
+  if (completed) {
+    // Render a completed state
+    return "Presale is active";
+  } else {
+    // Render a countdown
+    return (
+      <span>
+        Presale starts in {days} Days : {hours} Hrs : {minutes} Mins : {seconds}{" "}
+        Secs
+      </span>
+    );
+  }
+};
+
+const PresaleEndsInCountdown = ({
+  // @ts-ignore
+  days,
+  // @ts-ignore
+  hours,
+  // @ts-ignore
+  minutes,
+  // @ts-ignore
+  seconds,
+  // @ts-ignore
+  completed,
+}) => {
+  if (completed) {
+    // Render a completed state
+    return "Presale has ended";
+  } else {
+    // Render a countdown
+    return (
+      <span>
+        Presale ends in {days} Days : {hours} Hrs : {minutes} Mins : {seconds}{" "}
+        Secs
+      </span>
+    );
+  }
+};
 
 const getAllContractDetails = async (
   crowdsaleContractAddress: string,
@@ -160,11 +213,16 @@ export const IdoCard = ({
   let idoVestingEnd = new Date(
     parseFloat(ido.vestingEnd) * 1000
   ).toLocaleDateString();
+  let idoCliff = new Date(
+    parseFloat(ido.vestingCliff) * 1000
+  ).toLocaleDateString();
 
   const vestingInfoDiff = datediff(
     parseDate(idoVestingStart),
     parseDate(idoVestingEnd)
   );
+
+  const cliffDuration = datediff(parseDate(idoCliff), parseDate(idoVestingEnd));
 
   if (data) {
     tokensRemainingForSale = data.tokensRemainingForSale;
@@ -281,10 +339,23 @@ export const IdoCard = ({
             justifyContent: "center",
           }}
         >
-          <Uik.Text
-            text="Presale Starts In: 0 Days 16 Hours 35 Mins"
-            className="white"
-          />
+          <Uik.Text className="white">
+            {typeOfPresale === "Completed Presales" && (
+              // @ts-ignore
+              <Countdown
+                date={parseFloat(ido.idoStart) * 1000}
+                renderer={PresaleStartsInCountdown}
+              />
+            )}
+
+            {typeOfPresale === "Active Presales" && (
+              // @ts-ignore
+              <Countdown
+                date={parseFloat(ido.idoEnd) * 1000}
+                renderer={PresaleEndsInCountdown}
+              />
+            )}
+          </Uik.Text>
         </div>
         <div>
           <div style={{ width: "100%", marginBottom: "20px" }}>
@@ -316,7 +387,10 @@ export const IdoCard = ({
                   justifyContent: "flex-start",
                 }}
               >
-                <Uik.Text text="Cliff Duration: 1068 Days" className="white" />
+                <Uik.Text
+                  text={`Cliff Duration: ${cliffDuration} Days`}
+                  className="white"
+                />
               </div>
             </div>
           )}
