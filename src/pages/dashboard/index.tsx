@@ -4,6 +4,10 @@ import "./index.css";
 import { useQuery } from "@tanstack/react-query";
 import { idoType } from "../../assets/ido";
 import { IdoCard } from "./IdoCard";
+import { Contract } from "ethers";
+import { Crowdsale } from "../../abis/Crowdsale";
+import { appState, hooks, ReefSigner } from "@reef-defi/react-lib";
+import BigNumber from "bignumber.js";
 
 const getAllIdos = async () => {
   const username = "adminUser";
@@ -48,7 +52,17 @@ const TabsData = ({ allIdos }: { allIdos: idoType[] }) => {
   const [completedPresales, setCompletedPresales] = useState<idoType[]>([]);
   const [myCrowdsales, setMyCrowdsales] = useState<idoType[]>([]);
 
-  const sortAllIdos = async (allTypesOfIdos: idoType[]) => {
+  const selectedSigner: ReefSigner | undefined | null =
+    hooks.useObservableState(appState.selectedSigner$);
+  const accounts: ReefSigner[] | undefined | null = hooks.useObservableState(
+    appState.signers$
+  );
+
+  const sortAllIdos = async (
+    allTypesOfIdos: idoType[],
+    selectedSigner: ReefSigner,
+    selectedAccount: string
+  ) => {
     setIsSorting(() => true);
 
     const idos = allTypesOfIdos;
@@ -69,6 +83,19 @@ const TabsData = ({ allIdos }: { allIdos: idoType[] }) => {
       else if (idoStartTime > currentTime && idoEndTime > currentTime)
         upcomingIdos.push(ido);
       else completedIdos.push(ido);
+
+      const crowdsaleContract = new Contract(
+        ido.crowdsaleAddress,
+        Crowdsale,
+        selectedSigner.signer
+      );
+
+      const vestingScheduleForBeneficiary =
+        await crowdsaleContract.vestingScheduleForBeneficiary(selectedAccount);
+
+      const amount = vestingScheduleForBeneficiary[0]; // total invested
+      const amountInString = amount.toString();
+      if (new BigNumber(amountInString).isGreaterThan(0)) myIdos.push(ido);
     }
 
     setActivePresales(() => activeIdos);
@@ -80,10 +107,12 @@ const TabsData = ({ allIdos }: { allIdos: idoType[] }) => {
   };
 
   useEffect(() => {
-    sortAllIdos(allIdos).catch((e) => {
-      setIsSorting(() => false);
-      console.log("Error in sortAllIdos: ", e);
-    });
+    if (selectedSigner && accounts) {
+      sortAllIdos(allIdos, selectedSigner, accounts[0].address).catch((e) => {
+        setIsSorting(() => false);
+        console.log("Error in sortAllIdos: ", e);
+      });
+    }
   }, [allIdos]);
 
   return (
