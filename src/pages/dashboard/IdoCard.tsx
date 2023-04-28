@@ -284,9 +284,11 @@ export const IdoCard = ({
           selectedSigner.signer
         );
 
-        const investValueInWei = new BigNumber(investValue).multipliedBy(
-          new BigNumber(10).pow(selectedInputToken.inputTokenDecimals)
-        );
+        const investValueInWei = new BigNumber(investValue)
+          .multipliedBy(
+            new BigNumber(10).pow(selectedInputToken.inputTokenDecimals)
+          )
+          .toString();
 
         await erc20Contract.approve(crowdsaleContractAddress, investValueInWei);
 
