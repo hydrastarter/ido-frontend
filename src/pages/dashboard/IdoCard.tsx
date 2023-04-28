@@ -154,7 +154,6 @@ export const IdoCard = ({
   const [isOpen, setOpen] = useState(false);
   const [showMoreVesting, setShowMoreVesting] = useState(true);
   const [showMorePoolInfo, setShowMorePoolInfo] = useState(true);
-  const value = Math.floor(Math.random() * (100 - 1 + 1) + 1);
 
   const [investValue, setInvestValue] = useState("0");
   const [isInvesting, setIsInvesting] = useState(false);
@@ -233,8 +232,11 @@ export const IdoCard = ({
     availableForDrawDown = data.availableForDrawDown;
   }
 
-  const tokensThatAreNotRemainingForSale =
+  const tokensThatHaveBeenSold =
     parseFloat(ido.hardcap) - parseFloat(tokensRemainingForSale);
+  const percentCompleted = Math.floor(
+    (tokensThatHaveBeenSold / parseFloat(ido.hardcap)) * 100
+  );
 
   const handleClaim = async () => {
     Uik.notify.info("Processing your claim request");
@@ -266,7 +268,7 @@ export const IdoCard = ({
     Uik.notify.info("Processing your deposit request");
     setIsInvesting(() => true);
 
-    const crowdsaleContractAddress = ido.projectTokenAddress;
+    const crowdsaleContractAddress = ido.crowdsaleAddress;
 
     try {
       if (selectedSigner) {
@@ -327,7 +329,7 @@ export const IdoCard = ({
         <div style={{ position: "relative" }}>
           <BorderLinearProgress
             variant="determinate"
-            value={tokensThatAreNotRemainingForSale}
+            value={tokensThatHaveBeenSold}
           />
           <div
             style={{
@@ -337,7 +339,7 @@ export const IdoCard = ({
             }}
           >
             <Uik.Text
-              text={`${tokensThatAreNotRemainingForSale}/${ido.hardcap}`}
+              text={`${tokensThatHaveBeenSold}/${ido.hardcap}`}
               type="mini"
             />
           </div>
@@ -525,8 +527,8 @@ export const IdoCard = ({
           </div>
           <div className="ido-card-slider-box">
             <Uik.Slider
-              value={value}
-              tooltip={`${value}%`}
+              value={percentCompleted}
+              tooltip={`${percentCompleted}%`}
               helpers={[
                 { position: 0, text: "0%" },
                 { position: 25 },
