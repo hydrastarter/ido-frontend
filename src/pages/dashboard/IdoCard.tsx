@@ -483,7 +483,7 @@ export const IdoCard = ({
         </div>
         {(typeOfPresale === "Active Presales" ||
           typeOfPresale === "My Crowdsale") && (
-          <div>
+          <div style={{ marginBottom: "20px" }}>
             <Uik.Container>
               <Uik.Input
                 type="number"
@@ -558,11 +558,11 @@ export const IdoCard = ({
             <Uik.Container>
               <Uik.Button
                 text="Claim"
-                fill
-                size="large"
                 onClick={handleClaim}
                 loading={isClaiming}
                 className="invest-submit-btn"
+                fill={!new BigNumber(availableForDrawDown).isEqualTo(0)}
+                size="large"
                 disabled={new BigNumber(availableForDrawDown).isEqualTo(0)}
               />
             </Uik.Container>
