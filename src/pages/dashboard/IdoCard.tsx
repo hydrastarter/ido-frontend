@@ -342,7 +342,7 @@ export const IdoCard = ({
         <div style={{ position: "relative" }}>
           <BorderLinearProgress
             variant="determinate"
-            value={tokensThatHaveBeenSold}
+            value={percentCompleted}
           />
           <div
             style={{
