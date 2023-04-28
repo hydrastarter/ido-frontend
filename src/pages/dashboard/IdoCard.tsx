@@ -11,11 +11,11 @@ import LinearProgress, {
 } from "@mui/material/LinearProgress";
 import { idoType } from "../../assets/ido";
 // @ts-ignore
-import twitterICon from "../../assets/images/twitter.png";
+import twitterIcon from "../../assets/images/twitter.png";
 // @ts-ignore
-import telegramICon from "../../assets/images/telegram.png";
+import telegramIcon from "../../assets/images/telegram.png";
 // @ts-ignore
-import websiteICon from "../../assets/images/chain.png";
+import websiteIcon from "../../assets/images/chain.png";
 import { appState, hooks, ReefSigner } from "@reef-defi/react-lib";
 import { Contract } from "ethers";
 import { Crowdsale } from "../../abis/Crowdsale";
@@ -43,7 +43,7 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
  * Round to nearest whole number to deal with DST.
  * first date < second date
  */
-function datediff(first: any, second: any) {
+function dateDiff(first: any, second: any) {
   return Math.round((second - first) / (1000 * 60 * 60 * 24));
 }
 
@@ -52,7 +52,7 @@ function datediff(first: any, second: any) {
  * a simple parse function for U.S. date format (which does no error checking)
  */
 function parseDate(str: any) {
-  var mdy = str.split("/");
+  let mdy = str.split("/");
   return new Date(mdy[2], mdy[0] - 1, mdy[1]);
 }
 
@@ -178,7 +178,7 @@ export const IdoCard = ({
     canFetchContractDetails = true;
   }
 
-  const { data, isLoading, isError } = useQuery({
+  const { data } = useQuery({
     queryKey: [
       "getContractDetails",
       ido.crowdsaleAddress,
@@ -201,11 +201,13 @@ export const IdoCard = ({
   let availableForDrawDown = "0";
 
   let idoStartDate = new Date(
-    parseFloat(ido.idoStart) * 1000
+    parseFloat(ido.crowdsaleStartTime) * 1000
   ).toLocaleDateString();
-  let idoEndDate = new Date(parseFloat(ido.idoEnd) * 1000).toLocaleDateString();
+  let idoEndDate = new Date(
+    parseFloat(ido.crowdsaleEndTime) * 1000
+  ).toLocaleDateString();
 
-  const poolInfoDiff = datediff(parseDate(idoStartDate), parseDate(idoEndDate));
+  const poolInfoDiff = dateDiff(parseDate(idoStartDate), parseDate(idoEndDate));
 
   let idoVestingStart = new Date(
     parseFloat(ido.vestingStart) * 1000
@@ -214,15 +216,15 @@ export const IdoCard = ({
     parseFloat(ido.vestingEnd) * 1000
   ).toLocaleDateString();
   let idoCliff = new Date(
-    parseFloat(ido.vestingCliff) * 1000
+    parseFloat(ido.cliffDuration) * 1000
   ).toLocaleDateString();
 
-  const vestingInfoDiff = datediff(
+  const vestingInfoDiff = dateDiff(
     parseDate(idoVestingStart),
     parseDate(idoVestingEnd)
   );
 
-  const cliffDuration = datediff(parseDate(idoCliff), parseDate(idoVestingEnd));
+  const cliffDuration = dateDiff(parseDate(idoCliff), parseDate(idoVestingEnd));
 
   if (data) {
     tokensRemainingForSale = data.tokensRemainingForSale;
@@ -233,9 +235,10 @@ export const IdoCard = ({
   }
 
   const tokensThatHaveBeenSold =
-    parseFloat(ido.hardcap) - parseFloat(tokensRemainingForSale);
+    parseFloat(ido.crowdsaleTokenAllocated) -
+    parseFloat(tokensRemainingForSale);
   const percentCompleted = Math.floor(
-    (tokensThatHaveBeenSold / parseFloat(ido.hardcap)) * 100
+    (tokensThatHaveBeenSold / parseFloat(ido.crowdsaleTokenAllocated)) * 100
   );
 
   const handleClaim = async () => {
@@ -278,11 +281,11 @@ export const IdoCard = ({
           selectedSigner.signer
         );
         const investValueInWei = new BigNumber(investValue).multipliedBy(
-          new BigNumber(10).pow(selectedInputToken.decimals)
+          new BigNumber(10).pow(selectedInputToken.inputTokenDecimals)
         );
 
         await crowdsaleContract.purchaseToken(
-          selectedInputToken.address,
+          selectedInputToken.inputTokenAddress,
           investValueInWei
         );
 
@@ -305,21 +308,18 @@ export const IdoCard = ({
         footer={<></>}
       >
         <div className="ido-card-avatar-box">
-          <Uik.Avatar image={ido.projectTokenImage} size="extra-large" />
+          <Uik.Avatar image={ido.tokenImageUrl} size="extra-large" />
         </div>
         <Uik.Container flow="spaceBetween">
           <Uik.Container flow="start">
             <Uik.Container flow="start">
-              <Uik.Text text={ido.projectTokenName} className="no-wrap" />
-              <Uik.Text
-                text={`(${ido.projectTokenSymbol})`}
-                className="no-wrap"
-              />
+              <Uik.Text text={ido.tokenName} className="no-wrap" />
+              <Uik.Text text={`(${ido.tokenSymbol})`} className="no-wrap" />
             </Uik.Container>
             <Uik.Container flow="start">
-              <img src={twitterICon} alt="twitter" width="30px" />
-              <img src={telegramICon} alt="twitter" width="30px" />
-              <img src={websiteICon} alt="twitter" width="30px" />
+              <img src={twitterIcon} alt="twitter" width="30px" />
+              <img src={telegramIcon} alt="twitter" width="30px" />
+              <img src={websiteIcon} alt="twitter" width="30px" />
             </Uik.Container>
           </Uik.Container>
           <Link to="/" target="_blank" style={{ whiteSpace: "nowrap" }}>
@@ -339,7 +339,7 @@ export const IdoCard = ({
             }}
           >
             <Uik.Text
-              text={`${tokensThatHaveBeenSold}/${ido.hardcap}`}
+              text={`${tokensThatHaveBeenSold}/${ido.crowdsaleTokenAllocated}`}
               type="mini"
             />
           </div>
@@ -358,7 +358,7 @@ export const IdoCard = ({
             {typeOfPresale === "Upcoming Presales" && (
               // @ts-ignore
               <Countdown
-                date={parseFloat(ido.idoStart) * 1000}
+                date={parseFloat(ido.crowdsaleStartTime) * 1000}
                 renderer={PresaleStartsInCountdown}
               />
             )}
@@ -366,7 +366,7 @@ export const IdoCard = ({
             {typeOfPresale === "Active Presales" && (
               // @ts-ignore
               <Countdown
-                date={parseFloat(ido.idoEnd) * 1000}
+                date={parseFloat(ido.crowdsaleEndTime) * 1000}
                 renderer={PresaleEndsInCountdown}
               />
             )}
@@ -445,7 +445,7 @@ export const IdoCard = ({
                 }}
               >
                 <Uik.Text
-                  text={`Soft Cap: ${ido.softcap} ${ido.projectTokenSymbol}`}
+                  text={`Soft Cap: ${ido.minimumTokenSaleAmount} ${ido.tokenSymbol}`}
                   className="white"
                 />
               </div>
@@ -462,7 +462,7 @@ export const IdoCard = ({
               />
               <Uik.Button
                 size="large"
-                text={selectedInputToken.symbol}
+                text={selectedInputToken.inputTokenSymbol}
                 onClick={() => setSelectorOpen(!isSelectorOpen)}
               />
               <Uik.Dropdown
@@ -472,8 +472,8 @@ export const IdoCard = ({
               >
                 {ido.inputTokens.map((inputToken) => (
                   <Uik.DropdownItem
-                    key={inputToken.symbol}
-                    text={inputToken.symbol}
+                    key={inputToken.inputTokenSymbol}
+                    text={inputToken.inputTokenSymbol}
                     onClick={() => setSelectedInputToken(() => inputToken)}
                   />
                 ))}
@@ -517,12 +517,12 @@ export const IdoCard = ({
       <Uik.Card className="ido-card">
         <div onClick={() => setOpen(!isOpen)}>
           <div className="ido-card-avatar-box">
-            <Uik.Avatar image={ido.projectTokenImage} size="large" />
+            <Uik.Avatar image={ido.tokenImageUrl} size="large" />
           </div>
           <div className="ido-card-name-box">
-            <Uik.Text type="title">{ido.projectTokenName}</Uik.Text>
+            <Uik.Text type="title">{ido.tokenName}</Uik.Text>
             <Uik.Text type="light" className="ido-card-name_symbol">
-              {ido.projectTokenSymbol}
+              {ido.tokenSymbol}
             </Uik.Text>
           </div>
           <div className="ido-card-slider-box">
@@ -541,8 +541,8 @@ export const IdoCard = ({
           <div className="ido-card-name-box">
             <Uik.Text type="light">Hardcap: </Uik.Text>
             <Uik.Text type="lead" className="ido-card-name_symbol">
-              {ido.hardcap}
-              {ido.projectTokenSymbol}
+              {ido.crowdsaleTokenAllocated}
+              {ido.tokenSymbol}
             </Uik.Text>
           </div>
         </div>

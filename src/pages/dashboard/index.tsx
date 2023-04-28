@@ -2,18 +2,19 @@ import React, { useEffect, useState } from "react";
 import Uik from "@reef-defi/ui-kit";
 import "./index.css";
 import { useQuery } from "@tanstack/react-query";
-import { idos, idoType } from "../../assets/ido";
+import { idoType } from "../../assets/ido";
 import { IdoCard } from "./IdoCard";
 
 const getAllIdos = async () => {
   const username = "adminUser";
   const password = "password";
-  const resp = await fetch("http://3.93.247.188/crowdsale", {
+  const resp = await fetch("http://3.84.7.113/crowdsale", {
     headers: {
       Authorization: `Basic ${btoa(`${username}:${password}`)}`,
     },
   });
-  return resp.json();
+  const res = await resp.json();
+  return res.data;
 };
 
 export const Dashboard: React.FC = () => {
@@ -24,10 +25,10 @@ export const Dashboard: React.FC = () => {
 
   return (
     <div>
-      {/*{isLoading && <Uik.Loading text="Loading ..." />}*/}
-      {/*{isError && <Uik.Alert type="danger" text="An error has occurred." />}*/}
-      {/*{!isLoading && !isError && data && <TabsData allIdos={data} />}*/}
-      {<TabsData allIdos={idos} />}
+      {isLoading && <Uik.Loading text="Loading ..." />}
+      {isError && <Uik.Alert type="danger" text="An error has occurred." />}
+      {!isLoading && !isError && data && <TabsData allIdos={data} />}
+      {/*{<TabsData allIdos={idos} />}*/}
     </div>
   );
 };
@@ -60,8 +61,8 @@ const TabsData = ({ allIdos }: { allIdos: idoType[] }) => {
     const currentTime = Math.floor(+new Date() / 1000);
 
     for (let ido of idos) {
-      const idoStartTime = parseFloat(ido.idoStart);
-      const idoEndTime = parseFloat(ido.idoEnd);
+      const idoStartTime = parseFloat(ido.crowdsaleStartTime);
+      const idoEndTime = parseFloat(ido.crowdsaleEndTime);
 
       if (idoStartTime < currentTime && idoEndTime > currentTime)
         activeIdos.push(ido);
@@ -100,38 +101,22 @@ const TabsData = ({ allIdos }: { allIdos: idoType[] }) => {
           <div className="idos-container">
             {firstTab === Tab1 &&
               activePresales.map((ido) => (
-                <IdoCard
-                  key={ido.projectTokenName}
-                  ido={ido}
-                  typeOfPresale={Tab1}
-                />
+                <IdoCard key={ido.id} ido={ido} typeOfPresale={Tab1} />
               ))}
 
             {firstTab === Tab2 &&
               upcomingPresales.map((ido) => (
-                <IdoCard
-                  key={ido.projectTokenName}
-                  ido={ido}
-                  typeOfPresale={Tab2}
-                />
+                <IdoCard key={ido.id} ido={ido} typeOfPresale={Tab2} />
               ))}
 
             {firstTab === Tab3 &&
               completedPresales.map((ido) => (
-                <IdoCard
-                  key={ido.projectTokenName}
-                  ido={ido}
-                  typeOfPresale={Tab3}
-                />
+                <IdoCard key={ido.id} ido={ido} typeOfPresale={Tab3} />
               ))}
 
             {firstTab === Tab4 &&
               myCrowdsales.map((ido) => (
-                <IdoCard
-                  key={ido.projectTokenName}
-                  ido={ido}
-                  typeOfPresale={Tab4}
-                />
+                <IdoCard key={ido.id} ido={ido} typeOfPresale={Tab4} />
               ))}
           </div>
         </>

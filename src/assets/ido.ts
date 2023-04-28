@@ -1,269 +1,265 @@
 export type idoType = {
+  id: string;
   crowdsaleAddress: string;
-  projectTokenAddress: string;
-  projectTokenImage: string;
-  projectTokenName: string;
-  projectTokenSymbol: string;
-  projectTokenDecimals: number;
-  projectTokenDescription: string;
+  tokenName: string;
+
+  tokenSymbol: string;
+  tokenDecimals: number;
+  tokenAddress: string;
+  tokenImageUrl: string;
+
+  description: string;
   isVerified: boolean;
 
   inputTokenRate: string;
   inputTokens: {
-    name: string;
-    symbol: string;
-    address: string;
-    decimals: number;
+    inputTokenName: string;
+    inputTokenSymbol: string;
+    inputTokenAddress: string;
+    inputTokenDecimals: number;
   }[];
 
-  socialMediaLinks: {
-    twitter: string;
-    telegram: string;
-    website: string;
-    misc: string;
-  };
+  twitterUrl: string;
+  telegramUrl: string;
+  websiteUrl: string;
+  miscellaneousUrl: string;
 
-  idoStart: string;
-  idoEnd: string;
+  crowdsaleStartTime: string;
+  crowdsaleEndTime: string;
   vestingStart: string;
   vestingEnd: string;
-  vestingCliff: string;
+  cliffDuration: string;
 
-  hardcap: string;
-  userLimit: string;
-  softcap: string;
+  crowdsaleTokenAllocated: string;
+  maxUserAllocation: string;
+  minimumTokenSaleAmount: string;
 };
 
 export const idos: idoType[] = [
   {
+    id: "",
     crowdsaleAddress: "",
-    projectTokenAddress: "",
-    projectTokenImage: "https://picsum.photos/id/237/200/300",
-    projectTokenDecimals: 18,
-    projectTokenName: "Cryption Network",
-    projectTokenSymbol: "CNT",
-    projectTokenDescription: "",
+    tokenAddress: "",
+    tokenImageUrl: "https://picsum.photos/id/237/200/300",
+    tokenDecimals: 18,
+    tokenName: "Cryption Network",
+    tokenSymbol: "CNT",
+    description: "",
     isVerified: false,
 
     inputTokens: [
       {
-        name: "USD Coin",
-        symbol: "USDC",
-        address: "",
-        decimals: 6,
+        inputTokenName: "USD Coin",
+        inputTokenSymbol: "USDC",
+        inputTokenAddress: "",
+        inputTokenDecimals: 6,
       },
       {
-        name: "USDT coin",
-        symbol: "USDT",
-        address: "",
-        decimals: 8,
+        inputTokenName: "USDT coin",
+        inputTokenSymbol: "USDT",
+        inputTokenAddress: "",
+        inputTokenDecimals: 8,
       },
       {
-        name: "DAI coin",
-        symbol: "DAI",
-        address: "",
-        decimals: 8,
+        inputTokenName: "DAI coin",
+        inputTokenSymbol: "DAI",
+        inputTokenAddress: "",
+        inputTokenDecimals: 8,
       },
       {
-        name: "BUSD coin",
-        symbol: "BUSD",
-        address: "",
-        decimals: 8,
+        inputTokenName: "BUSD coin",
+        inputTokenSymbol: "BUSD",
+        inputTokenAddress: "",
+        inputTokenDecimals: 8,
       },
     ],
     inputTokenRate: "1.2",
 
-    socialMediaLinks: {
-      twitter: "www.twitter.com",
-      telegram: "www.telegram.com",
-      website: "https://cryption.network/",
-      misc: "https://www.auroblocks.com/",
-    },
+    twitterUrl: "www.twitter.com",
+    telegramUrl: "www.telegram.com",
+    websiteUrl: "https://cryption.network/",
+    miscellaneousUrl: "https://www.auroblocks.com/",
 
-    idoStart: "1682569665",
-    idoEnd: "1682853709",
+    crowdsaleStartTime: "1682569665",
+    crowdsaleEndTime: "1682853709",
     vestingStart: "1682853709",
     vestingEnd: "1682853729",
-    vestingCliff: "1682853719",
+    cliffDuration: "1682853719",
 
-    userLimit: "2000",
-    hardcap: "10000",
-    softcap: "9000",
+    maxUserAllocation: "2000",
+    crowdsaleTokenAllocated: "10000",
+    minimumTokenSaleAmount: "9000",
   },
 
   {
+    id: "",
     crowdsaleAddress: "",
-    projectTokenAddress: "",
-    projectTokenDecimals: 18,
-    projectTokenImage: "https://picsum.photos/id/237/200/300",
-    projectTokenName: "Apple",
-    projectTokenSymbol: "APPLE",
-    projectTokenDescription: "",
+    tokenAddress: "",
+    tokenDecimals: 18,
+    tokenImageUrl: "https://picsum.photos/id/237/200/300",
+    tokenName: "Apple",
+    tokenSymbol: "APPLE",
+    description: "",
     isVerified: true,
 
     inputTokens: [
       {
-        name: "DAI coin",
-        symbol: "DAI",
-        address: "",
-        decimals: 8,
+        inputTokenName: "DAI coin",
+        inputTokenSymbol: "DAI",
+        inputTokenAddress: "",
+        inputTokenDecimals: 8,
       },
       {
-        name: "BUSD coin",
-        symbol: "BUSD",
-        address: "",
-        decimals: 8,
+        inputTokenName: "BUSD coin",
+        inputTokenSymbol: "BUSD",
+        inputTokenAddress: "",
+        inputTokenDecimals: 8,
       },
     ],
     inputTokenRate: "3.2",
 
-    socialMediaLinks: {
-      twitter: "www.twitter.com",
-      telegram: "www.telegram.com",
-      website: "https://cryption.network/",
-      misc: "https://www.auroblocks.com/",
-    },
+    twitterUrl: "www.twitter.com",
+    telegramUrl: "www.telegram.com",
+    websiteUrl: "https://cryption.network/",
+    miscellaneousUrl: "https://www.auroblocks.com/",
 
-    idoStart: "1682940109",
-    idoEnd: "1683285709",
+    crowdsaleStartTime: "1682940109",
+    crowdsaleEndTime: "1683285709",
     vestingStart: "1683285709",
     vestingEnd: "1683285709",
-    vestingCliff: "1683285709",
+    cliffDuration: "1683285709",
 
-    userLimit: "1000",
-    softcap: "1500",
-    hardcap: "2000",
+    maxUserAllocation: "1000",
+    minimumTokenSaleAmount: "1500",
+    crowdsaleTokenAllocated: "2000",
   },
 
   {
+    id: "",
     crowdsaleAddress: "",
-    projectTokenAddress: "",
-    projectTokenDecimals: 6,
-    projectTokenImage: "https://picsum.photos/id/237/200/300",
-    projectTokenName: "Binance",
-    projectTokenSymbol: "BNB",
-    projectTokenDescription: "",
+    tokenAddress: "",
+    tokenDecimals: 6,
+    tokenImageUrl: "https://picsum.photos/id/237/200/300",
+    tokenName: "Binance",
+    tokenSymbol: "BNB",
+    description: "",
     isVerified: true,
 
     inputTokens: [
       {
-        name: "DAI coin",
-        symbol: "DAI",
-        address: "",
-        decimals: 8,
+        inputTokenName: "DAI coin",
+        inputTokenSymbol: "DAI",
+        inputTokenAddress: "",
+        inputTokenDecimals: 8,
       },
       {
-        name: "BUSD coin",
-        symbol: "BUSD",
-        address: "",
-        decimals: 8,
+        inputTokenName: "BUSD coin",
+        inputTokenSymbol: "BUSD",
+        inputTokenAddress: "",
+        inputTokenDecimals: 8,
       },
     ],
     inputTokenRate: "5.9",
 
-    socialMediaLinks: {
-      twitter: "www.twitter.com",
-      telegram: "www.telegram.com",
-      website: "https://cryption.network/",
-      misc: "https://www.auroblocks.com/",
-    },
+    twitterUrl: "www.twitter.com",
+    telegramUrl: "www.telegram.com",
+    websiteUrl: "https://cryption.network/",
+    miscellaneousUrl: "https://www.auroblocks.com/",
 
-    idoStart: "1672572109",
-    idoEnd: "1673263309",
+    crowdsaleStartTime: "1672572109",
+    crowdsaleEndTime: "1673263309",
     vestingStart: "1673263309",
     vestingEnd: "1673263309",
-    vestingCliff: "1673263309",
+    cliffDuration: "1673263309",
 
-    userLimit: "100000",
-    softcap: "800000",
-    hardcap: "900000",
+    maxUserAllocation: "100000",
+    minimumTokenSaleAmount: "800000",
+    crowdsaleTokenAllocated: "900000",
   },
 
   {
+    id: "",
     crowdsaleAddress: "",
-    projectTokenAddress: "",
-    projectTokenDecimals: 18,
-    projectTokenImage: "https://picsum.photos/id/237/200/300",
-    projectTokenName: "Polkadot",
-    projectTokenSymbol: "PLK",
-    projectTokenDescription: "",
+    tokenAddress: "",
+    tokenDecimals: 18,
+    tokenImageUrl: "https://picsum.photos/id/237/200/300",
+    tokenName: "Polkadot",
+    tokenSymbol: "PLK",
+    description: "",
     isVerified: true,
 
     inputTokens: [
       {
-        name: "DAI coin",
-        symbol: "DAI",
-        address: "",
-        decimals: 8,
+        inputTokenName: "DAI coin",
+        inputTokenSymbol: "DAI",
+        inputTokenAddress: "",
+        inputTokenDecimals: 8,
       },
       {
-        name: "BUSD coin",
-        symbol: "BUSD",
-        address: "",
-        decimals: 8,
+        inputTokenName: "BUSD coin",
+        inputTokenSymbol: "BUSD",
+        inputTokenAddress: "",
+        inputTokenDecimals: 8,
       },
     ],
     inputTokenRate: "1.2",
 
-    socialMediaLinks: {
-      twitter: "www.twitter.com",
-      telegram: "www.telegram.com",
-      website: "https://cryption.network/",
-      misc: "https://www.auroblocks.com/",
-    },
+    twitterUrl: "www.twitter.com",
+    telegramUrl: "www.telegram.com",
+    websiteUrl: "https://cryption.network/",
+    miscellaneousUrl: "https://www.auroblocks.com/",
 
-    idoStart: "1682569665",
-    idoEnd: "1682853709",
+    crowdsaleStartTime: "1682569665",
+    crowdsaleEndTime: "1682853709",
     vestingStart: "1682853709",
     vestingEnd: "1682853729",
-    vestingCliff: "1682853719",
+    cliffDuration: "1682853719",
 
-    userLimit: "2000",
-    softcap: "9000",
-    hardcap: "100",
+    maxUserAllocation: "2000",
+    minimumTokenSaleAmount: "9000",
+    crowdsaleTokenAllocated: "100",
   },
 
   {
+    id: "",
     crowdsaleAddress: "",
-    projectTokenAddress: "",
-    projectTokenDecimals: 18,
-    projectTokenImage: "https://picsum.photos/id/237/200/300",
-    projectTokenName: "Ethereum",
-    projectTokenSymbol: "ETH",
-    projectTokenDescription: "",
+    tokenAddress: "",
+    tokenDecimals: 18,
+    tokenImageUrl: "https://picsum.photos/id/237/200/300",
+    tokenName: "Ethereum",
+    tokenSymbol: "ETH",
+    description: "",
     isVerified: false,
 
     inputTokens: [
       {
-        name: "DAI coin",
-        symbol: "DAI",
-        address: "",
-        decimals: 8,
+        inputTokenName: "DAI coin",
+        inputTokenSymbol: "DAI",
+        inputTokenAddress: "",
+        inputTokenDecimals: 8,
       },
       {
-        name: "BUSD coin",
-        symbol: "BUSD",
-        address: "",
-        decimals: 8,
+        inputTokenName: "BUSD coin",
+        inputTokenSymbol: "BUSD",
+        inputTokenAddress: "",
+        inputTokenDecimals: 8,
       },
     ],
     inputTokenRate: "1.2",
 
-    socialMediaLinks: {
-      twitter: "www.twitter.com",
-      telegram: "www.telegram.com",
-      website: "https://cryption.network/",
-      misc: "https://www.auroblocks.com/",
-    },
+    twitterUrl: "www.twitter.com",
+    telegramUrl: "www.telegram.com",
+    websiteUrl: "https://cryption.network/",
+    miscellaneousUrl: "https://www.auroblocks.com/",
 
-    idoStart: "1682569665",
-    idoEnd: "1682853709",
+    crowdsaleStartTime: "1682569665",
+    crowdsaleEndTime: "1682853709",
     vestingStart: "1682853709",
     vestingEnd: "1682853729",
-    vestingCliff: "1682853719",
+    cliffDuration: "1682853719",
 
-    userLimit: "2000",
-    softcap: "9000",
-    hardcap: "1000000",
+    maxUserAllocation: "2000",
+    minimumTokenSaleAmount: "9000",
+    crowdsaleTokenAllocated: "1000000",
   },
 ];
