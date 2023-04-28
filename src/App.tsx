@@ -1,6 +1,5 @@
 import { hooks } from "@reef-defi/react-lib";
 import React, { useEffect, useState } from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Nav from "./common/Nav";
@@ -10,8 +9,6 @@ import NoExtension from "./pages/error/NoExtension";
 import NetworkSwitch, { setSwitching } from "./context/NetworkSwitch";
 import NetworkSwitching from "./common/NetworkSwitching";
 import Bind from "./common/Bind/Bind";
-
-const queryClient = new QueryClient();
 
 const App = (): JSX.Element => {
   const { loading, error } = hooks.useInitReefState("Reef Wallet App", {
@@ -37,9 +34,7 @@ const App = (): JSX.Element => {
           {!loading && !error && (
             <>
               <Nav display={!loading && !error} />
-              <QueryClientProvider client={queryClient}>
-                <ContentRouter />
-              </QueryClientProvider>
+              <ContentRouter />
             </>
           )}
 

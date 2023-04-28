@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Uik from "@reef-defi/ui-kit";
 import "./index.css";
-import { useQuery } from "@tanstack/react-query";
 import { idoType } from "../../assets/ido";
 import { IdoCard } from "./IdoCard";
 import { Contract } from "ethers";
@@ -9,29 +8,38 @@ import { Crowdsale } from "../../abis/Crowdsale";
 import { appState, hooks, ReefSigner } from "@reef-defi/react-lib";
 import BigNumber from "bignumber.js";
 
-const getAllIdos = async () => {
-  const username = "adminUser";
-  const password = "password";
-  const resp = await fetch("http://3.84.7.113/crowdsale", {
-    headers: {
-      Authorization: `Basic ${btoa(`${username}:${password}`)}`,
-    },
-  });
-  const res = await resp.json();
-  return res.data;
-};
-
 export const Dashboard: React.FC = () => {
-  const { data, isLoading, isError } = useQuery<idoType[]>({
-    queryKey: ["getAllIdos"],
-    queryFn: getAllIdos,
-  });
+  const [allIdos, setAllIdos] = useState<idoType[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+
+  const getAllIdos = async () => {
+    setIsLoading(() => true);
+    const username = "adminUser";
+    const password = "password";
+    const resp = await fetch("http://3.84.7.113/crowdsale", {
+      headers: {
+        Authorization: `Basic ${btoa(`${username}:${password}`)}`,
+      },
+    });
+    const res = await resp.json();
+    setAllIdos(() => res.data);
+    setIsLoading(() => false);
+  };
+
+  useEffect(() => {
+    getAllIdos().catch((e) => {
+      setIsLoading(() => false);
+      setIsError(() => true);
+      console.log("Error in getAllIdos: ", e);
+    });
+  }, []);
 
   return (
     <div>
       {isLoading && <Uik.Loading text="Loading ..." />}
       {isError && <Uik.Alert type="danger" text="An error has occurred." />}
-      {!isLoading && !isError && data && <TabsData allIdos={data} />}
+      {!isLoading && !isError && allIdos && <TabsData allIdos={allIdos} />}
       {/*{<TabsData allIdos={idos} />}*/}
     </div>
   );

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Uik from "@reef-defi/ui-kit";
 import "./idoCard.css";
 import { Link } from "react-router-dom";
@@ -20,7 +20,6 @@ import { appState, hooks, ReefSigner } from "@reef-defi/react-lib";
 import { Contract } from "ethers";
 import { Crowdsale } from "../../abis/Crowdsale";
 import { ERC20 } from "../../abis/ERC20";
-import { useQuery } from "@tanstack/react-query";
 import Countdown from "react-countdown";
 import BigNumber from "bignumber.js";
 
@@ -109,39 +108,6 @@ const PresaleEndsInCountdown = ({
   }
 };
 
-const getAllContractDetails = async (
-  crowdsaleContractAddress: string,
-  selectedSigner: ReefSigner
-) => {
-  const crowdsaleContract = new Contract(
-    crowdsaleContractAddress,
-    Crowdsale,
-    selectedSigner.signer
-  );
-
-  const tokensRemainingForSale =
-    await crowdsaleContract.tokenRemainingForSale();
-
-  const vestingScheduleForBeneficiary =
-    await crowdsaleContract.vestingScheduleForBeneficiary(
-      selectedSigner.evmAddress
-    );
-
-  const amount = vestingScheduleForBeneficiary[0]; // total invested
-  const totalDrawn = vestingScheduleForBeneficiary[1]; // claimed
-  // const lastDrawnAt = vestingScheduleForBeneficiary[2]; // not needed
-  const remainingBalance = vestingScheduleForBeneficiary[3]; // yet to claim
-  const availableForDrawDown = vestingScheduleForBeneficiary[4]; // claimable
-
-  return {
-    tokensRemainingForSale: tokensRemainingForSale.toString(),
-    amount: amount.toString(),
-    totalDrawn: totalDrawn.toString(),
-    remainingBalance: remainingBalance.toString(),
-    availableForDrawDown: availableForDrawDown.toString(),
-  };
-};
-
 export const IdoCard = ({
   ido,
   typeOfPresale,
@@ -169,23 +135,46 @@ export const IdoCard = ({
   const selectedSigner: ReefSigner | undefined | null =
     hooks.useObservableState(appState.selectedSigner$);
 
-  let canFetchContractDetails = false;
-
-  if (selectedSigner) {
-    canFetchContractDetails = true;
-  }
-
-  const { data } = useQuery({
-    queryKey: ["getContractDetails", ido.crowdsaleAddress, selectedSigner],
-    queryFn: () => getAllContractDetails(ido.crowdsaleAddress, selectedSigner!),
-    enabled: canFetchContractDetails,
+  const [contractDetails, setContractDetails] = useState({
+    tokensRemainingForSale: "0",
+    amount: "0",
+    totalDrawn: "0",
+    remainingBalance: "0",
+    availableForDrawDown: "0",
   });
 
-  let tokensRemainingForSale = "0";
-  let amount = "0";
-  let totalDrawn = "0";
-  let remainingBalance = "0";
-  let availableForDrawDown = "0";
+  const getAllContractDetails = async (
+    crowdsaleContractAddress: string,
+    selectedSigner: ReefSigner
+  ) => {
+    const crowdsaleContract = new Contract(
+      crowdsaleContractAddress,
+      Crowdsale,
+      selectedSigner.signer
+    );
+
+    const tokensRemainingForSale =
+      await crowdsaleContract.tokenRemainingForSale();
+
+    const vestingScheduleForBeneficiary =
+      await crowdsaleContract.vestingScheduleForBeneficiary(
+        selectedSigner.evmAddress
+      );
+
+    const amount = vestingScheduleForBeneficiary[0]; // total invested
+    const totalDrawn = vestingScheduleForBeneficiary[1]; // claimed
+    // const lastDrawnAt = vestingScheduleForBeneficiary[2]; // not needed
+    const remainingBalance = vestingScheduleForBeneficiary[3]; // yet to claim
+    const availableForDrawDown = vestingScheduleForBeneficiary[4]; // claimable
+
+    setContractDetails({
+      tokensRemainingForSale: tokensRemainingForSale.toString(),
+      amount: amount.toString(),
+      totalDrawn: totalDrawn.toString(),
+      remainingBalance: remainingBalance.toString(),
+      availableForDrawDown: availableForDrawDown.toString(),
+    });
+  };
 
   let idoStartDate = new Date(
     parseFloat(ido.crowdsaleStartTime) * 1000
@@ -213,23 +202,25 @@ export const IdoCard = ({
 
   const cliffDuration = dateDiff(parseDate(idoCliff), parseDate(idoVestingEnd));
 
-  if (data) {
-    tokensRemainingForSale = new BigNumber(data.tokensRemainingForSale)
-      .dividedBy(new BigNumber(10).pow(ido.tokenDecimals))
-      .toString();
-    amount = new BigNumber(data.amount)
-      .dividedBy(new BigNumber(10).pow(ido.tokenDecimals))
-      .toString();
-    totalDrawn = new BigNumber(data.totalDrawn)
-      .dividedBy(new BigNumber(10).pow(ido.tokenDecimals))
-      .toString();
-    remainingBalance = new BigNumber(data.remainingBalance)
-      .dividedBy(new BigNumber(10).pow(ido.tokenDecimals))
-      .toString();
-    availableForDrawDown = new BigNumber(data.availableForDrawDown)
-      .dividedBy(new BigNumber(10).pow(ido.tokenDecimals))
-      .toString();
-  }
+  const tokensRemainingForSale = new BigNumber(
+    contractDetails.tokensRemainingForSale
+  )
+    .dividedBy(new BigNumber(10).pow(ido.tokenDecimals))
+    .toString();
+  const amount = new BigNumber(contractDetails.amount)
+    .dividedBy(new BigNumber(10).pow(ido.tokenDecimals))
+    .toString();
+  const totalDrawn = new BigNumber(contractDetails.totalDrawn)
+    .dividedBy(new BigNumber(10).pow(ido.tokenDecimals))
+    .toString();
+  const remainingBalance = new BigNumber(contractDetails.remainingBalance)
+    .dividedBy(new BigNumber(10).pow(ido.tokenDecimals))
+    .toString();
+  const availableForDrawDown = new BigNumber(
+    contractDetails.availableForDrawDown
+  )
+    .dividedBy(new BigNumber(10).pow(ido.tokenDecimals))
+    .toString();
 
   const tokensThatHaveBeenSold =
     parseFloat(ido.crowdsaleTokenAllocated) -
@@ -306,6 +297,14 @@ export const IdoCard = ({
       setIsInvesting(() => false);
     }
   };
+
+  useEffect(() => {
+    if (selectedSigner) {
+      getAllContractDetails(ido.crowdsaleAddress, selectedSigner).catch((e) =>
+        console.log("Error in getAllContractDetails: ", e)
+      );
+    }
+  }, [selectedSigner, ido.crowdsaleAddress]);
 
   return (
     <>
