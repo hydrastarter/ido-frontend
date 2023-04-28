@@ -214,11 +214,21 @@ export const IdoCard = ({
   const cliffDuration = dateDiff(parseDate(idoCliff), parseDate(idoVestingEnd));
 
   if (data) {
-    tokensRemainingForSale = data.tokensRemainingForSale;
-    amount = data.amount;
-    totalDrawn = data.totalDrawn;
-    remainingBalance = data.remainingBalance;
-    availableForDrawDown = data.availableForDrawDown;
+    tokensRemainingForSale = new BigNumber(data.tokensRemainingForSale)
+      .dividedBy(new BigNumber(10).pow(ido.tokenDecimals))
+      .toString();
+    amount = new BigNumber(data.amount)
+      .dividedBy(new BigNumber(10).pow(ido.tokenDecimals))
+      .toString();
+    totalDrawn = new BigNumber(data.totalDrawn)
+      .dividedBy(new BigNumber(10).pow(ido.tokenDecimals))
+      .toString();
+    remainingBalance = new BigNumber(data.remainingBalance)
+      .dividedBy(new BigNumber(10).pow(ido.tokenDecimals))
+      .toString();
+    availableForDrawDown = new BigNumber(data.availableForDrawDown)
+      .dividedBy(new BigNumber(10).pow(ido.tokenDecimals))
+      .toString();
   }
 
   const tokensThatHaveBeenSold =
