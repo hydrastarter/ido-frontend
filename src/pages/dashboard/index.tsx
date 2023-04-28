@@ -60,8 +60,7 @@ const TabsData = ({ allIdos }: { allIdos: idoType[] }) => {
 
   const sortAllIdos = async (
     allTypesOfIdos: idoType[],
-    selectedSigner: ReefSigner,
-    selectedAccount: string
+    selectedSigner: ReefSigner
   ) => {
     setIsSorting(() => true);
 
@@ -84,18 +83,24 @@ const TabsData = ({ allIdos }: { allIdos: idoType[] }) => {
         upcomingIdos.push(ido);
       else completedIdos.push(ido);
 
-      const crowdsaleContract = new Contract(
-        ido.crowdsaleAddress,
-        Crowdsale,
-        selectedSigner.signer
-      );
+      try {
+        const crowdsaleContract = new Contract(
+          ido.crowdsaleAddress,
+          Crowdsale,
+          selectedSigner.signer
+        );
 
-      const vestingScheduleForBeneficiary =
-        await crowdsaleContract.vestingScheduleForBeneficiary(selectedAccount);
+        const vestingScheduleForBeneficiary =
+          await crowdsaleContract.vestingScheduleForBeneficiary(
+            selectedSigner.evmAddress
+          );
 
-      const amount = vestingScheduleForBeneficiary[0]; // total invested
-      const amountInString = amount.toString();
-      if (new BigNumber(amountInString).isGreaterThan(0)) myIdos.push(ido);
+        const amount = vestingScheduleForBeneficiary[0]; // total invested
+        const amountInString = amount.toString();
+        if (new BigNumber(amountInString).isGreaterThan(0)) myIdos.push(ido);
+      } catch (e) {
+        console.log("Error while checking for my crowdsale", e);
+      }
     }
 
     setActivePresales(() => activeIdos);
@@ -108,7 +113,7 @@ const TabsData = ({ allIdos }: { allIdos: idoType[] }) => {
 
   useEffect(() => {
     if (selectedSigner && accounts) {
-      sortAllIdos(allIdos, selectedSigner, accounts[0].address).catch((e) => {
+      sortAllIdos(allIdos, selectedSigner).catch((e) => {
         setIsSorting(() => false);
         console.log("Error in sortAllIdos: ", e);
       });

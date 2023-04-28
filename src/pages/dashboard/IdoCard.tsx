@@ -111,8 +111,7 @@ const PresaleEndsInCountdown = ({
 
 const getAllContractDetails = async (
   crowdsaleContractAddress: string,
-  selectedSigner: ReefSigner,
-  selectedAccount: string
+  selectedSigner: ReefSigner
 ) => {
   const crowdsaleContract = new Contract(
     crowdsaleContractAddress,
@@ -124,7 +123,9 @@ const getAllContractDetails = async (
     await crowdsaleContract.tokenRemainingForSale();
 
   const vestingScheduleForBeneficiary =
-    await crowdsaleContract.vestingScheduleForBeneficiary(selectedAccount);
+    await crowdsaleContract.vestingScheduleForBeneficiary(
+      selectedSigner.evmAddress
+    );
 
   const amount = vestingScheduleForBeneficiary[0]; // total invested
   const totalDrawn = vestingScheduleForBeneficiary[1]; // claimed
@@ -167,31 +168,16 @@ export const IdoCard = ({
 
   const selectedSigner: ReefSigner | undefined | null =
     hooks.useObservableState(appState.selectedSigner$);
-  const accounts: ReefSigner[] | undefined | null = hooks.useObservableState(
-    appState.signers$
-  );
 
-  let selectedAccount = "";
   let canFetchContractDetails = false;
 
-  if (selectedSigner && accounts) {
-    selectedAccount = accounts[0].address;
+  if (selectedSigner) {
     canFetchContractDetails = true;
   }
 
   const { data } = useQuery({
-    queryKey: [
-      "getContractDetails",
-      ido.crowdsaleAddress,
-      selectedSigner,
-      selectedAccount,
-    ],
-    queryFn: () =>
-      getAllContractDetails(
-        ido.crowdsaleAddress,
-        selectedSigner!,
-        selectedAccount
-      ),
+    queryKey: ["getContractDetails", ido.crowdsaleAddress, selectedSigner],
+    queryFn: () => getAllContractDetails(ido.crowdsaleAddress, selectedSigner!),
     enabled: canFetchContractDetails,
   });
 
