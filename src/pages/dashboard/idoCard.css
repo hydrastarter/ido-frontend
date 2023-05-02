@@ -6,6 +6,9 @@
 
 .ido-card-avatar-box {
     margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .ido-card-name-box {
@@ -100,10 +103,49 @@
     flex-grow: 1;
 }
 
-.total-invested-text{
-   margin-right: 5px;
+.total-invested-text {
+    margin-right: 5px;
 }
 
 .display-user-rate {
     margin-top: 15px;
+}
+
+.card-header-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-name-links-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-name-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-links-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-verified-box {
+}
+
+.card-token-name{
+    margin-left: 5px;
+}
+
+.card-token-symbol{
+    margin:  0 20px 0 5px;
+}
+
+.card-link{
+   margin: 0 2px;
 }

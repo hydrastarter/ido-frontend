@@ -36,7 +36,7 @@ export const Dashboard: React.FC = () => {
   }, []);
 
   return (
-    <div>
+    <div style={{ width: "100%" }}>
       {isLoading && <Uik.Loading text="Loading ..." />}
       {isError && <Uik.Alert type="danger" text="An error has occurred." />}
       {!isLoading && !isError && allIdos && <TabsData allIdos={allIdos} />}

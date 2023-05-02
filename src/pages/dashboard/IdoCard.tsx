@@ -108,6 +108,48 @@ const PresaleEndsInCountdown = ({
   }
 };
 
+const PresaleStartsOnCard = ({
+  // @ts-ignore
+  days,
+  // @ts-ignore
+  hours,
+  // @ts-ignore
+  minutes,
+  // @ts-ignore
+  seconds,
+  // @ts-ignore
+  completed,
+}) => {
+  if (completed) {
+    // Render a completed state
+    return "Presale is active";
+  } else {
+    // Render a countdown
+    return `Starts in ${days} Days : ${hours} Hrs : ${minutes} Mins`;
+  }
+};
+
+const PresaleEndsOnCard = ({
+  // @ts-ignore
+  days,
+  // @ts-ignore
+  hours,
+  // @ts-ignore
+  minutes,
+  // @ts-ignore
+  seconds,
+  // @ts-ignore
+  completed,
+}) => {
+  if (completed) {
+    // Render a completed state
+    return "Presale has ended";
+  } else {
+    // Render a countdown
+    return `Ends in ${days} Days : ${hours} Hrs : ${minutes} Mins`;
+  }
+};
+
 export const IdoCard = ({
   ido,
   typeOfPresale,
@@ -317,28 +359,48 @@ export const IdoCard = ({
         <div className="ido-card-avatar-box">
           <Uik.Avatar image={ido.tokenImageUrl} size="extra-large" />
         </div>
-        <Uik.Container flow="spaceBetween">
-          <Uik.Container flow="start">
-            <Uik.Container flow="start">
-              <Uik.Text text={ido.tokenName} className="no-wrap" />
-              <Uik.Text text={`(${ido.tokenSymbol})`} className="no-wrap" />
-            </Uik.Container>
-            <Uik.Container flow="start">
-              <a href={`//${ido.twitterUrl}`} target="_blank">
+        <div className="card-header-box">
+          <div className="card-name-links-box">
+            <div className="card-name-box">
+              <Uik.Text
+                text={ido.tokenName}
+                className="no-wrap card-token-name"
+              />
+              <Uik.Text
+                text={`(${ido.tokenSymbol})`}
+                className="no-wrap card-token-symbol"
+              />
+            </div>
+            <div className="card-links-box">
+              <a
+                href={`//${ido.twitterUrl}`}
+                target="_blank"
+                className="card-link twitter-link"
+              >
                 <img src={twitterIcon} alt="twitter" width="30px" />
               </a>
-              <a href={`//${ido.telegramUrl}`} target="_blank">
+              <a
+                href={`//${ido.telegramUrl}`}
+                target="_blank"
+                className="card-link telegram-link"
+              >
                 <img src={telegramIcon} alt="telegram" width="30px" />
               </a>
-              <a href={`//${ido.websiteUrl}`} target="_blank">
+              <a
+                href={`//${ido.websiteUrl}`}
+                target="_blank"
+                className="card-link website-link"
+              >
                 <img src={websiteIcon} alt="project website" width="30px" />
               </a>
-            </Uik.Container>
-          </Uik.Container>
-          <Link to="/" target="_blank" style={{ whiteSpace: "nowrap" }}>
-            <Uik.Text text="Apply For a Verified Tag" type="mini" />
-          </Link>
-        </Uik.Container>
+            </div>
+          </div>
+          <div className="card-verified-box">
+            <Link to="/" target="_blank" style={{ whiteSpace: "nowrap" }}>
+              <Uik.Text text="Apply for a Verified Tag" type="mini" />
+            </Link>
+          </div>
+        </div>
         <div style={{ position: "relative" }}>
           <BorderLinearProgress
             variant="determinate"
@@ -410,7 +472,8 @@ export const IdoCard = ({
               <div
                 style={{
                   margin: "20px 0px",
-                  background: "#898E9C",
+                  background:
+                    "linear-gradient(rgb(108, 23, 159), rgb(142, 30, 113))",
                   padding: "5px 20px",
                   borderRadius: "20px",
                   display: "flex",
@@ -454,7 +517,8 @@ export const IdoCard = ({
               <div
                 style={{
                   margin: "20px 0px",
-                  background: "#898E9C",
+                  background:
+                    "linear-gradient(rgb(108, 23, 159), rgb(142, 30, 113))",
                   padding: "5px 20px",
                   borderRadius: "20px",
                   display: "flex",
@@ -470,7 +534,8 @@ export const IdoCard = ({
               <div
                 style={{
                   margin: "20px 0px",
-                  background: "#898E9C",
+                  background:
+                    "linear-gradient(rgb(108, 23, 159), rgb(142, 30, 113))",
                   padding: "5px 20px",
                   borderRadius: "20px",
                   display: "flex",
@@ -583,6 +648,28 @@ export const IdoCard = ({
         <div onClick={() => setOpen(!isOpen)}>
           <div className="ido-card-avatar-box">
             <Uik.Avatar image={ido.tokenImageUrl} size="large" />
+            {typeOfPresale === "Upcoming Presales" && (
+              <Uik.Tag color="red">
+                {/* @ts-ignore */}
+                <Countdown
+                  date={parseFloat(ido.crowdsaleStartTime) * 1000}
+                  renderer={PresaleStartsOnCard}
+                />
+              </Uik.Tag>
+            )}
+            {typeOfPresale === "Active Presales" && (
+              <Uik.Tag color="red">
+                {/* @ts-ignore */}
+                <Countdown
+                  date={parseFloat(ido.crowdsaleEndTime) * 1000}
+                  renderer={PresaleEndsOnCard}
+                />
+              </Uik.Tag>
+            )}
+
+            {typeOfPresale === "Completed Presales" && (
+              <Uik.Tag color="red">Presale is completed </Uik.Tag>
+            )}
           </div>
           <div className="ido-card-name-box">
             <Uik.Text type="title">{ido.tokenName}</Uik.Text>
@@ -604,10 +691,9 @@ export const IdoCard = ({
             />
           </div>
           <div className="ido-card-name-box">
-            <Uik.Text type="light">Hardcap: </Uik.Text>
+            <Uik.Text type="light">Hardcap :</Uik.Text>
             <Uik.Text type="lead" className="ido-card-name_symbol">
-              {ido.crowdsaleTokenAllocated}
-              {ido.tokenSymbol}
+              {ido.crowdsaleTokenAllocated} {` `} {ido.tokenSymbol}
             </Uik.Text>
           </div>
         </div>
