@@ -17,7 +17,7 @@ export const Dashboard: React.FC = () => {
     setIsLoading(() => true);
     const username = "adminUser";
     const password = "password";
-    const resp = await fetch("https://3.84.7.113/crowdsale", {
+    const resp = await fetch("https://reef-ido.cryption.network/crowdsale", {
       headers: {
         Authorization: `Basic ${btoa(`${username}:${password}`)}`,
       },
