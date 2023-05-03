@@ -1,2 +1,2 @@
-export const DASHBOARD_URL = "/dashboard";
+export const DASHBOARD_URL = "/";
 export const ADMIN_URL = "/admin";
