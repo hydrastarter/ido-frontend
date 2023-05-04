@@ -3,10 +3,18 @@ import Uik from "@reef-defi/ui-kit";
 import "./index.css";
 import { idoType } from "../../assets/ido";
 import { IdoCard } from "./IdoCard";
-import { Contract } from "ethers";
-import { Crowdsale } from "../../abis/Crowdsale";
-import { appState, hooks, ReefSigner } from "@reef-defi/react-lib";
-import BigNumber from "bignumber.js";
+import { ReefSigner, hooks, appState } from "@reef-defi/react-lib";
+
+const getAllIdos = async () => {
+  const username = "adminUser";
+  const password = "password";
+  const resp = await fetch("http://54.86.244.136/crowdsale/", {
+    headers: {
+      Authorization: `Basic ${btoa(`${username}:${password}`)}`,
+    },
+  });
+  return resp.json();
+};
 
 export const Dashboard: React.FC = () => {
   const [allIdos, setAllIdos] = useState<idoType[]>([]);
@@ -70,50 +78,32 @@ const TabsData = ({ allIdos }: { allIdos: idoType[] }) => {
     setIsSorting(() => true);
 
     const idos = allTypesOfIdos;
+    if (idos && idos.length > 0) {
+      let activeIdos = [] as idoType[];
+      let upcomingIdos = [] as idoType[];
+      let completedIdos = [] as idoType[];
+      let myIdos = [] as idoType[];
 
-    let activeIdos = [] as idoType[];
-    let upcomingIdos = [] as idoType[];
-    let completedIdos = [] as idoType[];
-    let myIdos = [] as idoType[];
+      const currentTime = Math.floor(+new Date() / 1000);
 
-    const currentTime = Math.floor(+new Date() / 1000);
+      for (let ido of idos) {
+        const idoStartTime = parseFloat(ido.crowdsaleStartTime);
+        const idoEndTime = parseFloat(ido.crowdsaleStartTime);
 
-    for (let ido of idos) {
-      const idoStartTime = parseFloat(ido.crowdsaleStartTime);
-      const idoEndTime = parseFloat(ido.crowdsaleEndTime);
-
-      if (idoStartTime < currentTime && idoEndTime > currentTime)
-        activeIdos.push(ido);
-      else if (idoStartTime > currentTime && idoEndTime > currentTime)
-        upcomingIdos.push(ido);
-      else completedIdos.push(ido);
-
-      try {
-        const crowdsaleContract = new Contract(
-          ido.crowdsaleAddress,
-          Crowdsale,
-          selectedSigner.signer
-        );
-
-        const vestingScheduleForBeneficiary =
-          await crowdsaleContract.vestingScheduleForBeneficiary(
-            selectedSigner.evmAddress
-          );
-
-        const amount = vestingScheduleForBeneficiary[0]; // total invested
-        const amountInString = amount.toString();
-        if (new BigNumber(amountInString).isGreaterThan(0)) myIdos.push(ido);
-      } catch (e) {
-        console.log("Error while checking for my crowdsale", e);
+        if (idoStartTime < currentTime && idoEndTime > currentTime)
+          activeIdos.push(ido);
+        else if (idoStartTime > currentTime && idoEndTime > currentTime)
+          upcomingIdos.push(ido);
+        else completedIdos.push(ido);
       }
+
+      setActivePresales(() => activeIdos);
+      setUpcomingPresales(() => upcomingIdos);
+      setCompletedPresales(() => completedIdos);
+      setMyCrowdsales(() => myIdos);
+
+      setIsSorting(() => false);
     }
-
-    setActivePresales(() => activeIdos);
-    setUpcomingPresales(() => upcomingIdos);
-    setCompletedPresales(() => completedIdos);
-    setMyCrowdsales(() => myIdos);
-
-    setIsSorting(() => false);
   };
 
   useEffect(() => {
