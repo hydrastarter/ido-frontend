@@ -379,7 +379,7 @@ export const Admin: React.FC = () => {
           headers: myHeaders,
           body: raw,
         };
-        const resp = await fetch('http://3.84.7.113/crowdsale/', requestOptions);
+        const resp = await fetch('https://reef-ido.cryption.network/crowdsale', requestOptions);
         console.log('resp: ', resp);
       }
       setIsCreatingIdo(false);

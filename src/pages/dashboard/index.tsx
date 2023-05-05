@@ -8,7 +8,7 @@ import { ReefSigner, hooks, appState } from "@reef-defi/react-lib";
 const getAllIdos = async () => {
   const username = "adminUser";
   const password = "password";
-  const resp = await fetch("http://54.86.244.136/crowdsale/", {
+  const resp = await fetch("https://reef-ido.cryption.network/crowdsale/", {
     headers: {
       Authorization: `Basic ${btoa(`${username}:${password}`)}`,
     },
