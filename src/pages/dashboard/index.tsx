@@ -34,7 +34,7 @@ export const Dashboard: React.FC = () => {
 
   return (
     <div style={{ width: "100%" }}>
-      {isLoading && <Uik.Loading text="Loading ..." />}
+      {isLoading && <Uik.Loading text="Fetching all IDOs..." />}
       {isError && <Uik.Alert type="danger" text="An error has occurred." />}
       {!isLoading && !isError && allIdos && <TabsData allIdos={allIdos} />}
       {/*{<TabsData allIdos={idos} />}*/}
@@ -93,6 +93,7 @@ const TabsData = ({ allIdos }: { allIdos: idoType[] }) => {
 
       setIsSorting(() => false);
     }
+    setIsSorting(() => false);
   };
 
   useEffect(() => {
@@ -106,7 +107,7 @@ const TabsData = ({ allIdos }: { allIdos: idoType[] }) => {
 
   return (
     <div className="dashboard-container">
-      {isSorting && <Uik.Loading text="Loading ..." />}
+      {isSorting && <Uik.Loading text="Sorting all IDOs..." />}
       {!isSorting && (
         <>
           <div className="tabs-container">
