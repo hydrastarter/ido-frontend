@@ -77,7 +77,7 @@ const TabsData = ({ allIdos }: { allIdos: idoType[] }) => {
 
       for (let ido of idos) {
         const idoStartTime = parseFloat(ido.crowdsaleStartTime);
-        const idoEndTime = parseFloat(ido.crowdsaleStartTime);
+        const idoEndTime = parseFloat(ido.crowdsaleEndTime);
 
         if (idoStartTime < currentTime && idoEndTime > currentTime)
           activeIdos.push(ido);
