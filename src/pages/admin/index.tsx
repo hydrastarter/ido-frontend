@@ -331,6 +331,12 @@ export const Admin: React.FC = () => {
           amountOfTokensToSell,
           tokenDecimals.toString()
         );
+
+        const maxUserAllocationInWei = ethers.utils.parseUnits(
+          maxUserAllocation,
+          tokenDecimals.toString()
+        );
+
         const softcapAmount = ethers.utils.parseUnits(
           softcap,
           tokenDecimals.toString()
@@ -360,6 +366,7 @@ export const Admin: React.FC = () => {
             "address",
             "string",
             "uint256",
+            "uint256",
           ],
           [
             projectTokenAddress,
@@ -373,6 +380,7 @@ export const Admin: React.FC = () => {
             selectedSigner.evmAddress,
             projectTokenImage.ipfsImgUrl,
             softcapAmount,
+            maxUserAllocationInWei,
           ]
         );
         const txObject = await factoryContract.launchCrowdsale(
