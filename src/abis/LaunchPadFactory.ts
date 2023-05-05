@@ -5,9 +5,9 @@ export const LaunchPadFactory: ContractInterface = [
     anonymous: false,
     inputs: [
       {
-        indexed: false,
+        indexed: true,
         internalType: "uint256",
-        name: "_id",
+        name: "id",
         type: "uint256",
       },
       {
@@ -32,13 +32,13 @@ export const LaunchPadFactory: ContractInterface = [
       {
         indexed: false,
         internalType: "uint256",
-        name: "_id",
+        name: "id",
         type: "uint256",
       },
       {
         indexed: false,
         internalType: "address",
-        name: "_newImplementation",
+        name: "newImplementation",
         type: "address",
       },
     ],
@@ -51,32 +51,13 @@ export const LaunchPadFactory: ContractInterface = [
       {
         indexed: false,
         internalType: "uint256",
-        name: "_id",
+        name: "id",
         type: "uint256",
       },
       {
         indexed: false,
         internalType: "address",
-        name: "_implementation",
-        type: "address",
-      },
-    ],
-    name: "ImplementationLaunched",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "_id",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "address",
-        name: "_implementation",
+        name: "updatedImplementation",
         type: "address",
       },
     ],
@@ -126,13 +107,13 @@ export const LaunchPadFactory: ContractInterface = [
     name: "crowdsales",
     outputs: [
       {
-        internalType: "address",
-        name: "crowdsaleAddress",
+        internalType: "contract IERC20",
+        name: "projectToken",
         type: "address",
       },
       {
-        internalType: "contract IERC20",
-        name: "projectToken",
+        internalType: "address",
+        name: "crowdsaleAddress",
         type: "address",
       },
       {
@@ -146,11 +127,11 @@ export const LaunchPadFactory: ContractInterface = [
   },
   {
     inputs: [],
-    name: "feeManager",
+    name: "getLatestCrowdsale",
     outputs: [
       {
-        internalType: "contract IFeeManager",
-        name: "",
+        internalType: "address",
+        name: "latestCrowdsaleAddress",
         type: "address",
       },
     ],
@@ -158,29 +139,13 @@ export const LaunchPadFactory: ContractInterface = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_implementationId",
-        type: "uint256",
-      },
-      {
-        internalType: "bytes",
-        name: "_feeManagerEncodedData",
-        type: "bytes",
-      },
-    ],
-    name: "getFeeInfo",
+    inputs: [],
+    name: "getTotalLaunchedCrowdsales",
     outputs: [
       {
         internalType: "uint256",
         name: "",
         type: "uint256",
-      },
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
       },
     ],
     stateMutability: "view",
@@ -206,32 +171,6 @@ export const LaunchPadFactory: ContractInterface = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "isFeeManagerEnabled",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "isReferralManagerEnabled",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
     inputs: [
       {
         internalType: "uint256",
@@ -241,11 +180,6 @@ export const LaunchPadFactory: ContractInterface = [
       {
         internalType: "bytes",
         name: "_implementationData",
-        type: "bytes",
-      },
-      {
-        internalType: "bytes",
-        name: "_feeManagerEncodedData",
         type: "bytes",
       },
     ],
@@ -253,50 +187,11 @@ export const LaunchPadFactory: ContractInterface = [
     outputs: [
       {
         internalType: "address",
-        name: "",
+        name: "crowdsaleAddress",
         type: "address",
       },
     ],
-    stateMutability: "payable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_id",
-        type: "uint256",
-      },
-      {
-        internalType: "address",
-        name: "_referrer",
-        type: "address",
-      },
-      {
-        internalType: "bytes",
-        name: "_implementationData",
-        type: "bytes",
-      },
-      {
-        internalType: "bytes",
-        name: "_feeManagerEncodedData",
-        type: "bytes",
-      },
-      {
-        internalType: "bytes",
-        name: "_referralEncodedData",
-        type: "bytes",
-      },
-    ],
-    name: "launchCrowdsaleWithReferral",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "payable",
+    stateMutability: "nonpayable",
     type: "function",
   },
   {
@@ -327,19 +222,6 @@ export const LaunchPadFactory: ContractInterface = [
   },
   {
     inputs: [],
-    name: "referralManager",
-    outputs: [
-      {
-        internalType: "contract IReferralManager",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
     name: "renounceOwnership",
     outputs: [],
     stateMutability: "nonpayable",
@@ -361,24 +243,6 @@ export const LaunchPadFactory: ContractInterface = [
   {
     inputs: [
       {
-        internalType: "bool",
-        name: "_isFeeManagerEnabled",
-        type: "bool",
-      },
-      {
-        internalType: "address",
-        name: "_feeManager",
-        type: "address",
-      },
-    ],
-    name: "updateFeeManagerMode",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
         internalType: "uint256",
         name: "_id",
         type: "uint256",
@@ -390,24 +254,6 @@ export const LaunchPadFactory: ContractInterface = [
       },
     ],
     name: "updateImplementation",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "bool",
-        name: "_isReferralManagerEnabled",
-        type: "bool",
-      },
-      {
-        internalType: "address",
-        name: "_referralManager",
-        type: "address",
-      },
-    ],
-    name: "updateReferralManagerMode",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

@@ -89,6 +89,9 @@ export const Admin: React.FC = () => {
   const [inputTokens, setInputTokens] = useState([
     {
       tokenAddress: '',
+      tokenName: '',
+      tokenSymbol: '',
+      tokenDecimals: '',
     },
   ]);
   const [enableWhitelisting, setEnableWhitelisting] = useState(false);
@@ -137,13 +140,31 @@ export const Admin: React.FC = () => {
     newArr[index].tokenAddress = event.target.value;
     setInputTokens([...newArr]);
   };
+  const handleBlurInputToken = async (index: number) => {
+    try {
+      if (selectedSigner) {
+        const tokenDetails = inputTokens;
+        const erc20Contract = new Contract(projectTokenAddress, ERC20, selectedSigner.signer);
+        if (tokenDetails[index] && tokenDetails[index].tokenAddress) {
+          const name = await erc20Contract.name();
+          const symbol = await erc20Contract.symbol();
+          const decimal = await erc20Contract.decimals();
+          tokenDetails[index].tokenDecimals = decimal;
+          tokenDetails[index].tokenName = name;
+          tokenDetails[index].tokenSymbol = symbol;
+          setInputTokens([...tokenDetails]);
+        }
+      }
+    } catch (e) {
+      console.error("error is", e);
+    }
+  };
   const addToken = async () => {
     const newToken = {
       tokenAddress: '',
       tokenName: '',
       tokenDecimals: '',
       tokenSymbol: '',
-      tokenRate: '',
     };
     const tokens = [...inputTokens, newToken];
     setInputTokens(tokens);
@@ -244,7 +265,21 @@ export const Admin: React.FC = () => {
     try {
       setIsCreatingIdo(true);
       if (selectedSigner) {
-        const differenceEpochTime = new Date(vestingStartTimeInUTC).valueOf() - new Date(cliffPeriodInUTC).valueOf();
+        let startDateNum = new Date(startTimeInUTC).valueOf();
+        let endDateNum = new Date(endTimeInUTC).valueOf();
+        let cliffStartDateNum = new Date(vestingStartTimeInUTC).valueOf();
+        let cliffEndDateNum = new Date(vestingEndTimeInUTC).valueOf();
+        startDateNum = Math.floor(parseFloat(startDateNum.toString()) / 1000);
+        endDateNum = Math.floor(parseFloat(endDateNum.toString()) / 1000);
+        cliffStartDateNum = Math.floor(
+          parseFloat(cliffStartDateNum.toString()) / 1000
+        );
+        cliffEndDateNum = Math.floor(parseFloat(cliffEndDateNum.toString()) / 1000);
+        let cliffPeriodNum =new Date(cliffPeriodInUTC).valueOf();
+        cliffPeriodNum = Math.floor(
+          parseFloat(cliffPeriodNum.toString()) / 1000
+        );
+        const differenceEpochTime = cliffPeriodNum - cliffStartDateNum;
         let whitelistedAddressesArray: any = [];
         if (whitelistedAddresses) {
           whitelistedAddressesArray = whitelistedAddresses.split(',');
@@ -266,10 +301,10 @@ export const Admin: React.FC = () => {
         const crowdSaleTimings = ethers.utils.defaultAbiCoder.encode(
           ['uint128', 'uint128', 'uint128', 'uint128', 'uint128'],
           [
-            new Date(startTimeInUTC).valueOf(),
-            new Date(endTimeInUTC).valueOf(),
-            new Date(vestingStartTimeInUTC).valueOf(),
-            new Date(vestingEndTimeInUTC).valueOf(),
+            startDateNum,
+            endDateNum,
+            cliffStartDateNum,
+            cliffEndDateNum,
             enableCliffPeriod ? differenceEpochTime : '0',
           ],
         );
@@ -296,21 +331,56 @@ export const Admin: React.FC = () => {
         const txObject = await factoryContract.launchCrowdsale(
           0,
           launchCrowdSaleData,
-          '0x00',
         );
         await txObject.wait();
         setTxHash(txObject.hash);
         setOpen(true);
-        // const username = 'adminUser';
-        // const password = 'password';
-        // const token = btoa(`${username}:${password}`);
-        // console.log('token: ', token);
-        // const resp = await fetch('http://54.227.136.157/crowdsale', {
-        //   headers: {
-        //     Authorization: `Basic ${btoa(`${username}:${password}`)}`,
-        //   },
-        // });
-        // console.log('resp: ', resp);
+        const getLatestCrowdSaleContract = await factoryContract.getLatestCrowdsale()
+        const username = 'adminUser';
+        const password = 'password';
+        const token = btoa(`${username}:${password}`);
+        const inputTokensData = inputTokens.map(token => {
+          return {
+            inputTokenName: token.tokenName,
+            inputTokenSymbol: token.tokenSymbol,
+            inputTokenDecimals: parseInt(token.tokenDecimals),
+            inputTokenAddress: token.tokenAddress
+          }
+        })
+        const raw = JSON.stringify({
+          "crowdsaleAddress": getLatestCrowdSaleContract,
+          "tokenName": projectTokenDetails.name,
+          "tokenSymbol": projectTokenDetails.symbol,
+          "tokenDecimals": parseInt(projectTokenDetails.decimals),
+          "tokenAddress": projectTokenAddress,
+          "tokenImageUrl": projectTokenImage.ipfsImgUrl,
+          "twitterUrl": twitterUrl,
+          "telegramUrl": telegramUrl,
+          "websiteUrl": websiteUrl,
+          "miscellaneousUrl": miscellaneousUrl,
+          "description": description,
+          "crowdsaleTokenAllocated": amountOfTokensToSell,
+          "crowdsaleStartTime": startDateNum.toString(),
+          "crowdsaleEndTime": endDateNum.toString(),
+          "vestingStart": cliffStartDateNum.toString(),
+          "vestingEnd": cliffEndDateNum.toString(),
+          "cliffDuration": enableCliffPeriod ? differenceEpochTime.toString() : '0',
+          "minimumTokenSaleAmount": softcap,
+          "maxUserAllocation": maxUserAllocation,
+          "inputTokenRate": inputTokenRate,
+          "isVerified": false,
+          "inputTokens": inputTokensData
+        })
+        let myHeaders = new Headers();
+        myHeaders.append("Authorization", "Basic YWRtaW5Vc2VyOnBhc3N3b3Jk");
+        myHeaders.append("Content-Type", "application/json");
+        const requestOptions = {
+          method: 'POST',
+          headers: myHeaders,
+          body: raw,
+        };
+        const resp = await fetch('http://3.84.7.113/crowdsale/', requestOptions);
+        console.log('resp: ', resp);
       }
       setIsCreatingIdo(false);
     } catch (error) {
@@ -389,6 +459,7 @@ export const Admin: React.FC = () => {
               label="Input token address"
               key={`inputTokenField+${index}`}
               value={eachInputToken.tokenAddress}
+              onBlur={() => handleBlurInputToken(index)}
               onInput={(e) => handleInputTokenChange(e, index)}
             />
             {index > 0 && (
