@@ -4,6 +4,9 @@ import "./index.css";
 import { idoType } from "../../assets/ido";
 import { IdoCard } from "./IdoCard";
 import { ReefSigner, hooks, appState } from "@reef-defi/react-lib";
+import BigNumber from "bignumber.js";
+import { Crowdsale } from "../../abis/Crowdsale";
+import { Contract } from "ethers";
 
 export const Dashboard: React.FC = () => {
   const [allIdos, setAllIdos] = useState<idoType[]>([]);
@@ -84,6 +87,25 @@ const TabsData = ({ allIdos }: { allIdos: idoType[] }) => {
         else if (idoStartTime > currentTime && idoEndTime > currentTime)
           upcomingIdos.push(ido);
         else completedIdos.push(ido);
+
+        try {
+          const crowdsaleContract = new Contract(
+            ido.crowdsaleAddress,
+            Crowdsale,
+            selectedSigner.signer
+          );
+
+          const vestingScheduleForBeneficiary =
+            await crowdsaleContract.vestingScheduleForBeneficiary(
+              selectedSigner.evmAddress
+            );
+
+          const amount = vestingScheduleForBeneficiary[0]; // total invested
+          const amountInString = amount.toString();
+          if (new BigNumber(amountInString).isGreaterThan(0)) myIdos.push(ido);
+        } catch (e) {
+          console.log("Error while checking for my crowdsale", e);
+        }
       }
 
       setActivePresales(() => activeIdos);
