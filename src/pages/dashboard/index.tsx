@@ -5,17 +5,6 @@ import { idoType } from "../../assets/ido";
 import { IdoCard } from "./IdoCard";
 import { ReefSigner, hooks, appState } from "@reef-defi/react-lib";
 
-const getAllIdos = async () => {
-  const username = "adminUser";
-  const password = "password";
-  const resp = await fetch("https://reef-ido.cryption.network/crowdsale/", {
-    headers: {
-      Authorization: `Basic ${btoa(`${username}:${password}`)}`,
-    },
-  });
-  return resp.json();
-};
-
 export const Dashboard: React.FC = () => {
   const [allIdos, setAllIdos] = useState<idoType[]>([]);
   const [isLoading, setIsLoading] = useState(false);
