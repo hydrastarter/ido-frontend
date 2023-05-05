@@ -116,13 +116,13 @@ export const Admin: React.FC = () => {
     DEFAULT_REMOVE_HOVER_COLOR,
   );
   const [vestingStartTimeInUTC, setVestingStartTimeInUTC] = useState(
-    new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
+    new Date(Date.now() + 1 * 1 * 60 * 60 * 1000),
   );
   const [vestingEndTimeInUTC, setVestingEndTimeInUTC] = useState(
-    new Date(Date.now() + 4 * 24 * 60 * 60 * 1000),
+    new Date(Date.now() + 1 * 1 * 60 * 60 * 1000),
   );
   const [cliffPeriodInUTC, setCliffPeriodInUTC] = useState(
-    new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+    new Date(Date.now() + 1 * 1 * 60 * 60 * 1000),
   );
   const [enableCliffPeriod, setEnableCliffPeriod] = useState(false);
   const [isCreatingIDO, setIsCreatingIdo] = useState(false);
