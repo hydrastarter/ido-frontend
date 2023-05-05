@@ -102,7 +102,7 @@ export const Admin: React.FC = () => {
   const [miscellaneousUrl, setMiscellaneousUrl] = useState("");
   const [description, setDescription] = useState("");
   const [approveLoading, setApproveLoading] = useState(false);
-  const [allowence, setAllowence] = useState(new BigNumber(0));
+  const [allowance, setAllowance] = useState(new BigNumber(0));
   const [startTimeInUTC, setStartTimeInUTC] = useState(new Date(Date.now()));
   const [endTimeInUTC, setEndTimeInUTC] = useState(
     new Date(Date.now() + 1 * 60 * 60 * 1000)
@@ -227,7 +227,7 @@ export const Admin: React.FC = () => {
       uploadingFile: false,
     }));
   };
-  const checkAllowence = async () => {
+  const checkAllowance = async () => {
     try {
       if (selectedSigner) {
         const erc20Contract = new Contract(
@@ -235,7 +235,7 @@ export const Admin: React.FC = () => {
           ERC20,
           selectedSigner.signer
         );
-        const allowenceAmount = await erc20Contract.allowance(
+        const allowanceAmount = await erc20Contract.allowance(
           selectedSigner.evmAddress,
           LAUNCHPAD_FACTORY_ADDRESS
         );
@@ -248,7 +248,7 @@ export const Admin: React.FC = () => {
           decimals: tokenDecimals.toString(),
           symbol: tokenSymbol,
         }));
-        setAllowence(new BigNumber(allowenceAmount.toString()));
+        setAllowance(new BigNumber(allowanceAmount.toString()));
       }
     } catch (error) {
       console.error(error);
@@ -268,11 +268,11 @@ export const Admin: React.FC = () => {
           constants.MaxUint256
         );
         await approvalTx.wait();
-        const allowenceAmount = await erc20Contract.allowance(
+        const allowanceAmount = await erc20Contract.allowance(
           selectedSigner.evmAddress,
           LAUNCHPAD_FACTORY_ADDRESS
         );
-        setAllowence(new BigNumber(allowenceAmount.toString()));
+        setAllowance(new BigNumber(allowanceAmount.toString()));
       }
       setApproveLoading(false);
     } catch (error) {
@@ -415,7 +415,7 @@ export const Admin: React.FC = () => {
           inputTokens: inputTokensData,
         });
         let myHeaders = new Headers();
-        myHeaders.append("Authorization", "Basic YWRtaW5Vc2VyOnBhc3N3b3Jk");
+        myHeaders.append("Authorization", `Basic ${token}`);
         myHeaders.append("Content-Type", "application/json");
         const requestOptions = {
           method: "POST",
@@ -434,7 +434,7 @@ export const Admin: React.FC = () => {
       console.error(error);
     }
   };
-  let disbaleCreateButton = true;
+  let disableCreateButton = true;
   if (
     projectTokenAddress &&
     projectTokenAddress.length > 0 &&
@@ -447,7 +447,7 @@ export const Admin: React.FC = () => {
     parseFloat(amountOfTokensToSell.toString()) > 0 &&
     parseFloat(amountOfTokensToSell.toString()) > parseFloat(softcap.toString())
   ) {
-    disbaleCreateButton = false;
+    disableCreateButton = false;
   }
   return (
     <Uik.Card condensed className="admin-container">
@@ -491,7 +491,7 @@ export const Admin: React.FC = () => {
               label="Project token address"
               value={projectTokenAddress}
               onInput={(e) => setProjectTokenAddress(e.target.value)}
-              onBlur={checkAllowence}
+              onBlur={checkAllowance}
             />
             <label className="uik-button" style={{ marginTop: "20px" }}>
               <input
@@ -795,7 +795,7 @@ export const Admin: React.FC = () => {
         />
         <Uik.Container flow="stretch">
           <Uik.Button
-            disabled={allowence.isGreaterThan(amountOfTokensToSell)}
+            disabled={allowance.isGreaterThan(amountOfTokensToSell)}
             size="large"
             loading={approveLoading}
             onClick={approveProjectToken}
@@ -804,9 +804,9 @@ export const Admin: React.FC = () => {
           </Uik.Button>
           <Uik.Button
             disabled={
-              disbaleCreateButton ||
+              disableCreateButton ||
               isCreatingIDO ||
-              allowence.isLessThan(amountOfTokensToSell)
+              allowance.isLessThan(amountOfTokensToSell)
             }
             onClick={createIdo}
             size="large"
