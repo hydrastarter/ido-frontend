@@ -214,7 +214,6 @@ export const Admin: React.FC = () => {
     if (!event.target.files) return;
 
     const imageUrl = URL.createObjectURL(event.target.files[0]);
-    console.log({ imageUrl });
     setProjectTokenImage(() => ({
       ...projectTokenImage,
       previewImgUrl: imageUrl,
