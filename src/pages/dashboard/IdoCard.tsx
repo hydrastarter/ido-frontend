@@ -156,10 +156,10 @@ export const IdoCard = ({
 }: {
   ido: idoType;
   typeOfPresale:
-  | "Active Presales"
-  | "Upcoming Presales"
-  | "Completed Presales"
-  | "My Crowdsale";
+    | "Active Presales"
+    | "Upcoming Presales"
+    | "Completed Presales"
+    | "My Crowdsale";
 }): JSX.Element => {
   const [isOpen, setOpen] = useState(false);
   const [showMoreVesting, setShowMoreVesting] = useState(true);
@@ -232,16 +232,15 @@ export const IdoCard = ({
   let idoVestingEnd = new Date(
     parseFloat(ido.vestingEnd) * 1000
   ).toLocaleDateString();
-  let idoCliff = new Date(
-    parseFloat(ido.cliffDuration) * 1000
+
+  const cliffTime = new Date(
+    parseFloat(ido.vestingStart) * 1000 + parseFloat(ido.cliffDuration) * 1000
   ).toLocaleDateString();
 
   const vestingInfoDiff = dateDiff(
     parseDate(idoVestingStart),
     parseDate(idoVestingEnd)
   );
-
-  const cliffDuration = dateDiff(parseDate(idoCliff), parseDate(idoVestingEnd));
 
   const tokensRemainingForSale = new BigNumber(
     contractDetails.tokensRemainingForSale
@@ -483,7 +482,7 @@ export const IdoCard = ({
                   <Uik.Text text={`Cliff Duration: 0 Days`} className="white" />
                 ) : (
                   <Uik.Text
-                    text={`Cliff Duration: ${cliffDuration} Days`}
+                    text={`Cliff Time: ${cliffTime}`}
                     className="white"
                   />
                 )}
@@ -551,109 +550,112 @@ export const IdoCard = ({
         </div>
         {(typeOfPresale === "Active Presales" ||
           typeOfPresale === "My Crowdsale") && (
-            <div style={{ marginBottom: "20px" }}>
-              <Uik.Container>
-                <Uik.Input
-                  type="number"
-                  value={investValue}
-                  onInput={(e) => setInvestValue(e.target.value)}
-                />
-                <Uik.Button
-                  size="large"
-                  text={selectedInputToken.inputTokenSymbol}
-                  onClick={() => setSelectorOpen(!isSelectorOpen)}
-                />
-                <Uik.Dropdown
-                  isOpen={isSelectorOpen}
-                  onClose={() => setSelectorOpen(false)}
-                  position="topLeft"
-                >
-                  {ido.inputTokens.map((inputToken) => (
-                    <Uik.DropdownItem
-                      key={inputToken.inputTokenSymbol}
-                      text={inputToken.inputTokenSymbol}
-                      onClick={() => setSelectedInputToken(() => inputToken)}
-                    />
-                  ))}
-                </Uik.Dropdown>
-              </Uik.Container>
-              <Uik.Container>
-                <Uik.Button
-                  text="Invest"
-                  fill
-                  size="large"
-                  onClick={handleInvest}
-                  loading={isInvesting}
-                  className="invest-submit-btn"
-                  loader="fish"
-                />
-              </Uik.Container>
-            </div>
-          )}
+          <div style={{ marginBottom: "20px" }}>
+            <Uik.Container>
+              <Uik.Input
+                type="number"
+                value={investValue}
+                onInput={(e) => setInvestValue(e.target.value)}
+              />
+              <Uik.Button
+                size="large"
+                text={selectedInputToken.inputTokenSymbol}
+                onClick={() => setSelectorOpen(!isSelectorOpen)}
+              />
+              <Uik.Dropdown
+                isOpen={isSelectorOpen}
+                onClose={() => setSelectorOpen(false)}
+                position="topLeft"
+              >
+                {ido.inputTokens.map((inputToken) => (
+                  <Uik.DropdownItem
+                    key={inputToken.inputTokenSymbol}
+                    text={inputToken.inputTokenSymbol}
+                    onClick={() => setSelectedInputToken(() => inputToken)}
+                  />
+                ))}
+              </Uik.Dropdown>
+            </Uik.Container>
+            <Uik.Container>
+              <Uik.Button
+                text="Invest"
+                fill
+                size="large"
+                onClick={handleInvest}
+                loading={isInvesting}
+                className="invest-submit-btn"
+                loader="fish"
+              />
+            </Uik.Container>
+          </div>
+        )}
         {(typeOfPresale === "Completed Presales" ||
           typeOfPresale === "My Crowdsale") && (
-            <div className="all-box-container">
-              <div className="one-box-container">
-                <div className="box box1">
-                  <Uik.Text type="lead" className="total-invested-text">
-                    Total Invested :
-                  </Uik.Text>
-                  <Uik.Text>
-                    {amount} {ido.tokenSymbol}
-                  </Uik.Text>
-                </div>
-              </div>
-              <div className="three-box-container">
-                <div className="box box2">
-                  <Uik.Text type="lead">Locked</Uik.Text>
-                  <Uik.Text>
-                    {remainingBalance} {ido.tokenSymbol}
-                  </Uik.Text>
-                </div>
-                <div className="box box3">
-                  <Uik.Text type="lead">Claimable</Uik.Text>
-                  <Uik.Text>
-                    {availableForDrawDown} {ido.tokenSymbol}
-                  </Uik.Text>
-                </div>
-                <div className="box box4">
-                  <Uik.Text type="lead">Claimed</Uik.Text>
-                  <Uik.Text>
-                    {totalDrawn} {ido.tokenSymbol}
-                  </Uik.Text>
-                </div>
-              </div>
-              {typeOfPresale === "Completed Presales" && new BigNumber(
-                contractDetails.tokensRemainingForSale).dividedBy(new BigNumber(10).pow(ido.tokenDecimals)).isGreaterThan(ido.minimumTokenSaleAmount) ?
-                <Uik.Container>
-                <Uik.Text>
-                  As Softcap Condition is not met, you have can retrieve your investment by simply clicking on the button below.
+          <div className="all-box-container">
+            <div className="one-box-container">
+              <div className="box box1">
+                <Uik.Text type="lead" className="total-invested-text">
+                  Total Invested :
                 </Uik.Text>
-                  <Uik.Button
-                  text="Retrieve Investment"
-                    onClick={handleClaim}
-                    loading={isClaiming}
-                    className="invest-submit-btn"
-                    fill={!new BigNumber(availableForDrawDown).isEqualTo(0)}
-                    size="large"
-                    disabled={new BigNumber(availableForDrawDown).isEqualTo(0)}
-                  />
-                </Uik.Container>
-                :
-                <Uik.Container>
-                  <Uik.Button
-                    text="Claim"
-                    onClick={handleClaim}
-                    loading={isClaiming}
-                    className="invest-submit-btn"
-                    fill={!new BigNumber(availableForDrawDown).isEqualTo(0)}
-                    size="large"
-                    disabled={new BigNumber(availableForDrawDown).isEqualTo(0)}
-                  />
-                </Uik.Container>
-              }
+                <Uik.Text>
+                  {amount} {ido.tokenSymbol}
+                </Uik.Text>
+              </div>
             </div>
-          )}
+            <div className="three-box-container">
+              <div className="box box2">
+                <Uik.Text type="lead">Locked</Uik.Text>
+                <Uik.Text>
+                  {remainingBalance} {ido.tokenSymbol}
+                </Uik.Text>
+              </div>
+              <div className="box box3">
+                <Uik.Text type="lead">Claimable</Uik.Text>
+                <Uik.Text>
+                  {availableForDrawDown} {ido.tokenSymbol}
+                </Uik.Text>
+              </div>
+              <div className="box box4">
+                <Uik.Text type="lead">Claimed</Uik.Text>
+                <Uik.Text>
+                  {totalDrawn} {ido.tokenSymbol}
+                </Uik.Text>
+              </div>
+            </div>
+            {typeOfPresale === "Completed Presales" &&
+            new BigNumber(contractDetails.tokensRemainingForSale)
+              .dividedBy(new BigNumber(10).pow(ido.tokenDecimals))
+              .isGreaterThan(ido.minimumTokenSaleAmount) ? (
+              <Uik.Container>
+                <Uik.Text>
+                  As Softcap Condition is not met, you have can retrieve your
+                  investment by simply clicking on the button below.
+                </Uik.Text>
+                <Uik.Button
+                  text="Retrieve Investment"
+                  onClick={handleClaim}
+                  loading={isClaiming}
+                  className="invest-submit-btn"
+                  fill={!new BigNumber(availableForDrawDown).isEqualTo(0)}
+                  size="large"
+                  disabled={new BigNumber(availableForDrawDown).isEqualTo(0)}
+                />
+              </Uik.Container>
+            ) : (
+              <Uik.Container>
+                <Uik.Button
+                  text="Claim"
+                  onClick={handleClaim}
+                  loading={isClaiming}
+                  className="invest-submit-btn"
+                  fill={!new BigNumber(availableForDrawDown).isEqualTo(0)}
+                  size="large"
+                  disabled={new BigNumber(availableForDrawDown).isEqualTo(0)}
+                />
+              </Uik.Container>
+            )}
+          </div>
+        )}
         <Uik.Container className="display-user-rate">
           <Uik.Text>
             You will receive {ido.inputTokenRate} {ido.tokenSymbol} for 1{" "}
