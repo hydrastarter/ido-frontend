@@ -105,7 +105,7 @@ export const Admin: React.FC = () => {
   const [allowence, setAllowence] = useState(new BigNumber(0));
   const [startTimeInUTC, setStartTimeInUTC] = useState(new Date(Date.now()));
   const [endTimeInUTC, setEndTimeInUTC] = useState(
-    new Date(Date.now() + 24 * 60 * 60 * 1000),
+    new Date(Date.now() + 1 * 60 * 60 * 1000),
   );
   const [amountOfTokensToSell, setAmountOfTokensToSell] = useState('0');
   const [softcap, setSoftcap] = useState('900');
