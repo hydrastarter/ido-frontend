@@ -138,14 +138,25 @@
 .card-verified-box {
 }
 
-.card-token-name{
+.card-token-name {
     margin-left: 5px;
 }
 
-.card-token-symbol{
-    margin:  0 20px 0 5px;
+.card-token-symbol {
+    margin: 0 20px 0 5px;
 }
 
-.card-link{
-   margin: 0 2px;
+.card-link {
+    margin: 0 2px;
 }
+
+.softcap-not-met-box {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+.softcap-not-met-text {
+   margin-bottom: 10px;
+}
+

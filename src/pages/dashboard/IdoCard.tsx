@@ -623,24 +623,28 @@ export const IdoCard = ({
               </div>
             </div>
             {typeOfPresale === "Completed Presales" &&
-            new BigNumber(contractDetails.tokensRemainingForSale)
-              .dividedBy(new BigNumber(10).pow(ido.tokenDecimals))
-              .isGreaterThan(ido.minimumTokenSaleAmount) ? (
-              <Uik.Container>
-                <Uik.Text>
-                  As Softcap Condition is not met, you have can retrieve your
-                  investment by simply clicking on the button below.
-                </Uik.Text>
-                <Uik.Button
-                  text="Retrieve Investment"
-                  onClick={handleClaim}
-                  loading={isClaiming}
-                  className="invest-submit-btn"
-                  fill={!new BigNumber(availableForDrawDown).isEqualTo(0)}
-                  size="large"
-                  disabled={new BigNumber(availableForDrawDown).isEqualTo(0)}
-                />
-              </Uik.Container>
+            new BigNumber(ido.minimumTokenSaleAmount).isGreaterThan(
+              tokensThatHaveBeenSold
+            ) ? (
+              <div className="softcap-not-met-box">
+                <div className="softcap-not-met-text">
+                  <Uik.Text>
+                    Since the Softcap has not met, you have can retrieve your
+                    investment by simply clicking on the button below.
+                  </Uik.Text>
+                </div>
+                <div>
+                  <Uik.Button
+                    text="Retrieve Investment"
+                    onClick={handleClaim}
+                    loading={isClaiming}
+                    className="invest-submit-btn"
+                    fill={!new BigNumber(availableForDrawDown).isEqualTo(0)}
+                    size="large"
+                    disabled={new BigNumber(availableForDrawDown).isEqualTo(0)}
+                  />
+                </div>
+              </div>
             ) : (
               <Uik.Container>
                 <Uik.Button
