@@ -219,23 +219,23 @@ export const IdoCard = ({
 
   let idoStartDate = new Date(
     parseFloat(ido.crowdsaleStartTime) * 1000
-  ).toLocaleDateString();
+  ).toLocaleDateString("en-US");
   let idoEndDate = new Date(
     parseFloat(ido.crowdsaleEndTime) * 1000
-  ).toLocaleDateString();
+  ).toLocaleDateString("en-US");
 
   const poolInfoDiff = dateDiff(parseDate(idoStartDate), parseDate(idoEndDate));
 
   let idoVestingStart = new Date(
     parseFloat(ido.vestingStart) * 1000
-  ).toLocaleDateString();
+  ).toLocaleDateString("en-US");
   let idoVestingEnd = new Date(
     parseFloat(ido.vestingEnd) * 1000
-  ).toLocaleDateString();
+  ).toLocaleDateString("en-US");
 
   const cliffTime = new Date(
     parseFloat(ido.vestingStart) * 1000 + parseFloat(ido.cliffDuration) * 1000
-  ).toLocaleDateString();
+  ).toLocaleDateString("en-US");
 
   const vestingInfoDiff = dateDiff(
     parseDate(idoVestingStart),
