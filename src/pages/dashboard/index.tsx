@@ -53,7 +53,7 @@ export const Tab4 = "My Crowdsale";
 const TabsData = ({ allIdos }: { allIdos: idoType[] }) => {
   const [firstTab, setFirstTab] = useState(Tab1);
 
-  const [isSorting, setIsSorting] = useState(false);
+  // const [isSorting, setIsSorting] = useState(false);
 
   const [activePresales, setActivePresales] = useState<idoType[]>([]);
   const [upcomingPresales, setUpcomingPresales] = useState<idoType[]>([]);
@@ -67,7 +67,7 @@ const TabsData = ({ allIdos }: { allIdos: idoType[] }) => {
     allTypesOfIdos: idoType[],
     selectedSigner: ReefSigner
   ) => {
-    setIsSorting(() => true);
+    // setIsSorting(() => true);
 
     const idos = allTypesOfIdos;
     if (idos && idos.length > 0) {
@@ -113,15 +113,16 @@ const TabsData = ({ allIdos }: { allIdos: idoType[] }) => {
       setCompletedPresales(() => completedIdos);
       setMyCrowdsales(() => myIdos);
 
-      setIsSorting(() => false);
+      // setIsSorting(() => false);
     }
-    setIsSorting(() => false);
+    // setIsSorting(() => false);
   };
 
   useEffect(() => {
+    console.log('selectedSigner', selectedSigner)
     if (selectedSigner) {
       sortAllIdos(allIdos, selectedSigner).catch((e) => {
-        setIsSorting(() => false);
+        // setIsSorting(() => false);
         console.log("Error in sortAllIdos: ", e);
       });
     }
@@ -129,39 +130,39 @@ const TabsData = ({ allIdos }: { allIdos: idoType[] }) => {
 
   return (
     <div className="dashboard-container">
-      {isSorting && <Uik.Loading text="Sorting all IDOs..." />}
-      {!isSorting && (
-        <>
-          <div className="tabs-container">
-            <Uik.Tabs
-              value={firstTab}
-              onChange={(value) => setFirstTab(value)}
-              options={[Tab1, Tab2, Tab3, Tab4]}
-            />
-          </div>
-          <div className="idos-container">
-            {firstTab === Tab1 &&
-              activePresales.map((ido) => (
-                <IdoCard key={ido.id} ido={ido} typeOfPresale={Tab1} />
-              ))}
+      {/* {isSorting && <Uik.Loading text="Sorting all IDOs..." />} */}
+      {/* {!isSorting && ( */}
+      <>
+        <div className="tabs-container">
+          <Uik.Tabs
+            value={firstTab}
+            onChange={(value) => setFirstTab(value)}
+            options={[Tab1, Tab2, Tab3, Tab4]}
+          />
+        </div>
+        <div className="idos-container">
+          {firstTab === Tab1 &&
+            activePresales.map((ido) => (
+              <IdoCard key={ido.id} ido={ido} typeOfPresale={Tab1} />
+            ))}
 
-            {firstTab === Tab2 &&
-              upcomingPresales.map((ido) => (
-                <IdoCard key={ido.id} ido={ido} typeOfPresale={Tab2} />
-              ))}
+          {firstTab === Tab2 &&
+            upcomingPresales.map((ido) => (
+              <IdoCard key={ido.id} ido={ido} typeOfPresale={Tab2} />
+            ))}
 
-            {firstTab === Tab3 &&
-              completedPresales.map((ido) => (
-                <IdoCard key={ido.id} ido={ido} typeOfPresale={Tab3} />
-              ))}
+          {firstTab === Tab3 &&
+            completedPresales.map((ido) => (
+              <IdoCard key={ido.id} ido={ido} typeOfPresale={Tab3} />
+            ))}
 
-            {firstTab === Tab4 &&
-              myCrowdsales.map((ido) => (
-                <IdoCard key={ido.id} ido={ido} typeOfPresale={Tab4} />
-              ))}
-          </div>
-        </>
-      )}
+          {firstTab === Tab4 &&
+            myCrowdsales.map((ido) => (
+              <IdoCard key={ido.id} ido={ido} typeOfPresale={Tab4} />
+            ))}
+        </div>
+      </>
+      {/* )} */}
     </div>
   );
 };
