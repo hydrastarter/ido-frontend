@@ -34,7 +34,12 @@ export type idoType = {
   maxUserAllocation: string;
   minimumTokenSaleAmount: string;
 };
-
+export type inputTokenType = {
+  inputTokenName: string;
+  inputTokenSymbol: string;
+  inputTokenAddress: string;
+  inputTokenDecimals: number;
+};
 export const idos: idoType[] = [
   {
     id: "",

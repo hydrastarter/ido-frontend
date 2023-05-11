@@ -5,7 +5,7 @@
       "DOM",
       "DOM.Iterable",
       "esnext",
-      "ScriptHost" 
+      "ScriptHost"
     ],
     "allowJs": true,
     "skipLibCheck": true,
@@ -22,6 +22,7 @@
     "jsx": "react-jsx"
   },
   "include": [
-    "./src/**/*.ts"
+    "./src/**/*.ts",
+    "./global.d.ts"
   ]
 }
