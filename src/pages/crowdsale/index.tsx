@@ -1,14 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from "react";
 import Uik from "@reef-defi/ui-kit";
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from "react-router-dom";
 import BigNumber from "bignumber.js";
-import { Link } from "react-router-dom";
-import IconButton from "@mui/material/IconButton";
 import { appState, hooks, ReefSigner } from "@reef-defi/react-lib";
 import { Contract } from "ethers";
 import Countdown from "react-countdown";
-import ExpandLessIcon from "@mui/icons-material/ExpandLess";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import InfoIcon from "@mui/icons-material/Info";
 import { styled } from "@mui/material/styles";
 import LinearProgress, {
   linearProgressClasses,
@@ -24,7 +22,7 @@ import { idoType, inputTokenType } from "../../assets/ido";
 import { ERC20 } from "../../abis/ERC20";
 import "../dashboard/index.css";
 import "../dashboard/idoCard.css";
-
+import { DASHBOARD_URL } from "../../urls";
 
 /**
  * Take the difference between the dates and divide by milliseconds per day.
@@ -43,11 +41,12 @@ function parseDate(str: any) {
   let mdy = str.split("/");
   return new Date(mdy[2], mdy[0] - 1, mdy[1]);
 }
+
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
-  height: 18,
+  height: 25,
   borderRadius: 9,
   marginTop: "20px",
-  marginBottom: "20px",
+  marginBottom: "2kpx",
   [`&.${linearProgressClasses.colorPrimary}`]: {
     backgroundColor:
       theme.palette.grey[theme.palette.mode === "light" ? 200 : 800],
@@ -113,14 +112,15 @@ export default function CrowdsaleDetails() {
   const selectedSigner: ReefSigner | undefined | null =
     hooks.useObservableState(appState.selectedSigner$);
   const [ido, setIdoData] = useState<idoType | null>(null);
-  const [showMoreVesting, setShowMoreVesting] = useState(true);
-  const [showMorePoolInfo, setShowMorePoolInfo] = useState(true);
-  const [selectedInputToken, setSelectedInputToken] = useState<inputTokenType | null>(null);
+  const [selectedInputToken, setSelectedInputToken] =
+    useState<inputTokenType | null>(null);
   const [isClaiming, setIsClaiming] = useState(false);
   const [investValue, setInvestValue] = useState("0");
   const [isInvesting, setIsInvesting] = useState(false);
   const [isSelectorOpen, setSelectorOpen] = useState(false);
-  const [typeOfPresale, setTypeofPresale] = useState<"Active Presales" | "Upcoming Presales" | "Completed Presales">("Active Presales");
+  const [typeOfPresale, setTypeofPresale] = useState<
+    "Active Presales" | "Upcoming Presales" | "Completed Presales"
+  >("Active Presales");
   const [contractDetails, setContractDetails] = useState({
     tokensRemainingForSale: "0",
     amount: "0",
@@ -183,7 +183,10 @@ export default function CrowdsaleDetails() {
             )
             .toString();
 
-          await erc20Contract.approve(crowdsaleContractAddress, investValueInWei);
+          await erc20Contract.approve(
+            crowdsaleContractAddress,
+            investValueInWei
+          );
 
           await crowdsaleContract.purchaseToken(
             selectedInputToken.inputTokenAddress,
@@ -204,11 +207,14 @@ export default function CrowdsaleDetails() {
     const getIdoDetails = async () => {
       const username = "adminUser";
       const password = "password";
-      const resp = await fetch(`https://reef-ido.cryption.network/crowdsale/${params.address}`, {
-        headers: {
-          Authorization: `Basic ${btoa(`${username}:${password}`)}`,
-        },
-      });
+      const resp = await fetch(
+        `https://reef-ido.cryption.network/crowdsale/${params.address}`,
+        {
+          headers: {
+            Authorization: `Basic ${btoa(`${username}:${password}`)}`,
+          },
+        }
+      );
       const res = await resp.json();
       setIdoData(() => res.data);
       const currentTime = Math.floor(+new Date() / 1000);
@@ -216,17 +222,17 @@ export default function CrowdsaleDetails() {
       const idoEndTime = parseFloat(res.data.crowdsaleEndTime);
 
       if (idoStartTime < currentTime && idoEndTime > currentTime) {
-        setTypeofPresale('Active Presales')
+        setTypeofPresale("Active Presales");
       } else if (idoStartTime > currentTime && idoEndTime > currentTime) {
-        setTypeofPresale('Upcoming Presales')
+        setTypeofPresale("Upcoming Presales");
       } else {
-        setTypeofPresale('Completed Presales')
+        setTypeofPresale("Completed Presales");
       }
-    }
+    };
     if (params && params.address) {
-      getIdoDetails()
+      getIdoDetails();
     }
-  }, [params.address])
+  }, [params.address]);
   useEffect(() => {
     const getAllContractDetails = async (
       crowdsaleContractAddress: string,
@@ -260,9 +266,9 @@ export default function CrowdsaleDetails() {
       });
     };
     if (selectedSigner) {
-      getAllContractDetails
+      getAllContractDetails;
     }
-  }, [selectedSigner])
+  }, [selectedSigner]);
 
   let percentCompleted = 0;
   let tokensThatHaveBeenSold = 0;
@@ -273,10 +279,10 @@ export default function CrowdsaleDetails() {
   let idoStartDate;
   let idoEndDate;
   let poolInfoDiff;
-  let amount = '0';
-  let totalDrawn = '0';
-  let remainingBalance = '0';
-  let availableForDrawDown = '0';
+  let amount = "0";
+  let totalDrawn = "0";
+  let remainingBalance = "0";
+  let availableForDrawDown = "0";
   if (ido) {
     const tokensRemainingForSale = new BigNumber(
       contractDetails.tokensRemainingForSale
@@ -287,7 +293,8 @@ export default function CrowdsaleDetails() {
       parseFloat(ido.crowdsaleTokenAllocated) -
       parseFloat(tokensRemainingForSale);
     percentCompleted = Math.floor(
-      (tokensThatHaveBeenSold / parseFloat(ido.crowdsaleTokenAllocated)) * 100);
+      (tokensThatHaveBeenSold / parseFloat(ido.crowdsaleTokenAllocated)) * 100
+    );
     idoVestingStart = new Date(
       parseFloat(ido.vestingStart) * 1000
     ).toLocaleDateString("en-US");
@@ -319,120 +326,58 @@ export default function CrowdsaleDetails() {
     remainingBalance = new BigNumber(contractDetails.remainingBalance)
       .dividedBy(new BigNumber(10).pow(ido.tokenDecimals))
       .toString();
-    availableForDrawDown = new BigNumber(
-      contractDetails.availableForDrawDown
-    )
+    availableForDrawDown = new BigNumber(contractDetails.availableForDrawDown)
       .dividedBy(new BigNumber(10).pow(ido.tokenDecimals))
       .toString();
-  }
-  return (
-    <div>
-      {ido &&
-        <Uik.Card>
-          <div className="ido-card-avatar-box">
-            <Uik.Avatar image={ido.tokenImageUrl} size="extra-large" />
-          </div>
-          <div className="card-header-box">
-            <div className="card-name-links-box">
-              <div className="card-name-box">
-                <Uik.Text
-                  text={ido.tokenName}
-                  className="no-wrap card-token-name"
-                />
-                <Uik.Text
-                  text={`(${ido.tokenSymbol})`}
-                  className="no-wrap card-token-symbol"
-                />
-              </div>
-              <div className="card-links-box">
-                <a
-                  href={`//${ido.twitterUrl}`}
-                  target="_blank"
-                  className="card-link twitter-link"
-                >
-                  <img src={twitterIcon} alt="twitter" width="30px" />
-                </a>
-                <a
-                  href={`//${ido.telegramUrl}`}
-                  target="_blank"
-                  className="card-link telegram-link"
-                >
-                  <img src={telegramIcon} alt="telegram" width="30px" />
-                </a>
-                <a
-                  href={`//${ido.websiteUrl}`}
-                  target="_blank"
-                  className="card-link website-link"
-                >
-                  <img src={websiteIcon} alt="project website" width="30px" />
-                </a>
-              </div>
-            </div>
-            <div className="card-verified-box">
-              <Link to="/" target="_blank" style={{ whiteSpace: "nowrap" }}>
-                <Uik.Text text="Apply for a Verified Tag" type="mini" />
-              </Link>
-            </div>
-          </div>
-          <div style={{ position: "relative" }}>
-            <BorderLinearProgress
-              variant="determinate"
-              value={percentCompleted}
-            />
+
+    return (
+      <div className="crowdsale-page-container">
+        <div className="back-button-container">
+          <Link to={DASHBOARD_URL} className="link-box">
+            <ArrowBackIcon color="inherit" />
+            <Uik.Text className="back-button-text">Back to Dashboard</Uik.Text>
+          </Link>
+        </div>
+        <div className="crowdsale-container">
+          <div className="interaction-box">
             <div
               style={{
-                position: "absolute",
-                right: "7px",
-                top: "1px",
+                margin: "10px 0px",
+                background: "linear-gradient(#6c179f, #8e1e71)",
+                padding: "10px 20px",
+                borderRadius: "10px",
+                display: "flex",
+                justifyContent: "center",
               }}
             >
-              <Uik.Text
-                text={`${tokensThatHaveBeenSold}/${ido.crowdsaleTokenAllocated}`}
-                type="mini"
-              />
-            </div>
-          </div>
-          <div
-            style={{
-              margin: "10px 0px",
-              background: "linear-gradient(#6c179f, #8e1e71)",
-              padding: "10px 20px",
-              borderRadius: "10px",
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            <Uik.Text className="white">
-              {typeOfPresale === "Upcoming Presales" && (
-                // @ts-ignore
-                <Countdown
-                  date={parseFloat(ido.crowdsaleStartTime) * 1000}
-                  renderer={PresaleStartsInCountdown}
-                />
-              )}
+              <Uik.Text className="white">
+                {typeOfPresale === "Upcoming Presales" && (
+                  // @ts-ignore
+                  <Countdown
+                    date={parseFloat(ido.crowdsaleStartTime) * 1000}
+                    renderer={PresaleStartsInCountdown}
+                  />
+                )}
 
-              {typeOfPresale === "Active Presales" && (
-                // @ts-ignore
-                <Countdown
-                  date={parseFloat(ido.crowdsaleEndTime) * 1000}
-                  renderer={PresaleEndsInCountdown}
-                />
-              )}
+                {typeOfPresale === "Active Presales" && (
+                  // @ts-ignore
+                  <Countdown
+                    date={parseFloat(ido.crowdsaleEndTime) * 1000}
+                    renderer={PresaleEndsInCountdown}
+                  />
+                )}
 
-              {typeOfPresale === "Completed Presales" && "Presale is completed"}
-            </Uik.Text>
-          </div>
-          <div>
-            <div style={{ width: "100%", marginBottom: "20px" }}>
-              <Uik.Container flow="spaceBetween">
-                <Uik.Text text="Vesting Info" type="light" />
-                <IconButton onClick={() => setShowMoreVesting(!showMoreVesting)}>
-                  {showMoreVesting ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                </IconButton>
-              </Uik.Container>
-              <div className="divider-line" />
+                {typeOfPresale === "Completed Presales" &&
+                  "Presale is completed"}
+              </Uik.Text>
             </div>
-            {showMoreVesting && (
+            <Uik.Card className="crowdsale-card">
+              <div style={{ width: "100%", marginBottom: "20px" }}>
+                <Uik.Container flow="spaceBetween">
+                  <Uik.Text text="Vesting Info" />
+                </Uik.Container>
+                <div className="divider-line" />
+              </div>
               <div>
                 <Uik.Container flow="start">
                   <Uik.Text text={idoVestingStart} />
@@ -442,42 +387,32 @@ export default function CrowdsaleDetails() {
                   />
                   <Uik.Text text={idoVestingEnd} className="divider-text" />
                 </Uik.Container>
-                <div
-                  style={{
-                    margin: "20px 0px",
-                    background:
-                      "linear-gradient(rgb(108, 23, 159), rgb(142, 30, 113))",
-                    padding: "5px 20px",
-                    borderRadius: "20px",
-                    display: "flex",
-                    justifyContent: "flex-start",
-                  }}
-                >
+                <div className="value-box cliff-duration-box">
                   {parseFloat(ido.cliffDuration) === 0 ? (
-                    <Uik.Text text={`Cliff Duration: 0 Days`} className="white" />
+                    <Uik.Text text={`Cliff Duration: 0 Days`} type="light" />
                   ) : (
-                    <Uik.Text
-                      text={`Cliff Time: ${cliffTime}`}
-                      className="white"
-                    />
+                    <Uik.Text text={`Cliff Time: ${cliffTime}`} type="light" />
                   )}
+                  <Uik.Tooltip
+                    delay={0}
+                    position="right"
+                    text={`Minimum number of IDO tokens to be sold for the IDO to continue.
+                      If the number is less then the purchasing token is given back after the IDO ends`}
+                    className="tooltip-custom-styles"
+                  >
+                    <InfoIcon color="inherit" style={{ marginLeft: "5px" }} />
+                  </Uik.Tooltip>
                 </div>
               </div>
-            )}
-          </div>
-          <div>
-            <div style={{ width: "100%", marginBottom: "20px" }}>
-              <Uik.Container flow="spaceBetween">
-                <Uik.Text text="Pool Info" type="light" />
-                <IconButton
-                  onClick={() => setShowMorePoolInfo(!showMorePoolInfo)}
-                >
-                  {showMorePoolInfo ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                </IconButton>
-              </Uik.Container>
-              <div className="divider-line" />
-            </div>
-            {showMorePoolInfo && (
+            </Uik.Card>
+            <Uik.Card className="crowdsale-card">
+              <div style={{ width: "100%", marginBottom: "20px" }}>
+                <Uik.Container flow="spaceBetween">
+                  <Uik.Text text="Pool Info" />
+                </Uik.Container>
+                <div className="divider-line" />
+              </div>
+
               <div>
                 <Uik.Container flow="start">
                   <Uik.Text text={idoStartDate} />
@@ -487,160 +422,261 @@ export default function CrowdsaleDetails() {
                   />
                   <Uik.Text text={idoEndDate} className="divider-text" />
                 </Uik.Container>
-                <div
-                  style={{
-                    margin: "20px 0px",
-                    background:
-                      "linear-gradient(rgb(108, 23, 159), rgb(142, 30, 113))",
-                    padding: "5px 20px",
-                    borderRadius: "20px",
-                    display: "flex",
-                    justifyContent: "flex-start",
-                  }}
-                >
+                <div className="value-box cliff-duration-box">
                   <Uik.Text
                     text={`Soft Cap: ${ido.minimumTokenSaleAmount} ${ido.tokenSymbol}`}
-                    className="white"
+                    type="light"
                   />
+                  <Uik.Tooltip
+                    delay={0}
+                    position="right"
+                    text={`Minimum number of IDO tokens to be sold for the IDO to continue.
+                      If the number is less then the purchasing token is given back after the IDO ends`}
+                    className="tooltip-custom-styles"
+                  >
+                    <InfoIcon color="inherit" style={{ marginLeft: "5px" }} />
+                  </Uik.Tooltip>
                 </div>
-
-                <div
-                  style={{
-                    margin: "20px 0px",
-                    background:
-                      "linear-gradient(rgb(108, 23, 159), rgb(142, 30, 113))",
-                    padding: "5px 20px",
-                    borderRadius: "20px",
-                    display: "flex",
-                    justifyContent: "flex-start",
-                  }}
-                >
+                <div className="value-box cliff-duration-box">
                   <Uik.Text
                     text={`User limit: ${ido.maxUserAllocation} ${ido.tokenSymbol}`}
-                    className="white"
+                    type="light"
                   />
-                </div>
-              </div>
-            )}
-          </div>
-          {typeOfPresale === "Active Presales" && (
-              <div style={{ marginBottom: "20px" }}>
-                <Uik.Container>
-                  <Uik.Input
-                    type="number"
-                    value={investValue}
-                    onInput={(e) => setInvestValue(e.target.value)}
-                  />
-                  {selectedInputToken && <Uik.Button
-                    size="large"
-                    text={selectedInputToken.inputTokenSymbol}
-                    onClick={() => setSelectorOpen(!isSelectorOpen)}
-                  />}
-                  <Uik.Dropdown
-                    isOpen={isSelectorOpen}
-                    onClose={() => setSelectorOpen(false)}
-                    position="topLeft"
+                  <Uik.Tooltip
+                    delay={0}
+                    position="right"
+                    text={`Minimum number of IDO tokens to be sold for the IDO to continue.
+                      If the number is less then the purchasing token is given back after the IDO ends`}
+                    className="tooltip-custom-styles"
                   >
-                    {ido.inputTokens.map((inputToken) => (
-                      <Uik.DropdownItem
-                        key={inputToken.inputTokenSymbol}
-                        text={inputToken.inputTokenSymbol}
-                        onClick={() => setSelectedInputToken(() => inputToken)}
-                      />
-                    ))}
-                  </Uik.Dropdown>
-                </Uik.Container>
-                <Uik.Container>
-                  <Uik.Button
-                    text="Invest"
-                    fill
-                    size="large"
-                    onClick={handleInvest}
-                    loading={isInvesting}
-                    className="invest-submit-btn"
-                    loader="fish"
-                  />
-                </Uik.Container>
+                    <InfoIcon color="inherit" style={{ marginLeft: "5px" }} />
+                  </Uik.Tooltip>
+                </div>
               </div>
-            )}
-          {typeOfPresale === "Completed Presales" && (
-              <div className="all-box-container">
-                <div className="one-box-container">
-                  <div className="box box1">
-                    <Uik.Text type="lead" className="total-invested-text">
-                      Total Invested :
-                    </Uik.Text>
-                    <Uik.Text>
-                      {amount} {ido.tokenSymbol}
-                    </Uik.Text>
-                  </div>
+            </Uik.Card>
+            <Uik.Card className="crowdsale-card">
+              <div style={{ width: "100%", marginBottom: "20px" }}>
+                <Uik.Container flow="spaceBetween">
+                  <Uik.Text text="Invest" />
+                </Uik.Container>
+                <div className="divider-line" />
+              </div>
+
+              {typeOfPresale === "Active Presales" && (
+                <div style={{ marginBottom: "20px" }}>
+                  <Uik.Container>
+                    <Uik.Input
+                      type="number"
+                      value={investValue}
+                      onInput={(e) => setInvestValue(e.target.value)}
+                    />
+                    {selectedInputToken && (
+                      <Uik.Button
+                        size="large"
+                        text={selectedInputToken.inputTokenSymbol}
+                        onClick={() => setSelectorOpen(!isSelectorOpen)}
+                      />
+                    )}
+                    <Uik.Dropdown
+                      isOpen={isSelectorOpen}
+                      onClose={() => setSelectorOpen(false)}
+                      position="topLeft"
+                    >
+                      {ido.inputTokens.map((inputToken) => (
+                        <Uik.DropdownItem
+                          key={inputToken.inputTokenSymbol}
+                          text={inputToken.inputTokenSymbol}
+                          onClick={() =>
+                            setSelectedInputToken(() => inputToken)
+                          }
+                        />
+                      ))}
+                    </Uik.Dropdown>
+                  </Uik.Container>
+                  <Uik.Container>
+                    <Uik.Button
+                      text="Invest"
+                      fill
+                      size="large"
+                      onClick={handleInvest}
+                      loading={isInvesting}
+                      className="invest-submit-btn"
+                      loader="fish"
+                    />
+                  </Uik.Container>
                 </div>
-                <div className="three-box-container">
-                  <div className="box box2">
-                    <Uik.Text type="lead">Locked</Uik.Text>
-                    <Uik.Text>
-                      {remainingBalance} {ido.tokenSymbol}
-                    </Uik.Text>
+              )}
+              {typeOfPresale === "Completed Presales" && (
+                <div className="all-box-container">
+                  <div className="one-box-container">
+                    <div className="box box1">
+                      <Uik.Text type="lead" className="total-invested-text">
+                        Total Invested :
+                      </Uik.Text>
+                      <Uik.Text>
+                        {amount} {ido.tokenSymbol}
+                      </Uik.Text>
+                    </div>
                   </div>
-                  <div className="box box3">
-                    <Uik.Text type="lead">Claimable</Uik.Text>
-                    <Uik.Text>
-                      {availableForDrawDown} {ido.tokenSymbol}
-                    </Uik.Text>
+                  <div className="three-box-container">
+                    <div className="box box2">
+                      <Uik.Text type="lead">Locked</Uik.Text>
+                      <Uik.Text>
+                        {remainingBalance} {ido.tokenSymbol}
+                      </Uik.Text>
+                    </div>
+                    <div className="box box3">
+                      <Uik.Text type="lead">Claimable</Uik.Text>
+                      <Uik.Text>
+                        {availableForDrawDown} {ido.tokenSymbol}
+                      </Uik.Text>
+                    </div>
+                    <div className="box box4">
+                      <Uik.Text type="lead">Claimed</Uik.Text>
+                      <Uik.Text>
+                        {totalDrawn} {ido.tokenSymbol}
+                      </Uik.Text>
+                    </div>
                   </div>
-                  <div className="box box4">
-                    <Uik.Text type="lead">Claimed</Uik.Text>
-                    <Uik.Text>
-                      {totalDrawn} {ido.tokenSymbol}
-                    </Uik.Text>
-                  </div>
-                </div>
-                {typeOfPresale === "Completed Presales" &&
+                  {typeOfPresale === "Completed Presales" &&
                   new BigNumber(ido.minimumTokenSaleAmount).isGreaterThan(
                     tokensThatHaveBeenSold
                   ) ? (
-                  <div className="softcap-not-met-box">
-                    <div className="softcap-not-met-text">
-                      <Uik.Text>
-                        Since the Softcap has not met, you have can retrieve your
-                        investment by simply clicking on the button below.
-                      </Uik.Text>
+                    <div className="softcap-not-met-box">
+                      <div className="softcap-not-met-text">
+                        <Uik.Text>
+                          Since the Softcap has not met, you have can retrieve
+                          your investment by simply clicking on the button
+                          below.
+                        </Uik.Text>
+                      </div>
+                      <div>
+                        <Uik.Button
+                          text="Retrieve Investment"
+                          onClick={handleClaim}
+                          loading={isClaiming}
+                          className="invest-submit-btn"
+                          fill={
+                            !new BigNumber(availableForDrawDown).isEqualTo(0)
+                          }
+                          size="large"
+                          disabled={new BigNumber(
+                            availableForDrawDown
+                          ).isEqualTo(0)}
+                        />
+                      </div>
                     </div>
-                    <div>
+                  ) : (
+                    <Uik.Container>
                       <Uik.Button
-                        text="Retrieve Investment"
+                        text="Claim"
                         onClick={handleClaim}
                         loading={isClaiming}
                         className="invest-submit-btn"
                         fill={!new BigNumber(availableForDrawDown).isEqualTo(0)}
                         size="large"
-                        disabled={new BigNumber(availableForDrawDown).isEqualTo(0)}
+                        disabled={new BigNumber(availableForDrawDown).isEqualTo(
+                          0
+                        )}
                       />
-                    </div>
-                  </div>
-                ) : (
-                  <Uik.Container>
-                    <Uik.Button
-                      text="Claim"
-                      onClick={handleClaim}
-                      loading={isClaiming}
-                      className="invest-submit-btn"
-                      fill={!new BigNumber(availableForDrawDown).isEqualTo(0)}
-                      size="large"
-                      disabled={new BigNumber(availableForDrawDown).isEqualTo(0)}
+                    </Uik.Container>
+                  )}
+                </div>
+              )}
+              {selectedInputToken && (
+                <Uik.Container className="display-user-rate">
+                  <Uik.Text>
+                    You will receive {ido.inputTokenRate} {ido.tokenSymbol} for
+                    1 {selectedInputToken.inputTokenSymbol}
+                  </Uik.Text>
+                </Uik.Container>
+              )}
+            </Uik.Card>
+          </div>
+          <div className="gap-column"></div>
+          <div className="information-box">
+            <div className="ido-card-avatar-box">
+              <Uik.Avatar image={ido.tokenImageUrl} size="extra-large" />
+              <div className="card-header-box">
+                <div className="card-name-links-box">
+                  <div className="card-name-box">
+                    <Uik.Text
+                      text={ido.tokenName}
+                      className="no-wrap card-token-name"
                     />
-                  </Uik.Container>
-                )}
+                    <Uik.Text
+                      text={`(${ido.tokenSymbol})`}
+                      className="no-wrap card-token-symbol"
+                    />
+                  </div>
+                  <div className="card-links-box">
+                    <a
+                      href={`//${ido.twitterUrl}`}
+                      target="_blank"
+                      className="card-link twitter-link"
+                    >
+                      <img src={twitterIcon} alt="twitter" width="30px" />
+                    </a>
+                    <a
+                      href={`//${ido.telegramUrl}`}
+                      target="_blank"
+                      className="card-link telegram-link"
+                    >
+                      <img src={telegramIcon} alt="telegram" width="30px" />
+                    </a>
+                    <a
+                      href={`//${ido.websiteUrl}`}
+                      target="_blank"
+                      className="card-link website-link"
+                    >
+                      <img
+                        src={websiteIcon}
+                        alt="project website"
+                        width="30px"
+                      />
+                    </a>
+                  </div>
+                </div>
               </div>
-            )}
-          {selectedInputToken && <Uik.Container className="display-user-rate">
-            <Uik.Text>
-              You will receive {ido.inputTokenRate} {ido.tokenSymbol} for 1{" "}
-              {selectedInputToken.inputTokenSymbol}
-            </Uik.Text>
-          </Uik.Container>}
-        </Uik.Card>
-      }
-    </div>
-  )
+              <div className="card-header-box">
+                <div className="card-verified-box">
+                  <Link to="/" target="_blank" style={{ whiteSpace: "nowrap" }}>
+                    <Uik.Text text="Apply for a Verified Tag" type="mini" />
+                  </Link>
+                </div>
+              </div>
+            </div>
+
+            <div style={{ position: "relative" }}>
+              <BorderLinearProgress
+                variant="determinate"
+                value={percentCompleted}
+              />
+              <div
+                style={{
+                  position: "absolute",
+                  right: "7px",
+                  top: "3px",
+                }}
+              >
+                <Uik.Text
+                  text={`${tokensThatHaveBeenSold}/${ido.crowdsaleTokenAllocated}`}
+                  type="mini"
+                />
+              </div>
+            </div>
+            <div className="about-description-container">
+              <div className="about-box">
+                <Uik.Text type="title">About</Uik.Text>
+              </div>
+              <div className="description-box">
+                <Uik.Text type="mini">{ido.description}</Uik.Text>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  return <></>;
 }

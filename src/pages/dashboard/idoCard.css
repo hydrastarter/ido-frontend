@@ -7,8 +7,8 @@
 .ido-card-avatar-box {
     margin-bottom: 20px;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    justify-content: center;
+    align-items: flex-start;
 }
 
 .ido-card-name-box {
@@ -121,29 +121,37 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
 }
 
 .card-name-box {
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-left: 20px;
 }
 
 .card-links-box {
     display: flex;
     justify-content: center;
+    margin-top: 10px;
     align-items: center;
 }
 
 .card-verified-box {
+    height: 100%;
+    display: flex;
+    align-items: flex-start;
 }
 
 .card-token-name {
     margin-left: 5px;
+    text-align: center;
 }
 
 .card-token-symbol {
     margin: 0 20px 0 5px;
+    text-align: center;
 }
 
 .card-link {
@@ -157,6 +165,97 @@
 }
 
 .softcap-not-met-text {
-   margin-bottom: 10px;
+    margin-bottom: 10px;
 }
 
+.crowdsale-page-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.crowdsale-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.interaction-box {
+    margin: 20px 0;
+    flex-grow: 4;
+}
+
+.gap-column {
+    flex-grow: 1;
+}
+
+@media (max-width: 1200px) {
+    .gap-column {
+        display: none;
+    }
+}
+
+.information-box {
+    margin: 20px 0;
+    flex-grow: 1;
+}
+
+.back-button-container {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.link-box {
+    text-decoration: none;
+    display: flex;
+    color: #a93185;
+}
+
+.link-box:hover {
+    text-decoration: underline;
+    color: var(--primary);
+}
+
+.back-button-text {
+    margin-left: 5px;
+    color: var(--primary);
+}
+
+.crowdsale-card {
+    margin: 20px 0;
+}
+
+.tooltip-custom-styles {
+    margin-left: 5px;
+    max-width: 350px;
+    color: var(--text-light);
+}
+
+.uik-tooltip__tooltip-text {
+    word-wrap: break-word;
+    width: 300px;
+    white-space: normal !important;
+    color: var(--text-light) !important;
+}
+
+.value-box{
+   margin: 20px 0 0 0;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.about-box {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.description-box{
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
