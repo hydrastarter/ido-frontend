@@ -396,8 +396,8 @@ export default function CrowdsaleDetails() {
                   <Uik.Tooltip
                     delay={0}
                     position="right"
-                    text={`Minimum number of IDO tokens to be sold for the IDO to continue.
-                      If the number is less then the purchasing token is given back after the IDO ends`}
+                    text={`The time after which the user can start claiming rewards. 
+                    The user will receive rewards from the vesting start date at the time the cliff duration ends.`}
                     className="tooltip-custom-styles"
                   >
                     <InfoIcon color="inherit" style={{ marginLeft: "5px" }} />
@@ -445,8 +445,7 @@ export default function CrowdsaleDetails() {
                   <Uik.Tooltip
                     delay={0}
                     position="right"
-                    text={`Minimum number of IDO tokens to be sold for the IDO to continue.
-                      If the number is less then the purchasing token is given back after the IDO ends`}
+                    text={`The maximum amount of token a single user can purchase.`}
                     className="tooltip-custom-styles"
                   >
                     <InfoIcon color="inherit" style={{ marginLeft: "5px" }} />
