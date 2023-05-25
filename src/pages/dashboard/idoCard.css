@@ -11,6 +11,10 @@
     align-items: flex-start;
 }
 
+.avatar-social-links-box{
+    display: flex;
+}
+
 .ido-card-name-box {
     display: flex;
     justify-content: start;
@@ -176,26 +180,18 @@
 
 .crowdsale-container {
     display: flex;
-    flex-wrap: wrap;
+    gap: 20px;
 }
 
 .interaction-box {
     margin: 20px 0;
+    width: 100%;
     flex-grow: 4;
-}
-
-.gap-column {
-    flex-grow: 1;
-}
-
-@media (max-width: 1200px) {
-    .gap-column {
-        display: none;
-    }
 }
 
 .information-box {
     margin: 20px 0;
+    width: 100%;
     flex-grow: 1;
 }
 

@@ -593,48 +593,50 @@ export default function CrowdsaleDetails() {
               )}
             </Uik.Card>
           </div>
-          <div className="gap-column"></div>
           <div className="information-box">
             <div className="ido-card-avatar-box">
-              <Uik.Avatar image={ido.tokenImageUrl} size="extra-large" />
-              <div className="card-header-box">
-                <div className="card-name-links-box">
-                  <div className="card-name-box">
-                    <Uik.Text
-                      text={ido.tokenName}
-                      className="no-wrap card-token-name"
-                    />
-                    <Uik.Text
-                      text={`(${ido.tokenSymbol})`}
-                      className="no-wrap card-token-symbol"
-                    />
-                  </div>
-                  <div className="card-links-box">
-                    <a
-                      href={`//${ido.twitterUrl}`}
-                      target="_blank"
-                      className="card-link twitter-link"
-                    >
-                      <img src={twitterIcon} alt="twitter" width="30px" />
-                    </a>
-                    <a
-                      href={`//${ido.telegramUrl}`}
-                      target="_blank"
-                      className="card-link telegram-link"
-                    >
-                      <img src={telegramIcon} alt="telegram" width="30px" />
-                    </a>
-                    <a
-                      href={`//${ido.websiteUrl}`}
-                      target="_blank"
-                      className="card-link website-link"
-                    >
-                      <img
-                        src={websiteIcon}
-                        alt="project website"
-                        width="30px"
+              <div className="avatar-social-links-box">
+                <Uik.Avatar image={ido.tokenImageUrl} size="extra-large" />
+
+                <div className="card-header-box">
+                  <div className="card-name-links-box">
+                    <div className="card-name-box">
+                      <Uik.Text
+                        text={ido.tokenName}
+                        className="no-wrap card-token-name"
                       />
-                    </a>
+                      <Uik.Text
+                        text={`(${ido.tokenSymbol})`}
+                        className="no-wrap card-token-symbol"
+                      />
+                    </div>
+                    <div className="card-links-box">
+                      <a
+                        href={`//${ido.twitterUrl}`}
+                        target="_blank"
+                        className="card-link twitter-link"
+                      >
+                        <img src={twitterIcon} alt="twitter" width="30px" />
+                      </a>
+                      <a
+                        href={`//${ido.telegramUrl}`}
+                        target="_blank"
+                        className="card-link telegram-link"
+                      >
+                        <img src={telegramIcon} alt="telegram" width="30px" />
+                      </a>
+                      <a
+                        href={`//${ido.websiteUrl}`}
+                        target="_blank"
+                        className="card-link website-link"
+                      >
+                        <img
+                          src={websiteIcon}
+                          alt="project website"
+                          width="30px"
+                        />
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -646,7 +648,6 @@ export default function CrowdsaleDetails() {
                 </div>
               </div>
             </div>
-
             <div style={{ position: "relative" }}>
               <BorderLinearProgress
                 variant="determinate"
