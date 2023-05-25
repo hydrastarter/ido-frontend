@@ -464,7 +464,7 @@ export const Admin: React.FC = () => {
         className="admin-headline"
       />
       <Uik.Modal
-        title="IDO Creation Successfull"
+        title="Transaction Successful!"
         isOpen={isOpen}
         onClose={() => setOpen(false)}
         footer={
@@ -484,11 +484,8 @@ export const Admin: React.FC = () => {
           </>
         }
       >
-        <Uik.Text
-          type="title"
-          text="Your Last Transcation was Successfull !!"
-          className="success-color"
-        />
+        <Uik.Text>Your IDO has be created successfully.</Uik.Text>
+        <Uik.Text>Please check the Upcoming IDO tab.</Uik.Text>
       </Uik.Modal>
       <Uik.Form>
         <Uik.Divider text="Project token details" />
