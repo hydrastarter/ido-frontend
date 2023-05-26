@@ -457,6 +457,11 @@ export default function CrowdsaleDetails() {
 
               {typeOfPresale === "Active Presales" && (
                 <div style={{ marginBottom: "20px" }}>
+                  <Uik.Container className="display-user-rate mb-10">
+                    <Uik.Text>
+                      Total Invested : {amount} {ido.tokenSymbol}
+                    </Uik.Text>
+                  </Uik.Container>
                   <Uik.Container>
                     <Uik.Input
                       type="number"
@@ -497,21 +502,6 @@ export default function CrowdsaleDetails() {
                       loader="fish"
                     />
                   </Uik.Container>
-                  <div
-                    className="all-box-container"
-                    style={{ marginTop: "10px" }}
-                  >
-                    <div className="one-box-container">
-                      <div className="box box1">
-                        <Uik.Text type="lead" className="total-invested-text">
-                          Total Invested :
-                        </Uik.Text>
-                        <Uik.Text>
-                          {amount} {ido.tokenSymbol}
-                        </Uik.Text>
-                      </div>
-                    </div>
-                  </div>
                 </div>
               )}
               {typeOfPresale === "Completed Presales" && (
