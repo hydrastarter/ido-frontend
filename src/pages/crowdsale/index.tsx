@@ -216,7 +216,9 @@ export default function CrowdsaleDetails() {
         }
       );
       const res = await resp.json();
-      setIdoData(() => res.data);
+      const ido = res.data as idoType;
+      setIdoData(() => ido);
+      setSelectedInputToken(() => ido.inputTokens[0]);
       const currentTime = Math.floor(+new Date() / 1000);
       const idoStartTime = parseFloat(res.data.crowdsaleStartTime);
       const idoEndTime = parseFloat(res.data.crowdsaleEndTime);
@@ -340,16 +342,7 @@ export default function CrowdsaleDetails() {
         </div>
         <div className="crowdsale-container">
           <div className="interaction-box">
-            <div
-              style={{
-                margin: "10px 0px",
-                background: "linear-gradient(#6c179f, #8e1e71)",
-                padding: "10px 20px",
-                borderRadius: "10px",
-                display: "flex",
-                justifyContent: "center",
-              }}
-            >
+            <div className="gradient-timer">
               <Uik.Text className="white">
                 {typeOfPresale === "Upcoming Presales" && (
                   // @ts-ignore

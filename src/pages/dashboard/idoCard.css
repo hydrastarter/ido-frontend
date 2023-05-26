@@ -261,3 +261,12 @@
     align-items: center;
     justify-content: center;
 }
+
+.gradient-timer {
+    margin: 10px 0;
+    background: linear-gradient(#6c179f, #8e1e71);
+    padding: 10px 20px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+}
