@@ -57,10 +57,10 @@ export const IdoCard = ({
 }: {
   ido: idoType;
   typeOfPresale:
-  | "Active Presales"
-  | "Upcoming Presales"
-  | "Completed Presales"
-  | "My Crowdsale";
+    | "Active Presales"
+    | "Upcoming Presales"
+    | "Completed Presales"
+    | "My Crowdsale";
 }): JSX.Element => {
   const selectedSigner: ReefSigner | undefined | null =
     hooks.useObservableState(appState.selectedSigner$);
@@ -131,8 +131,8 @@ export const IdoCard = ({
   const percentCompleted = Math.floor(
     (tokensThatHaveBeenSold / parseFloat(ido.crowdsaleTokenAllocated)) * 100
   );
+  console.log("percent completed idoCard: ", percentCompleted);
 
- 
   useEffect(() => {
     if (selectedSigner) {
       getAllContractDetails(ido.crowdsaleAddress, selectedSigner).catch((e) =>
@@ -142,66 +142,70 @@ export const IdoCard = ({
   }, [selectedSigner, ido.crowdsaleAddress]);
   return (
     <>
-        <Uik.Card className="ido-card">
-        <Link to={`crowdsale/${ido.id}`} style={{ textDecoration: 'none' }}>
-            <div className="ido-card-avatar-box">
-              <Uik.Avatar image={ido.tokenImageUrl} size="large" />
-              {typeOfPresale === "Upcoming Presales" && (
-                <Uik.Tag color="red">
-                  {/* @ts-ignore */}
-                  <Countdown
-                    date={parseFloat(ido.crowdsaleStartTime) * 1000}
-                    renderer={PresaleStartsOnCard}
-                  />
-                </Uik.Tag>
-              )}
-              {typeOfPresale === "Active Presales" && (
-                <Uik.Tag color="red">
-                  {/* @ts-ignore */}
-                  <Countdown
-                    date={parseFloat(ido.crowdsaleEndTime) * 1000}
-                    renderer={PresaleEndsOnCard}
-                  />
-                </Uik.Tag>
-              )}
+      <Uik.Card className="ido-card">
+        <Link to={`crowdsale/${ido.id}`} style={{ textDecoration: "none" }}>
+          <div className="ido-card-avatar-box">
+            <Uik.Avatar image={ido.tokenImageUrl} size="large" />
+            {typeOfPresale === "Upcoming Presales" && (
+              <Uik.Tag color="red">
+                {/* @ts-ignore */}
+                <Countdown
+                  date={parseFloat(ido.crowdsaleStartTime) * 1000}
+                  renderer={PresaleStartsOnCard}
+                />
+              </Uik.Tag>
+            )}
+            {typeOfPresale === "Active Presales" && (
+              <Uik.Tag color="red">
+                {/* @ts-ignore */}
+                <Countdown
+                  date={parseFloat(ido.crowdsaleEndTime) * 1000}
+                  renderer={PresaleEndsOnCard}
+                />
+              </Uik.Tag>
+            )}
 
-              {typeOfPresale === "Completed Presales" && (
-                <Uik.Tag color="red">Presale is completed </Uik.Tag>
-              )}
-            </div>
-            <div className="ido-card-name-box">
-              <Uik.Text type="title">{ido.tokenName}</Uik.Text>
-              <Uik.Text type="light" className="ido-card-name_symbol">
-                {ido.tokenSymbol}
-              </Uik.Text>
-            </div>
-            <div className="ido-card-slider-box">
-              <Uik.Slider
-                value={percentCompleted}
-                tooltip={`${percentCompleted}%`}
-                helpers={[
-                  { position: 0, text: "0%" },
-                  { position: 25 },
-                  { position: 50, text: "50" },
-                  { position: 75 },
-                  { position: 100, text: "100%" },
-                ]}
-              />
-            </div>
-            <div className="ido-card-name-box">
-              <Uik.Text type="light">Amount will Raised :</Uik.Text>
-              <Uik.Text type="lead" className="ido-card-name_symbol">
-                $ {parseFloat(ido.crowdsaleTokenAllocated) * parseFloat(ido.inputTokenRate)}
-              </Uik.Text>
-            </div>
-            <div className="ido-card-name-box">
-              <Uik.Text type="light">Maximum User Allocation :</Uik.Text>
-              <Uik.Text type="lead" className="ido-card-name_symbol">
-                $ {parseFloat(ido.maxUserAllocation) * parseFloat(ido.inputTokenRate)}
-              </Uik.Text>
-            </div>
+            {typeOfPresale === "Completed Presales" && (
+              <Uik.Tag color="red">Presale is completed </Uik.Tag>
+            )}
+          </div>
+          <div className="ido-card-name-box">
+            <Uik.Text type="title">{ido.tokenName}</Uik.Text>
+            <Uik.Text type="light" className="ido-card-name_symbol">
+              {ido.tokenSymbol}
+            </Uik.Text>
+          </div>
+          <div className="ido-card-slider-box">
+            <Uik.Slider
+              value={percentCompleted}
+              tooltip={`${percentCompleted}%`}
+              helpers={[
+                { position: 0, text: "0%" },
+                { position: 25 },
+                { position: 50, text: "50" },
+                { position: 75 },
+                { position: 100, text: "100%" },
+              ]}
+            />
+          </div>
+          <div className="ido-card-name-box">
+            <Uik.Text type="light">Amount will Raised :</Uik.Text>
+            <Uik.Text type="lead" className="ido-card-name_symbol">
+              ${" "}
+              {parseFloat(ido.crowdsaleTokenAllocated) *
+                parseFloat(ido.inputTokenRate)}
+            </Uik.Text>
+          </div>
+          <div className="ido-card-name-box">
+            <Uik.Text type="light">Maximum User Allocation :</Uik.Text>
+            <Uik.Text type="lead" className="ido-card-name_symbol">
+              ${" "}
+              {parseFloat(ido.maxUserAllocation) *
+                parseFloat(ido.inputTokenRate)}
+            </Uik.Text>
+          </div>
         </Link>
-        </Uik.Card>
+      </Uik.Card>
     </>
   );
 };

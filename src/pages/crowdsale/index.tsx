@@ -267,10 +267,10 @@ export default function CrowdsaleDetails() {
         availableForDrawDown: availableForDrawDown.toString(),
       });
     };
-    if (selectedSigner) {
-      getAllContractDetails;
+    if (selectedSigner && ido) {
+      getAllContractDetails(ido.crowdsaleAddress, selectedSigner);
     }
-  }, [selectedSigner]);
+  }, [selectedSigner, ido]);
 
   let percentCompleted = 0;
   let tokensThatHaveBeenSold = 0;
@@ -297,6 +297,7 @@ export default function CrowdsaleDetails() {
     percentCompleted = Math.floor(
       (tokensThatHaveBeenSold / parseFloat(ido.crowdsaleTokenAllocated)) * 100
     );
+    console.log("percent completed: ", percentCompleted);
     idoVestingStart = new Date(
       parseFloat(ido.vestingStart) * 1000
     ).toLocaleDateString("en-US");
@@ -496,6 +497,21 @@ export default function CrowdsaleDetails() {
                       loader="fish"
                     />
                   </Uik.Container>
+                  <div
+                    className="all-box-container"
+                    style={{ marginTop: "10px" }}
+                  >
+                    <div className="one-box-container">
+                      <div className="box box1">
+                        <Uik.Text type="lead" className="total-invested-text">
+                          Total Invested :
+                        </Uik.Text>
+                        <Uik.Text>
+                          {amount} {ido.tokenSymbol}
+                        </Uik.Text>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               )}
               {typeOfPresale === "Completed Presales" && (
