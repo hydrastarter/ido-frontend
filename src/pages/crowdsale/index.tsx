@@ -545,9 +545,9 @@ export default function CrowdsaleDetails() {
                     </div>
                   </div>
                   {typeOfPresale === "Completed Presales" &&
-                  new BigNumber(ido.minimumTokenSaleAmount).isGreaterThan(
-                    tokensThatHaveBeenSold
-                  ) ? (
+                  new BigNumber(
+                    ido.minimumTokenSaleAmount
+                  ).isGreaterThanOrEqualTo(tokensThatHaveBeenSold) ? (
                     <div className="softcap-not-met-box">
                       <div className="softcap-not-met-text">
                         <Uik.Text>
