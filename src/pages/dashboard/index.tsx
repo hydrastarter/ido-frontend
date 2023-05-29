@@ -119,7 +119,6 @@ const TabsData = ({ allIdos }: { allIdos: idoType[] }) => {
   };
 
   useEffect(() => {
-    console.log('selectedSigner', selectedSigner)
     if (selectedSigner) {
       sortAllIdos(allIdos, selectedSigner).catch((e) => {
         // setIsSorting(() => false);

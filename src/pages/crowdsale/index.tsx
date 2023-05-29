@@ -282,6 +282,10 @@ export default function CrowdsaleDetails() {
   let idoEndDate;
   let poolInfoDiff;
   let amount = "0";
+  let displayTotalInvested = "0";
+  let displayLocked = "0";
+  let displayClaimable = "0";
+  let displayClaimed = "0";
   let totalDrawn = "0";
   let remainingBalance = "0";
   let availableForDrawDown = "0";
@@ -297,7 +301,6 @@ export default function CrowdsaleDetails() {
     percentCompleted = Math.floor(
       (tokensThatHaveBeenSold / parseFloat(ido.crowdsaleTokenAllocated)) * 100
     );
-    console.log("percent completed: ", percentCompleted);
     idoVestingStart = new Date(
       parseFloat(ido.vestingStart) * 1000
     ).toLocaleDateString("en-US");
@@ -332,6 +335,11 @@ export default function CrowdsaleDetails() {
     availableForDrawDown = new BigNumber(contractDetails.availableForDrawDown)
       .dividedBy(new BigNumber(10).pow(ido.tokenDecimals))
       .toString();
+
+    displayTotalInvested = new BigNumber(amount).toFixed(2);
+    displayLocked = new BigNumber(remainingBalance).toFixed(2);
+    displayClaimable = new BigNumber(availableForDrawDown).toFixed(2);
+    displayClaimed = new BigNumber(totalDrawn).toFixed(2);
 
     return (
       <div className="crowdsale-page-container">
@@ -459,7 +467,7 @@ export default function CrowdsaleDetails() {
                 <div style={{ marginBottom: "20px" }}>
                   <Uik.Container className="display-user-rate mb-10">
                     <Uik.Text>
-                      Total Invested : {amount} {ido.tokenSymbol}
+                      Total Invested : {displayTotalInvested} {ido.tokenSymbol}
                     </Uik.Text>
                   </Uik.Container>
                   <Uik.Container>
@@ -512,7 +520,7 @@ export default function CrowdsaleDetails() {
                         Total Invested :
                       </Uik.Text>
                       <Uik.Text>
-                        {amount} {ido.tokenSymbol}
+                        {displayTotalInvested} {ido.tokenSymbol}
                       </Uik.Text>
                     </div>
                   </div>
@@ -520,19 +528,19 @@ export default function CrowdsaleDetails() {
                     <div className="box box2">
                       <Uik.Text type="lead">Locked</Uik.Text>
                       <Uik.Text>
-                        {remainingBalance} {ido.tokenSymbol}
+                        {displayLocked} {ido.tokenSymbol}
                       </Uik.Text>
                     </div>
                     <div className="box box3">
                       <Uik.Text type="lead">Claimable</Uik.Text>
                       <Uik.Text>
-                        {availableForDrawDown} {ido.tokenSymbol}
+                        {displayClaimable} {ido.tokenSymbol}
                       </Uik.Text>
                     </div>
                     <div className="box box4">
                       <Uik.Text type="lead">Claimed</Uik.Text>
                       <Uik.Text>
-                        {totalDrawn} {ido.tokenSymbol}
+                        {displayClaimed} {ido.tokenSymbol}
                       </Uik.Text>
                     </div>
                   </div>

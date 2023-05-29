@@ -131,7 +131,6 @@ export const IdoCard = ({
   const percentCompleted = Math.floor(
     (tokensThatHaveBeenSold / parseFloat(ido.crowdsaleTokenAllocated)) * 100
   );
-  console.log("percent completed idoCard: ", percentCompleted);
 
   useEffect(() => {
     if (selectedSigner) {
