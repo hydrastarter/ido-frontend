@@ -111,6 +111,10 @@ export default function CrowdsaleDetails() {
   const params: { address: string } = useParams();
   const selectedSigner: ReefSigner | undefined | null =
     hooks.useObservableState(appState.selectedSigner$);
+
+  const [isOpen, setOpen] = useState(false);
+  const [txHash, setTxHash] = useState(null);
+
   const [ido, setIdoData] = useState<idoType | null>(null);
   const [selectedInputToken, setSelectedInputToken] =
     useState<inputTokenType | null>(null);
@@ -143,7 +147,10 @@ export default function CrowdsaleDetails() {
             selectedSigner.signer
           );
 
-          await crowdsaleContract.drawDown();
+          const txObject = await crowdsaleContract.drawDown();
+          await txObject.wait();
+          setTxHash(txObject.hash);
+          setOpen(true);
 
           Uik.notify.success("You have successfully claimed in the IDO");
           setIsClaiming(() => false);
@@ -343,6 +350,31 @@ export default function CrowdsaleDetails() {
 
     return (
       <div className="crowdsale-page-container">
+        <Uik.Modal
+          title="Claim Successful!"
+          isOpen={isOpen}
+          onClose={() => setOpen(false)}
+          footer={
+            <>
+              <Uik.Button text="Close" onClick={() => setOpen(false)} />
+              <Uik.Button
+                text="Check Transcations"
+                success
+                fill
+                onClick={() =>
+                  window.open(
+                    `https://reefscan.com/extrinsic/${txHash}`,
+                    "_blank"
+                  )
+                }
+              />
+            </>
+          }
+        >
+          <Uik.Text>
+            You have successfully claimed {displayClaimed} {ido.tokenSymbol}
+          </Uik.Text>
+        </Uik.Modal>
         <div className="back-button-container">
           <Link to={DASHBOARD_URL} className="link-box">
             <ArrowBackIcon color="inherit" />
