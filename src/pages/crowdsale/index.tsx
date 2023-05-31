@@ -43,17 +43,17 @@ function parseDate(str: any) {
 }
 
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
-  height: 25,
+  height: 28,
   borderRadius: 9,
   marginTop: "20px",
-  marginBottom: "2kpx",
+  marginBottom: "20px",
+  border: "2px solid white",
   [`&.${linearProgressClasses.colorPrimary}`]: {
-    backgroundColor:
-      theme.palette.grey[theme.palette.mode === "light" ? 200 : 800],
+    backgroundColor: "#e4e0ef",
   },
   [`& .${linearProgressClasses.bar}`]: {
     borderRadius: 9,
-    backgroundColor: "#898E9C",
+    background: "linear-gradient(to right,#5d3bad ,#a93185)",
   },
 }));
 const PresaleStartsInCountdown = ({
@@ -308,7 +308,7 @@ export default function CrowdsaleDetails() {
     percentCompleted = Math.floor(
       (tokensThatHaveBeenSold / parseFloat(ido.crowdsaleTokenAllocated)) * 100
     );
-    idoVestingStart = new Date(
+      idoVestingStart = new Date(
       parseFloat(ido.vestingStart) * 1000
     ).toLocaleDateString("en-US");
     idoVestingEnd = new Date(
