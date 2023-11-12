@@ -333,7 +333,7 @@ h2, .h2 {
     position: relative;
 }
 .presales-section .slider-mn .slick-track {
-    width: auto !important;
+    /* width: auto !important; */
 }
 .presales-section .slider-mn .nav-slider {
     display: flex;
