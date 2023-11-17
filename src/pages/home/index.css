@@ -953,13 +953,13 @@ h2, .h2 {
     display: block;
     height: 12px;
     position: relative;
-    width: 100%;
+    /* width: 100%; */
 }
 .banner-section .row-flex .right-sec .banner-card .card-itm-baar .curnt-mrk-prc {
     bottom: inherit;
     position: absolute;
     top: 16px;
-    right: 32px;
+    /* right: 32px; */
 }
 .banner-section .row-flex .right-sec .banner-card .card-itm-baar .curnt-mrk-prc:before {
     border-left: 9px solid transparent;

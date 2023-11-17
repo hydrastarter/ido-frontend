@@ -192,6 +192,7 @@ export default function DetailPage() {
             crowdsaleContractAddress,
             investValueInWei
           );
+          Uik.notify.info("Approval successful, Now investing... ");
 
           await crowdsaleContract.purchaseToken(
             selectedInputToken.inputTokenAddress,
@@ -353,8 +354,33 @@ export default function DetailPage() {
     <div>
       <Header page={"yes"} />
       <section className="banner-section banner-section-inner">
+        <Uik.Modal
+          title="Claim Successful!"
+          isOpen={isOpen}
+          onClose={() => setOpen(false)}
+          footer={
+            <>
+              <Uik.Button text="Close" onClick={() => setOpen(false)} />
+              <Uik.Button
+                text="Check Transcations"
+                success
+                fill
+                onClick={() =>
+                  window.open(
+                    `https://reefscan.com/extrinsic/${txHash}`,
+                    "_blank"
+                  )
+                }
+              />
+            </>
+          }
+        >
+          <Uik.Text>
+            You have successfully claimed {displayClaimed} {ido?.tokenSymbol}
+          </Uik.Text>
+        </Uik.Modal>
         <div className="container">
-          {isloader ? (
+          {list.length === 0 &&  isloader ? (
             <div className="txt-center">
               <RotatingLines
                 strokeColor="white"
@@ -424,10 +450,10 @@ export default function DetailPage() {
                       </span>
                     </div>
                     <div className="card-itm-baar">
-                      <div className="card-baar-line"></div>
-                      <div className="curnt-mrk-prc">
+                      <div className="card-baar-line" style={{width:percentCompleted + '%'}}></div>
+                      <div className="curnt-mrk-prc" style={{left:percentCompleted + '%'}}>
                         <h4>
-                          <span className="sm-text">100%</span>
+                          <span className="sm-text">{percentCompleted}%</span>
                         </h4>
                       </div>
                     </div>
@@ -441,6 +467,10 @@ export default function DetailPage() {
                         <span>${data.inputTokenRate}</span>
                       </div>
                     </div>
+                    <div className="sub-card">
+                        <h6>Total Invested</h6>
+                        <span>{displayTotalInvested}</span>
+                      </div>
                     <div className="valid-s">
                       <p className="ath">
                         ATH ROI: <span className="ath-val">TBA</span>
@@ -463,7 +493,7 @@ export default function DetailPage() {
                           <button
                             type="submit"
                             className="btn-primary"
-                            onClick={()=>handleInvest()}
+                            onClick={handleInvest}
                           >
                             Invest
                           </button>
