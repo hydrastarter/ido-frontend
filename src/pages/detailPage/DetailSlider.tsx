@@ -48,7 +48,7 @@ export default function DetailSlider(file_id:any) {
                     <div>
                       <div className='img-big'>
                         {/* <img src={`https://154.41.254.185:9102/assets/${res.directus_files_id}?access_token=${token}`} /> */}
-                        <img src={`https://cmsapi.choiceindia.com/assets/${res.directus_files_id}`} />
+                        <img src={`https://cms.piyushchauhan.online/assets/${res.directus_files_id}`} />
 
                       </div>
                     </div>
@@ -78,7 +78,7 @@ export default function DetailSlider(file_id:any) {
                     <div>
                       <div className='img-small'>
                         {/* <img src={`https://154.41.254.185:9102/assets/${res.directus_files_id}??access_token=${token}`} /> */}
-                        <img src={`https://cmsapi.choiceindia.com/assets/${res.directus_files_id}`} />
+                        <img src={`https://cms.piyushchauhan.online/assets/${res.directus_files_id}`} />
 
                       </div>
                     </div>

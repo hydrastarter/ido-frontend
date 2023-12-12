@@ -26,10 +26,10 @@ function Header(page:any) {
                             <div className={show ? "show" : ""}>
                                 <ul className='reset' >
                                     <li>
-                                        <a href='#' className='link1'>Dashboard</a>
+                                        <a href='/' className='link1'>Dashboard</a>
                                     </li>
                                     <li>
-                                        <a href='#' className='link2'>Connect wallet</a>
+                                        <a href='/my_crowdsale' className='link2'>Connect wallet</a>
                                     </li>
                                 </ul>
                             </div>

@@ -37,7 +37,7 @@ const homeService = {
     hydraStarterCMS: function (id) {
 
         // let url = `http://154.41.254.185:9102/items/api_hydrastarter?filter[token_id][_eq]=${id}`
-        let url = `https://cmsapi.choiceindia.com/items/images?filter[token_id][_eq]=${id}`
+        let url = `https://cms.piyushchauhan.online/items/ido_detail?filter[token_id][_eq]=${id}`
         return axios.get(url).then((data) => {
             return data
         })
@@ -47,7 +47,7 @@ const homeService = {
     
     hydraStarterCMSFiles: function (id) {
         // let url =`http://154.41.254.185:9102/items/api_hydrastarter_files?filter[api_hydrastarter_id][_eq]=${id.file_id}`
-        let url = `https://cmsapi.choiceindia.com/items/images_files?filter[images_id][_eq]=${id.file_id}`
+        let url = `https://cms.piyushchauhan.online/items/ido_detail_files?filter[ido_detail_id][_eq]=${id.file_id}`
         return axios.get(url).then((data) => {
             return data
         })

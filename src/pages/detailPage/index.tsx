@@ -400,7 +400,7 @@ export default function DetailPage() {
                         <div className="logo-header">
                           {/* <img src={`https://154.41.254.185:9102/assets/${res.logo}`} alt="" className="img-fluid" /> */}
                           <img
-                            src={`https://cmsapi.choiceindia.com/assets/${res.logo}`}
+                            src={`https://cms.piyushchauhan.online/assets/${res.logo}`}
                             alt=""
                             className="img-fluid"
                           />

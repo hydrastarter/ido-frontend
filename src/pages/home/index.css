@@ -39,7 +39,7 @@ h2, .h2 {
     left: 0;
     width: 100%;
     top: 0;
-    z-index: 99;
+    z-index: 9999;
     padding: 20px 0;
 }
 .main-header .wrap-header {
@@ -361,7 +361,7 @@ h2, .h2 {
     border: 5px solid #73afff;
     border-radius: 16px;
     overflow: hidden;
-    width: 97% !important;
+    width: 97%;
     margin: 0 auto;
     transition-timing-function: ease;
     transition: 0.8s;
@@ -3255,3 +3255,17 @@ h2, .h2 {
     overflow: hidden;
     z-index: 99;
 }
+.Journeynumberpage{
+    display: flex;
+    flex-wrap: wrap;
+    padding: 20px;
+}
+.Journey-item-page{
+   
+    width: 27% !important;
+    margin: 20px !important;
+   
+  }
+  .notfound{
+    text-align: center;
+  }
