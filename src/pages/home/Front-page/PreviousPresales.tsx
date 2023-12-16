@@ -33,45 +33,43 @@ function PreviousPresales() {
 
   /** distribute between upcomming and previous */
   function loadCrowdSaleList() {
-    setIsloader(true)
+    setIsloader(true);
     const currentTimestamp = Math.floor(Date.now() / 1000);
     let values = [];
     homeService.CrowdSale().then((res) => {
       if (res) {
-        setIsloader(false)
+        setIsloader(false);
         values = res.data.data;
         const currentTime = Math.floor(+new Date() / 1000);
         const idoStartTime = parseFloat(res.data.data.crowdsaleStartTime);
         const idoEndTime = parseFloat(res.data.data.crowdsaleEndTime);
         values.forEach((ele: any) => {
           if (idoStartTime < currentTime && idoEndTime > currentTime) {
-
             if (!activeFilesValue.Body) {
-                activeFilesValue.Body = [];
-                activeFilesValue.Body.push(ele);
-              } else {
-                activeFilesValue.Body.push(ele);
-              }
+              activeFilesValue.Body = [];
+              activeFilesValue.Body.push(ele);
+            } else {
+              activeFilesValue.Body.push(ele);
+            }
           } else if (idoStartTime > currentTime && idoEndTime > currentTime) {
             if (!upcomingFilesValue.Body) {
-                upcomingFilesValue.Body = [];
-                upcomingFilesValue.Body.push(ele);
-              } else {
-                upcomingFilesValue.Body.push(ele);
-              }
+              upcomingFilesValue.Body = [];
+              upcomingFilesValue.Body.push(ele);
+            } else {
+              upcomingFilesValue.Body.push(ele);
+            }
           } else {
             if (!preFilesValue.Body) {
-                preFilesValue.Body = [];
-                preFilesValue.Body.push(ele);
-              } else {
-                preFilesValue.Body.push(ele);
-              }
+              preFilesValue.Body = [];
+              preFilesValue.Body.push(ele);
+            } else {
+              preFilesValue.Body.push(ele);
+            }
           }
-          
         });
         setUpcomingData(upcomingFilesValue.Body);
         setCompletedDate(preFilesValue.Body);
-        setActiveDate(activeFilesValue.Body)
+        setActiveDate(activeFilesValue.Body);
       }
     });
   }
@@ -191,7 +189,7 @@ function PreviousPresales() {
           <div className="heading-main">
             <h2>Upcoming Presales</h2>
           </div>
-          {isloader ?  (
+          {isloader ? (
             <div className="txt-center">
               <RotatingLines
                 strokeColor="white"
@@ -201,7 +199,7 @@ function PreviousPresales() {
                 visible={true}
               />
             </div>
-          ):(
+          ) : (
             <div className="slider-mn">
               <Slider
                 {...sliderSettings}
@@ -265,7 +263,7 @@ function PreviousPresales() {
                 )}
               </div>
             </div>
-          ) }
+          )}
 
           <div className="link-btn">
             <a href="/ido/upcoming-presale" className="btn-link">
@@ -336,7 +334,7 @@ function PreviousPresales() {
       <div className="presales-section presales-section2">
         <div className="container">
           <div className="heading-main">
-            <h2>Previous Presales</h2>
+            <h2>Completed Presales</h2>
           </div>
           {isloader ? (
             <div className="txt-center">
@@ -348,7 +346,7 @@ function PreviousPresales() {
                 visible={true}
               />
             </div>
-          ):(
+          ) : (
             <div className="slider-mn">
               <Slider
                 {...sliderSettingsPrevious}
@@ -413,7 +411,7 @@ function PreviousPresales() {
                 )}
               </div>
             </div>
-          )  }
+          )}
 
           <div className="link-btn">
             <a href="IDO/previous-presale" className="btn-link">
@@ -429,9 +427,9 @@ function PreviousPresales() {
         </div>
       </div>
 
-       {/* Previous slider */}
+      {/* Previous slider */}
 
-       <div className="presales-section presales-section2">
+      <div className="presales-section presales-section2">
         <div className="container">
           <div className="heading-main">
             <h2>Active Presales</h2>
@@ -446,7 +444,7 @@ function PreviousPresales() {
                 visible={true}
               />
             </div>
-          ):(
+          ) : (
             <div className="slider-mn">
               <Slider
                 {...sliderSettingsActive}
@@ -511,7 +509,7 @@ function PreviousPresales() {
                 )}
               </div>
             </div>
-          )  }
+          )}
 
           <div className="link-btn">
             <a href="/ido/active-presale" className="btn-link">

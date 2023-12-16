@@ -129,7 +129,7 @@ export default function DetailPage() {
     availableForDrawDown: "0",
   });
 
-  async function handleClaim () {
+  async function handleClaim() {
     console.log("llllllllllllllllll");
     Uik.notify.info("Processing your claim request");
     if (ido) {
@@ -159,7 +159,7 @@ export default function DetailPage() {
         setIsClaiming(() => false);
       }
     }
-  };
+  }
 
   async function handleInvest() {
     Uik.notify.info("Processing your deposit request");
@@ -208,7 +208,7 @@ export default function DetailPage() {
         setIsInvesting(() => false);
       }
     }
-  };
+  }
 
   /**
    * Take the difference between the dates and divide by milliseconds per day.
@@ -284,7 +284,7 @@ export default function DetailPage() {
   let tokensThatHaveBeenSold = 0; //important
   let idoVestingStart;
   let idoVestingEnd;
-  let cliffTime;
+  let cliffTime: any;
   let vestingInfoDiff;
   let idoStartDate;
   let idoEndDate;
@@ -380,7 +380,7 @@ export default function DetailPage() {
           </Uik.Text>
         </Uik.Modal>
         <div className="container">
-          {list.length === 0 &&  isloader ? (
+          {list.length === 0 && isloader ? (
             <div className="txt-center">
               <RotatingLines
                 strokeColor="white"
@@ -450,8 +450,14 @@ export default function DetailPage() {
                       </span>
                     </div>
                     <div className="card-itm-baar">
-                      <div className="card-baar-line" style={{width:percentCompleted + '%'}}></div>
-                      <div className="curnt-mrk-prc" style={{left:percentCompleted + '%'}}>
+                      <div
+                        className="card-baar-line"
+                        style={{ width: percentCompleted + "%" }}
+                      ></div>
+                      <div
+                        className="curnt-mrk-prc"
+                        style={{ left: percentCompleted + "%" }}
+                      >
                         <h4>
                           <span className="sm-text">{percentCompleted}%</span>
                         </h4>
@@ -468,9 +474,9 @@ export default function DetailPage() {
                       </div>
                     </div>
                     <div className="sub-card">
-                        <h6>Total Invested</h6>
-                        <span>{displayTotalInvested}</span>
-                      </div>
+                      <h6>Total Invested</h6>
+                      <span>{displayTotalInvested}</span>
+                    </div>
                     <div className="valid-s">
                       <p className="ath">
                         ATH ROI: <span className="ath-val">TBA</span>
@@ -509,8 +515,7 @@ export default function DetailPage() {
                           <button
                             type="submit"
                             className="btn-light"
-                            onClick={()=>handleClaim()}
-                          
+                            onClick={() => handleClaim()}
                           >
                             Retrieve Investment
                           </button>
@@ -520,8 +525,7 @@ export default function DetailPage() {
                           <button
                             type="submit"
                             className="btn-light"
-                            onClick={()=>handleClaim()}
-                            
+                            onClick={() => handleClaim()}
                           >
                             Claim
                           </button>
@@ -554,122 +558,246 @@ export default function DetailPage() {
         </div>
       ) : (
         <section className="tabs-section">
-          {(list || []).map((res: any, i: number) => {
-            return (
-              <div className="container">
-                <div className="tabs-header">
-                  <ul className="tabs">
-                    <li
-                      className={
-                        active === 0 ? "tabs-items  active" : "tabs-items"
-                      }
-                      onClick={() => setActive(0)}
-                    >
-                      {res.item_1}
-                    </li>
-                    <li
-                      className={
-                        active === 1 ? "tabs-items  active" : "tabs-items"
-                      }
-                      onClick={() => setActive(1)}
-                    >
-                      {res.item_2}
-                    </li>
-                    <li
-                      className={
-                        active === 2 ? "tabs-items  active" : "tabs-items"
-                      }
-                      onClick={() => setActive(2)}
-                    >
-                      {res.item_3}
-                    </li>
-                    <li
-                      className={
-                        active === 3 ? "tabs-items  active" : "tabs-items"
-                      }
-                      onClick={() => setActive(3)}
-                    >
-                      {res.item_4}
-                    </li>
-                  </ul>
-                </div>
-                <div className="tabs-content">
-                  <div
-                    className={
-                      active === 0 ? "tab-item tab-item-active" : "tab-item"
-                    }
-                  >
-                    <div className="highlight-sec">
-                      <h2 className="highlights">
-                        <span>{res.item_1_title}</span>
-                      </h2>
+          {list && list.length != 0? (
+            <div>
+              {(list || []).map((res: any, i: number) => {
+                return (
+                  <div className="container">
+                    <div className="tabs-header">
+                      <ul className="tabs">
+                        <li
+                          className={
+                            active === 0 ? "tabs-items  active" : "tabs-items"
+                          }
+                          onClick={() => setActive(0)}
+                        >
+                          Token Info
+                        </li>
+                        <li
+                          className={
+                            active === 1 ? "tabs-items  active" : "tabs-items"
+                          }
+                          onClick={() => setActive(1)}
+                        >
+                          {res.item_1}
+                        </li>
+                        <li
+                          className={
+                            active === 2 ? "tabs-items  active" : "tabs-items"
+                          }
+                          onClick={() => setActive(2)}
+                        >
+                          {res.item_2}
+                        </li>
+                        <li
+                          className={
+                            active === 3 ? "tabs-items  active" : "tabs-items"
+                          }
+                          onClick={() => setActive(3)}
+                        >
+                          {res.item_3}
+                        </li>
+                        <li
+                          className={
+                            active === 4 ? "tabs-items  active" : "tabs-items"
+                          }
+                          onClick={() => setActive(4)}
+                        >
+                          {res.item_4}
+                        </li>
+                      </ul>
                     </div>
-                    <div>
-                      <ul
-                        dangerouslySetInnerHTML={{
-                          __html: res.item_1_description,
-                        }}
-                      ></ul>
+                    <div className="tabs-content">
+                      <div
+                        className={
+                          active === 0 ? "tab-item tab-item-active" : "tab-item"
+                        }
+                      >
+                        <div className="highlight-sec">
+                          <h2 className="highlights">
+                            {/* <span>Information</span> */}
+                          </h2>
+                        </div>
+
+                        <div>
+                          <ul>
+                            <h4 className="highlights"> Vesting Info</h4>
+
+                            {ido && parseFloat(ido.cliffDuration) === 0 ? (
+                              <li>Cliff Duration: 0 Days </li>
+                            ) : (
+                              <li>Cliff Time: {cliffTime} </li>
+                            )}
+                            <h4 className="highlights">Pool Info</h4>
+
+                            <li>
+                              Soft Cap: {ido?.minimumTokenSaleAmount}{" "}
+                              {ido?.tokenSymbol}
+                            </li>
+                            <li>
+                              User limit: {ido?.maxUserAllocation}{" "}
+                              {ido?.tokenSymbol}
+                            </li>
+                            <h4 className="highlights">Invest</h4>
+                            <li>
+                              {" "}
+                              Total Invested : {displayTotalInvested}{" "}
+                              {ido?.tokenSymbol}
+                            </li>
+                            <li>
+                              Locked:{displayLocked} {ido?.tokenSymbol}
+                            </li>
+                            <li>
+                              Claimable:{displayClaimable} {ido?.tokenSymbol}
+                            </li>
+                            <li>
+                              Claimed:{displayClaimed} {ido?.tokenSymbol}
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                      <div
+                        className={
+                          active === 1 ? "tab-item tab-item-active" : "tab-item"
+                        }
+                      >
+                        <div className="highlight-sec">
+                          <h2 className="highlights">
+                            <span>{res.item_1_title}</span>
+                          </h2>
+                        </div>
+                        <div>
+                          <ul
+                            dangerouslySetInnerHTML={{
+                              __html: res.item_1_description,
+                            }}
+                          ></ul>
+                        </div>
+                      </div>
+                      <div
+                        className={
+                          active === 2 ? "tab-item tab-item-active" : "tab-item"
+                        }
+                      >
+                        <div className="highlight-sec">
+                          <h2 className="highlights">
+                            <span>{res.item_2_title}</span>
+                          </h2>
+                        </div>
+                        <div>
+                          <ul
+                            dangerouslySetInnerHTML={{
+                              __html: res.item_2_description,
+                            }}
+                          ></ul>
+                        </div>
+                      </div>
+                      <div
+                        className={
+                          active === 3 ? "tab-item tab-item-active" : "tab-item"
+                        }
+                      >
+                        <div className="highlight-sec">
+                          <h2 className="highlights">
+                            <span>{res.item_3_title}</span>
+                          </h2>
+                        </div>
+                        <div>
+                          <ul
+                            dangerouslySetInnerHTML={{
+                              __html: res.item_3_description,
+                            }}
+                          ></ul>
+                        </div>
+                      </div>
+                      <div
+                        className={
+                          active === 4 ? "tab-item tab-item-active" : "tab-item"
+                        }
+                      >
+                        <div className="highlight-sec">
+                          <h2 className="highlights">
+                            <span>{res.item_4_title}</span>
+                          </h2>
+                        </div>
+                        <div>
+                          <ul
+                            dangerouslySetInnerHTML={{
+                              __html: res.item_4_description,
+                            }}
+                          ></ul>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <div
+                );
+              })}
+            </div>
+          ) : (
+            <div className="container">
+              <div className="tabs-header">
+                <ul className="tabs">
+                  <li
                     className={
-                      active === 1 ? "tab-item tab-item-active" : "tab-item"
+                      active === 0 ? "tabs-items  active" : "tabs-items"
                     }
+                    onClick={() => setActive(0)}
                   >
-                    <div className="highlight-sec">
-                      <h2 className="highlights">
-                        <span>{res.item_2_title}</span>
-                      </h2>
-                    </div>
-                    <div>
-                      <ul
-                        dangerouslySetInnerHTML={{
-                          __html: res.item_2_description,
-                        }}
-                      ></ul>
-                    </div>
+                    Token Info
+                  </li>
+                </ul>
+              </div>
+              <div className="tabs-content">
+                <div
+                  className={
+                    active === 0 ? "tab-item tab-item-active" : "tab-item"
+                  }
+                >
+                  <div className="highlight-sec">
+                    <h2 className="highlights">
+                      {/* <span>Information</span> */}
+                    </h2>
                   </div>
-                  <div
-                    className={
-                      active === 2 ? "tab-item tab-item-active" : "tab-item"
-                    }
-                  >
-                    <div className="highlight-sec">
-                      <h2 className="highlights">
-                        <span>{res.item_3_title}</span>
-                      </h2>
-                    </div>
-                    <div>
-                      <ul
-                        dangerouslySetInnerHTML={{
-                          __html: res.item_3_description,
-                        }}
-                      ></ul>
-                    </div>
-                  </div>
-                  <div
-                    className={
-                      active === 3 ? "tab-item tab-item-active" : "tab-item"
-                    }
-                  >
-                    <div className="highlight-sec">
-                      <h2 className="highlights">
-                        <span>{res.item_4_title}</span>
-                      </h2>
-                    </div>
-                    <div>
-                      <ul
-                        dangerouslySetInnerHTML={{
-                          __html: res.item_4_description,
-                        }}
-                      ></ul>
-                    </div>
+
+                  <div>
+                    <ul>
+                      <h4 className="highlights"> Vesting Info</h4>
+
+                      {ido && parseFloat(ido.cliffDuration) === 0 ? (
+                        <li>Cliff Duration: 0 Days </li>
+                      ) : (
+                        <li>Cliff Time: {cliffTime} </li>
+                      )}
+                      <h4 className="highlights">Pool Info</h4>
+
+                      <li>
+                        Soft Cap: {ido?.minimumTokenSaleAmount}{" "}
+                        {ido?.tokenSymbol}
+                      </li>
+                      <li>
+                        User limit: {ido?.maxUserAllocation} {ido?.tokenSymbol}
+                      </li>
+                      <h4 className="highlights">Invest</h4>
+                      <li>
+                        {" "}
+                        Total Invested : {displayTotalInvested}{" "}
+                        {ido?.tokenSymbol}
+                      </li>
+                      <li>
+                        Locked:{displayLocked} {ido?.tokenSymbol}
+                      </li>
+                      <li>
+                        Claimable:{displayClaimable} {ido?.tokenSymbol}
+                      </li>
+                      <li>
+                        Claimed:{displayClaimed} {ido?.tokenSymbol}
+                      </li>
+                    </ul>
                   </div>
                 </div>
               </div>
-            );
-          })}
+            </div>
+          )}
         </section>
       )}
     </div>
