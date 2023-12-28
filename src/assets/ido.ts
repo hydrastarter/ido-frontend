@@ -40,7 +40,7 @@ export type inputTokenType = {
   inputTokenAddress: string;
   inputTokenDecimals: number;
 };
-export const idos: idoType[] = [
+/*export const idos: idoType[] = [
   {
     id: "",
     crowdsaleAddress: "",
@@ -267,4 +267,4 @@ export const idos: idoType[] = [
     minimumTokenSaleAmount: "9000",
     crowdsaleTokenAllocated: "1000000",
   },
-];
+];*/

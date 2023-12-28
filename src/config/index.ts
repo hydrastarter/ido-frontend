@@ -1,4 +1,7 @@
-export const LAUNCHPAD_FACTORY_ADDRESS =
-  "0xC58B97d8850f72A812BBdECA7Dd0672Ce406DAd4";
-export const PROXY_CONTRACT_MULTIOWNER = "0x93f8193e930E0342aF94eAAd99bC2f177a53c18B";
-// export const CROWDSALE_ADDRESS = "0xb0F6fF9478f73402262Ec9CF4B77fF47c3358C33";
+import { AvailableNetworks } from "@reef-defi/react-lib";
+import { networkConfig } from "../environment";
+
+
+export const getNetworkConfig = (networkName: AvailableNetworks)=>{
+  return networkConfig[networkName];
+}

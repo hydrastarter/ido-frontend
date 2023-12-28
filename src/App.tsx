@@ -1,4 +1,4 @@
-import { hooks } from "@reef-defi/react-lib";
+import { availableNetworks, hooks } from "@reef-defi/react-lib";
 import React, { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -9,9 +9,11 @@ import NoExtension from "./pages/error/NoExtension";
 import NetworkSwitch, { setSwitching } from "./context/NetworkSwitch";
 import NetworkSwitching from "./common/NetworkSwitching";
 import Bind from "./common/Bind/Bind";
+import { appSelectedNetwork } from "./environment";
 
 const App = (): JSX.Element => {
   const { loading, error } = hooks.useInitReefState("Reef Wallet App", {
+    network: appSelectedNetwork,
     ipfsHashResolverFn: (hash: string) =>
       `https://reef.infura-ipfs.io/ipfs/${hash}`,
   });

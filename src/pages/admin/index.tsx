@@ -14,18 +14,16 @@ import {
   useCSVReader,
 } from "react-papaparse";
 import { Buffer } from "buffer";
-import { appState, hooks, ReefSigner } from "@reef-defi/react-lib";
+import { appState, hooks, Network, ReefSigner } from "@reef-defi/react-lib";
 import { create } from "ipfs-http-client";
 import BigNumber from "bignumber.js";
-import {
-  PROXY_CONTRACT_MULTIOWNER,
-  LAUNCHPAD_FACTORY_ADDRESS,
-} from "../../config";
+import {getNetworkConfig} from "../../config";
 import { LaunchPadFactory } from "../../abis/LaunchPadFactory";
 import { ERC20 } from "../../abis/ERC20";
+import { infuraApiSecret, infuraProjectId, infuraSubDomainBaseUrl } from "../../environment";
 
 const auth = `Basic ${Buffer.from(
-  `${process.env.REACT_APP_INFURA_PROJECT_ID}:${process.env.REACT_APP_INFURA_API_SECRET}`
+  `${infuraProjectId}:${infuraApiSecret}`
 ).toString("base64")}`;
 
 const client = create({
@@ -134,6 +132,8 @@ export const Admin: React.FC = () => {
 
   const selectedSigner: ReefSigner | undefined | null =
     hooks.useObservableState(appState.selectedSigner$);
+  const selectedNetwork: Network | undefined | null =
+    hooks.useObservableState(appState.currentNetwork$);
   // const accounts: ReefSigner[] | undefined | null = hooks.useObservableState(appState.signers$);
   // const provider = hooks.useObservableState(appState.currentProvider$);
   const handleInputTokenChange = (
@@ -225,7 +225,7 @@ export const Admin: React.FC = () => {
     const added = await client.add(event.target.files[0]);
     setProjectTokenImage(() => ({
       previewImgUrl: imageUrl,
-      ipfsImgUrl: `${process.env.REACT_APP_INFURA_SUBDOMAIN_LINK}/${added.path}`,
+      ipfsImgUrl: `${infuraSubDomainBaseUrl}/${added.path}`,
       uploadingFile: false,
     }));
   };
@@ -239,7 +239,7 @@ export const Admin: React.FC = () => {
         );
         const allowanceAmount = await erc20Contract.allowance(
           selectedSigner.evmAddress,
-          PROXY_CONTRACT_MULTIOWNER
+          getNetworkConfig(selectedNetwork.name).PROXY_CONTRACT_MULTIOWNER
         );
         const tokenDecimals = await erc20Contract.decimals();
         const tokenName = await erc20Contract.name();
@@ -266,13 +266,13 @@ export const Admin: React.FC = () => {
           selectedSigner.signer
         );
         const approvalTx = await erc20Contract.approve(
-          PROXY_CONTRACT_MULTIOWNER,
+          getNetworkConfig(selectedNetwork.name).PROXY_CONTRACT_MULTIOWNER,
           constants.MaxUint256
         );
         await approvalTx.wait();
         const allowanceAmount = await erc20Contract.allowance(
           selectedSigner.evmAddress,
-          PROXY_CONTRACT_MULTIOWNER
+          getNetworkConfig(selectedNetwork.name).PROXY_CONTRACT_MULTIOWNER
         );
         setAllowance(new BigNumber(allowanceAmount.toString()));
       }
@@ -325,12 +325,12 @@ export const Admin: React.FC = () => {
           selectedSigner.signer
         );
         const proxyContract = new Contract(
-          PROXY_CONTRACT_MULTIOWNER,
+          getNetworkConfig(selectedNetwork.name).PROXY_CONTRACT_MULTIOWNER,
           LaunchPadFactory,
           selectedSigner.signer
         );
         const factoryContract = new Contract(
-          LAUNCHPAD_FACTORY_ADDRESS,
+          getNetworkConfig(selectedNetwork.name).LAUNCHPAD_FACTORY_ADDRESS,
           LaunchPadFactory,
           selectedSigner.signer
         );
