@@ -17,7 +17,10 @@ import { Buffer } from "buffer";
 import { appState, hooks, ReefSigner } from "@reef-defi/react-lib";
 import { create } from "ipfs-http-client";
 import BigNumber from "bignumber.js";
-import { LAUNCHPAD_FACTORY_ADDRESS } from "../../config";
+import {
+  PROXY_CONTRACT_MULTIOWNER,
+  LAUNCHPAD_FACTORY_ADDRESS,
+} from "../../config";
 import { LaunchPadFactory } from "../../abis/LaunchPadFactory";
 import { ERC20 } from "../../abis/ERC20";
 
@@ -236,7 +239,7 @@ export const Admin: React.FC = () => {
         );
         const allowanceAmount = await erc20Contract.allowance(
           selectedSigner.evmAddress,
-          LAUNCHPAD_FACTORY_ADDRESS
+          PROXY_CONTRACT_MULTIOWNER
         );
         const tokenDecimals = await erc20Contract.decimals();
         const tokenName = await erc20Contract.name();
@@ -263,13 +266,13 @@ export const Admin: React.FC = () => {
           selectedSigner.signer
         );
         const approvalTx = await erc20Contract.approve(
-          LAUNCHPAD_FACTORY_ADDRESS,
+          PROXY_CONTRACT_MULTIOWNER,
           constants.MaxUint256
         );
         await approvalTx.wait();
         const allowanceAmount = await erc20Contract.allowance(
           selectedSigner.evmAddress,
-          LAUNCHPAD_FACTORY_ADDRESS
+          PROXY_CONTRACT_MULTIOWNER
         );
         setAllowance(new BigNumber(allowanceAmount.toString()));
       }
@@ -319,6 +322,11 @@ export const Admin: React.FC = () => {
         const erc20Contract = new Contract(
           projectTokenAddress,
           ERC20,
+          selectedSigner.signer
+        );
+        const proxyContract = new Contract(
+          PROXY_CONTRACT_MULTIOWNER,
+          LaunchPadFactory,
           selectedSigner.signer
         );
         const factoryContract = new Contract(
@@ -383,7 +391,7 @@ export const Admin: React.FC = () => {
             maxUserAllocationInWei,
           ]
         );
-        const txObject = await factoryContract.launchCrowdsale(
+        const txObject = await proxyContract.launchCrowdsale(
           0,
           launchCrowdSaleData
         );
@@ -407,6 +415,7 @@ export const Admin: React.FC = () => {
           websiteUrl: websiteUrl,
           miscellaneousUrl: miscellaneousUrl,
           description: description,
+          presaleImageUrl: projectTokenImage.ipfsImgUrl,
           crowdsaleTokenAllocated: amountOfTokensToSell,
           crowdsaleStartTime: startDateNum.toString(),
           crowdsaleEndTime: endDateNum.toString(),
@@ -579,7 +588,7 @@ export const Admin: React.FC = () => {
             selected={formatUTC(startTimeInUTC, true)}
             wrapperClassName="display-flex"
             showTimeSelect
-            minDate={startTimeInUTC}
+            minDate={new Date(Date.now())}
             timeFormat="HH:mm"
             timeIntervals={15}
             dateFormat="dd/MM/yyyy HH:mm"
@@ -591,7 +600,7 @@ export const Admin: React.FC = () => {
             selected={formatUTC(endTimeInUTC, true)}
             wrapperClassName="display-flex"
             showTimeSelect
-            minDate={endTimeInUTC}
+            minDate={new Date(Date.now())}
             timeFormat="HH:mm"
             timeIntervals={15}
             dateFormat="dd/MM/yyyy HH:mm"
@@ -717,7 +726,7 @@ export const Admin: React.FC = () => {
             selected={formatUTC(vestingStartTimeInUTC, true)}
             wrapperClassName="display-flex"
             showTimeSelect
-            minDate={vestingStartTimeInUTC}
+            minDate={new Date(Date.now())}
             timeFormat="HH:mm"
             timeIntervals={15}
             dateFormat="dd/MM/yyyy HH:mm"
@@ -731,7 +740,7 @@ export const Admin: React.FC = () => {
             selected={formatUTC(vestingEndTimeInUTC, true)}
             wrapperClassName="display-flex"
             showTimeSelect
-            minDate={vestingEndTimeInUTC}
+            minDate={new Date(Date.now())}
             timeFormat="HH:mm"
             timeIntervals={15}
             dateFormat="dd/MM/yyyy HH:mm"
@@ -755,7 +764,7 @@ export const Admin: React.FC = () => {
               selected={formatUTC(cliffPeriodInUTC, true)}
               wrapperClassName="display-flex"
               showTimeSelect
-              minDate={cliffPeriodInUTC}
+              minDate={new Date(Date.now())}
               timeFormat="HH:mm"
               timeIntervals={15}
               dateFormat="dd/MM/yyyy HH:mm"
