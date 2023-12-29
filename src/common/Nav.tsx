@@ -104,7 +104,7 @@ const Nav = ({ display }: Nav): JSX.Element => {
                 selectAccount={selectAccount}
                 onNetworkSelect={selectNetwork}
                 selectedNetwork={selectedNetwork}
-              />
+                availableNetworks={['mainnet', 'testnet']}/>
             )}
           </nav>
         )}
