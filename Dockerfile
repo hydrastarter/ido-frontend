@@ -6,6 +6,8 @@ COPY . .
 
 RUN yarn && NODE_ENV=production yarn build
 
+RUN ls /apps/build
+
 # ===========================================================
 
 FROM nginx:stable-alpine
