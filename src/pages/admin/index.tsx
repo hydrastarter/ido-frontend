@@ -14,13 +14,13 @@ import {
   useCSVReader,
 } from "react-papaparse";
 import { Buffer } from "buffer";
-import { appState, hooks, Network, ReefSigner } from "@reef-defi/react-lib";
+import { appState, AvailableNetworks, hooks, Network, ReefSigner } from "@reef-defi/react-lib";
 import { create } from "ipfs-http-client";
 import BigNumber from "bignumber.js";
 import {getNetworkConfig} from "../../config";
 import { LaunchPadFactory } from "../../abis/LaunchPadFactory";
 import { ERC20 } from "../../abis/ERC20";
-import { infuraApiSecret, infuraProjectId, infuraSubDomainBaseUrl } from "../../environment";
+import { getNetworkCrowdsaleUrl, infuraApiSecret, infuraProjectId, infuraSubDomainBaseUrl } from "../../environment";
 
 const auth = `Basic ${Buffer.from(
   `${infuraProjectId}:${infuraApiSecret}`
@@ -106,7 +106,7 @@ export const Admin: React.FC = () => {
   const [allowance, setAllowance] = useState(new BigNumber(0));
   const [startTimeInUTC, setStartTimeInUTC] = useState(new Date(Date.now()));
   const [endTimeInUTC, setEndTimeInUTC] = useState(
-    new Date(Date.now() + 1 * 60 * 60 * 1000)
+    new Date(Date.now() + 60 * 60 * 1000)
   );
   const [amountOfTokensToSell, setAmountOfTokensToSell] = useState("0");
   const [softcap, setSoftcap] = useState("900");
@@ -282,7 +282,7 @@ export const Admin: React.FC = () => {
       console.error(error);
     }
   };
-  const createIdo = async () => {
+  const createIdo = async (networkName: AvailableNetworks) => {
     try {
       setIsCreatingIdo(true);
       if (selectedSigner) {
@@ -439,7 +439,7 @@ export const Admin: React.FC = () => {
           body: raw,
         };
         const resp = await fetch(
-          "https://reef-ido.cryption.network/crowdsale",
+          getNetworkCrowdsaleUrl(networkName),
           requestOptions
         );
         console.log("resp: ", resp);
@@ -821,7 +821,7 @@ export const Admin: React.FC = () => {
               isCreatingIDO ||
               allowance.isLessThan(amountOfTokensToSell)
             }
-            onClick={createIdo}
+            onClick={()=>createIdo(selectedNetwork.name)}
             size="large"
             fill
             loading={isCreatingIDO}

@@ -3,21 +3,24 @@ import Uik from "@reef-defi/ui-kit";
 import "./index.css";
 import { idoType } from "../../assets/ido";
 import { IdoCard } from "./IdoCard";
-import { ReefSigner, hooks, appState } from "@reef-defi/react-lib";
+import { appState, AvailableNetworks, hooks, Network, ReefSigner } from "@reef-defi/react-lib";
 import BigNumber from "bignumber.js";
 import { Crowdsale } from "../../abis/Crowdsale";
 import { Contract } from "ethers";
+import { getNetworkCrowdsaleUrl } from "../../environment";
 
 export const Dashboard: React.FC = () => {
   const [allIdos, setAllIdos] = useState<idoType[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
+  const selectedNetwork: Network | undefined | null =
+    hooks.useObservableState(appState.currentNetwork$);
 
-  const getAllIdos = async () => {
+  const getAllIdos = async (networkName: AvailableNetworks) => {
     setIsLoading(() => true);
     const username = "adminUser";
     const password = "password";
-    const resp = await fetch("https://reef-ido.cryption.network/crowdsale", {
+    const resp = await fetch(getNetworkCrowdsaleUrl(networkName), {
       headers: {
         Authorization: `Basic ${btoa(`${username}:${password}`)}`,
       },
@@ -28,12 +31,15 @@ export const Dashboard: React.FC = () => {
   };
 
   useEffect(() => {
-    getAllIdos().catch((e) => {
+    if (!selectedNetwork) {
+      return;
+    }
+    getAllIdos(selectedNetwork.name).catch((e) => {
       setIsLoading(() => false);
       setIsError(() => true);
       console.log("Error in getAllIdos: ", e);
     });
-  }, []);
+  }, [selectedNetwork]);
 
   return (
     <div style={{ width: "100%" }}>

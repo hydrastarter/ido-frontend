@@ -2,15 +2,13 @@ import React, { useEffect, useState } from "react";
 import Uik from "@reef-defi/ui-kit";
 import { Link, useParams } from "react-router-dom";
 import BigNumber from "bignumber.js";
-import { appState, hooks, ReefSigner } from "@reef-defi/react-lib";
+import { appState, hooks, Network, ReefSigner } from "@reef-defi/react-lib";
 import { Contract } from "ethers";
 import Countdown from "react-countdown";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import InfoIcon from "@mui/icons-material/Info";
 import { styled } from "@mui/material/styles";
-import LinearProgress, {
-  linearProgressClasses,
-} from "@mui/material/LinearProgress";
+import LinearProgress, { linearProgressClasses } from "@mui/material/LinearProgress";
 // @ts-ignore
 import twitterIcon from "../../assets/images/twitter.png";
 // @ts-ignore
@@ -23,6 +21,7 @@ import { ERC20 } from "../../abis/ERC20";
 import "../dashboard/index.css";
 import "../dashboard/idoCard.css";
 import { DASHBOARD_URL } from "../../urls";
+import { getNetworkCrowdsaleUrl } from "../../environment";
 
 /**
  * Take the difference between the dates and divide by milliseconds per day.
@@ -111,6 +110,8 @@ export default function CrowdsaleDetails() {
   const params: { address: string } = useParams();
   const selectedSigner: ReefSigner | undefined | null =
     hooks.useObservableState(appState.selectedSigner$);
+  const selectedNetwork: Network | undefined | null =
+    hooks.useObservableState(appState.currentNetwork$);
 
   const [isOpen, setOpen] = useState(false);
   const [txHash, setTxHash] = useState(null);
@@ -215,7 +216,7 @@ export default function CrowdsaleDetails() {
       const username = "adminUser";
       const password = "password";
       const resp = await fetch(
-        `https://reef-ido.cryption.network/crowdsale/${params.address}`,
+        `${getNetworkCrowdsaleUrl(selectedNetwork.name)}/${params.address}`,
         {
           headers: {
             Authorization: `Basic ${btoa(`${username}:${password}`)}`,
@@ -241,7 +242,7 @@ export default function CrowdsaleDetails() {
     if (params && params.address) {
       getIdoDetails();
     }
-  }, [params.address]);
+  }, [params.address, selectedNetwork]);
   useEffect(() => {
     const getAllContractDetails = async (
       crowdsaleContractAddress: string,
