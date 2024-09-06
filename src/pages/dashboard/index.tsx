@@ -11,7 +11,7 @@ import { getNetworkCrowdsaleUrl } from "../../environment";
 
 export const Dashboard: React.FC = () => {
   const [allIdos, setAllIdos] = useState<idoType[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [errorStatus, setErrorStatus] = useState({
     status:false,
     message:undefined
@@ -47,9 +47,14 @@ export const Dashboard: React.FC = () => {
     });
   }, [selectedNetwork]);
 
+
   return (
     <div style={{ width: "100%" }}>
-      {isLoading ? <Uik.Loading text="Fetching all IDOs..." />:errorStatus.status ?
+      {isLoading ? 
+      <div className="loader">
+        <Uik.Loading text="fetching all IDOs"/>
+      </div>
+      :errorStatus.status ?
       <div className="error-block">
         <Uik.Text className="error-block-title" text={"Encountered an error"} type="light"/>
         <Uik.Text className="error-block-desc" text={errorStatus.message} type="light" />

@@ -38,3 +38,10 @@
 .error-block-desc{
   font-weight: 200;
 }
+
+.loader{
+  height: 50vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
