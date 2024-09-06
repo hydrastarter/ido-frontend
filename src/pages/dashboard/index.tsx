@@ -54,7 +54,6 @@ export const Dashboard: React.FC = () => {
         <Uik.Text className="error-block-title" text={"Encountered an error"} type="light"/>
         <Uik.Text className="error-block-desc" text={errorStatus.message} type="light" />
       </div>:allIdos && <TabsData allIdos={allIdos} />}
-      {/*{<TabsData allIdos={idos} />}*/}
     </div>
   );
 };
