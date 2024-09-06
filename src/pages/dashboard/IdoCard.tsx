@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Uik from "@reef-defi/ui-kit";
+import Uik from "@reef-chain/ui-kit";
 import "./idoCard.css";
 import { Link } from "react-router-dom";
 import { idoType } from "../../assets/ido";

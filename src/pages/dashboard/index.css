@@ -20,3 +20,21 @@
 .mb-10{
   margin-bottom: 10px;
 }
+
+.error-block{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 60vh;
+  flex-direction: column;
+}
+
+.error-block-title{
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.error-block-desc{
+  font-weight: 200;
+}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Uik from "@reef-defi/ui-kit";
+import Uik from "@reef-chain/ui-kit";
 import "./index.css";
 import { idoType } from "../../assets/ido";
 import { IdoCard } from "./IdoCard";
@@ -12,7 +12,10 @@ import { getNetworkCrowdsaleUrl } from "../../environment";
 export const Dashboard: React.FC = () => {
   const [allIdos, setAllIdos] = useState<idoType[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
+  const [errorStatus, setErrorStatus] = useState({
+    status:false,
+    message:undefined
+  });
   const selectedNetwork: Network | undefined | null =
     hooks.useObservableState(appState.currentNetwork$);
 
@@ -36,16 +39,21 @@ export const Dashboard: React.FC = () => {
     }
     getAllIdos(selectedNetwork.name).catch((e) => {
       setIsLoading(() => false);
-      setIsError(() => true);
+      setErrorStatus({
+        status:true,
+        message:e.message
+      });
       console.log("Error in getAllIdos: ", e);
     });
   }, [selectedNetwork]);
 
   return (
     <div style={{ width: "100%" }}>
-      {isLoading && <Uik.Loading text="Fetching all IDOs..." />}
-      {isError && <Uik.Alert type="danger" text="An error has occurred." />}
-      {!isLoading && !isError && allIdos && <TabsData allIdos={allIdos} />}
+      {isLoading ? <Uik.Loading text="Fetching all IDOs..." />:errorStatus.status ?
+      <div className="error-block">
+        <Uik.Text className="error-block-title" text={"Encountered an error"} type="light"/>
+        <Uik.Text className="error-block-desc" text={errorStatus.message} type="light" />
+      </div>:allIdos && <TabsData allIdos={allIdos} />}
       {/*{<TabsData allIdos={idos} />}*/}
     </div>
   );

@@ -1,7 +1,7 @@
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { CSSProperties, useState } from "react";
-import Uik from "@reef-defi/ui-kit";
+import Uik from "@reef-chain/ui-kit";
 import { constants, Contract, ethers } from "ethers";
 import "./index.css";
 import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
