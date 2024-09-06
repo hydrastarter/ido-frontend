@@ -56,11 +56,7 @@ export const IdoCard = ({
   typeOfPresale,
 }: {
   ido: idoType;
-  typeOfPresale:
-    | "Active Presales"
-    | "Upcoming Presales"
-    | "Completed Presales"
-    | "My Crowdsale";
+  typeOfPresale:string;
 }): JSX.Element => {
   const selectedSigner: ReefSigner | undefined | null =
     hooks.useObservableState(appState.selectedSigner$);
