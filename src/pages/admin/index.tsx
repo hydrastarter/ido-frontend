@@ -468,74 +468,63 @@ export const Admin: React.FC = () => {
   }
 
 
-  const getTokenDetails = ()=>{
-    return <Uik.Container className="algin-top token-details">
-
-      <Uik.Input
-        label="Project token address"
-        value={projectTokenAddress}
-        onInput={(e) => setProjectTokenAddress(e.target.value)}
-        onBlur={checkAllowance}
-      />
-      <label className="uik-button" style={{ marginTop: "20px" }}>
-        <input
-          type="file"
-          hidden
-          disabled={projectTokenImage.uploadingFile}
-          onChange={handleFileUpload}
-        />
-        {projectTokenImage.uploadingFile
-          ? "Uploading..."
-          : "Upload token image"}
-      </label>
-          <div className="token-details-placeholder">
-
-          {projectTokenImage.previewImgUrl ? (
-          <img
-            src={projectTokenImage.previewImgUrl}
-            alt="project token"
-            style={{ width: "30px", marginBottom: "10px" }}
-          />
-        ):
-        <div className="empty-image">
-        </div>  
-          }
-          
-          {projectTokenDetails.name ? (
-          <Uik.Text
-            type="headline"
-            text={projectTokenDetails.name}
-            className="font20 margin10"
-          />
-        ):<Uik.Text
-        text={`TOKEN NAME`}
-        type="light"
-      />}
-          {projectTokenDetails.symbol ? (
-            <Uik.Text
-              text={`( ${projectTokenDetails.symbol} )`}
-              type="light"
-            />
-          ): <Uik.Text
-          text={`( TOKEN SYMBOL )`}
-          type="light"
-          className="text-sm"
-        />}
-          {projectTokenDetails.decimals ? (
-            <Uik.Text
-              text={`${projectTokenDetails.decimals} Decimals`}
-              type="lead"
-              className="text-center"
-            />
-          ):<Uik.Text
-          text={`DECIMALS`}
-          type="light"
-          className="text-sm"
-        />}
+  const getTokenDetails = () => {
+    return (
+      <Uik.Container className="align-top token-details card-create-ido">
+        <div className="token-details-placeholder">
+          <div style={{ position: "relative" }}>
+            {projectTokenImage.previewImgUrl ? (
+              <img
+                src={projectTokenImage.previewImgUrl}
+                alt="project token"
+                style={{ width: "30px", marginBottom: "10px" }}
+              />
+            ) : (
+              <div className="empty-image"></div>
+            )}
+  
+            <div
+              className="project-details"
+            >
+              {projectTokenDetails.name ? (
+                <Uik.Text type="headline" text={projectTokenDetails.name} className="font20 margin10" />
+              ) : (
+                <Uik.Text text={`TOKEN NAME`} type="light" />
+              )}
+              {projectTokenDetails.symbol ? (
+                <Uik.Text text={`( ${projectTokenDetails.symbol} )`} type="light" />
+              ) : (
+                <Uik.Text text={`( TOKEN SYMBOL )`} type="light" className="text-sm" />
+              )}
+              {projectTokenDetails.decimals ? (
+                <Uik.Text text={`${projectTokenDetails.decimals} Decimals`} type="lead" className="text-center" />
+              ) : (
+                <Uik.Text text={`DECIMALS`} type="light" className="text-sm" />
+              )}
+            </div>
           </div>
-      
-  </Uik.Container>
-  }
+        </div>
+  
+        <div style={{ flex: 2 }}>
+          <Uik.Input
+            label="Project token address"
+            value={projectTokenAddress}
+            onInput={(e) => setProjectTokenAddress(e.target.value)}
+            onBlur={checkAllowance}
+          />
+          <label className="uik-button" style={{ marginTop: "20px" }}>
+            <input
+              type="file"
+              hidden
+              disabled={projectTokenImage.uploadingFile}
+              onChange={handleFileUpload}
+            />
+            {projectTokenImage.uploadingFile ? "Uploading..." : "Upload token image"}
+          </label>
+        </div>
+      </Uik.Container>
+    );
+  };
 
 
   return (

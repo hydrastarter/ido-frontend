@@ -65,13 +65,15 @@ flex-direction: column;
   padding: 6rem;
   border-radius: 100%;
   margin-bottom: 0.6rem;
+  margin-right: 0.5rem;
+  border: 1px solid #d9dfea;
 }
 
 .token-details-placeholder{
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
+  justify-content: space-around;
 }
 
 .text-sm{
@@ -81,5 +83,26 @@ flex-direction: column;
 
 .token-details{
   display: flex;
+}
+
+.card-create-ido{
+  display: flex; 
+  padding: 2rem; 
+  border: 2px solid #f4f5f8;
+  border-radius: 1rem;
+}
+
+.project-details{
+  position: absolute;
+  bottom: -5px;
+  right: -5px;
+  background-color: white;
+  padding: 4px 10px;
+  border-radius: 10px;
+  z-index: 10;
+  border: 2px solid #a93085;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-direction: column;
 }
