@@ -85,13 +85,6 @@ flex-direction: column;
   display: flex;
 }
 
-.card-create-ido{
-  display: flex; 
-  padding: 2rem; 
-  border: 2px solid #f4f5f8;
-  border-radius: 1rem;
-}
-
 .project-details{
   position: absolute;
   bottom: -5px;
@@ -111,4 +104,12 @@ flex-direction: column;
   margin-top: 20px;
   padding: 14px;
   font-size: 1rem;
+}
+
+.card-create-ido{
+  padding: 2rem;
+}
+
+.small-headline{
+  font-size: larger;
 }

@@ -562,7 +562,7 @@ export const Admin: React.FC = () => {
       <Uik.Form>
 
       {getTokenDetails()}
-        <Uik.Divider text="Input token details" />
+        <Uik.Text text="Token Details" type="headline" className="small-headline"/>
         <Uik.Input
           label="Input token rate"
           type="number"
