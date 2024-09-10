@@ -617,9 +617,10 @@ export const Admin: React.FC = () => {
           />
         </Uik.Container>
 
-        <Uik.Input
+<div className="amount-to-sell">
+<Uik.Input
           type="number"
-          label="Amount of tokens to sell (Hardcap)"
+          label="Hardcap ( Maximum amount to sell )"
           value={amountOfTokensToSell}
           onChange={(e) => setAmountOfTokensToSell(e.target.value)}
         />
@@ -631,6 +632,8 @@ export const Admin: React.FC = () => {
           onChange={(e) => setSoftcap(e.target.value)}
         />
 
+</div>
+        
         <Uik.Input
           type="number"
           label="Max user allocation"
@@ -640,7 +643,7 @@ export const Admin: React.FC = () => {
 
         <Uik.Toggle
           label="Enable Whitelisting"
-          onText="Enabled"
+          onText="Enabled whitelisted addresses"
           offText="No addresses whitelisted"
           value={enableWhitelisting}
           onChange={() => setEnableWhitelisting(!enableWhitelisting)}
