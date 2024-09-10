@@ -465,79 +465,6 @@ export const Admin: React.FC = () => {
   ) {
     disableCreateButton = false;
   }
-
-
-  const getTokenDetails = ()=>{
-    return <Uik.Container className="algin-top">
-
-      <Uik.Input
-        label="Project token address"
-        value={projectTokenAddress}
-        onInput={(e) => setProjectTokenAddress(e.target.value)}
-        onBlur={checkAllowance}
-      />
-      <label className="uik-button" style={{ marginTop: "20px" }}>
-        <input
-          type="file"
-          hidden
-          disabled={projectTokenImage.uploadingFile}
-          onChange={handleFileUpload}
-        />
-        {projectTokenImage.uploadingFile
-          ? "Uploading..."
-          : "Upload token image"}
-      </label>
-
-          <div className="token-details-placeholder">
-
-          {projectTokenImage.previewImgUrl ? (
-          <img
-            src={projectTokenImage.previewImgUrl}
-            alt="project token"
-            style={{ width: "30px", marginBottom: "10px" }}
-          />
-        ):
-        <div className="empty-image">
-        </div>  
-          }
-          
-          {projectTokenDetails.name ? (
-          <Uik.Text
-            type="headline"
-            text={projectTokenDetails.name}
-            className="font20 margin10"
-          />
-        ):<Uik.Text
-        text={`TOKEN NAME`}
-        type="light"
-      />}
-          {projectTokenDetails.symbol ? (
-            <Uik.Text
-              text={`( ${projectTokenDetails.symbol} )`}
-              type="light"
-            />
-          ): <Uik.Text
-          text={`( TOKEN SYMBOL )`}
-          type="light"
-          className="text-sm"
-        />}
-          {projectTokenDetails.decimals ? (
-            <Uik.Text
-              text={`${projectTokenDetails.decimals} Decimals`}
-              type="lead"
-              className="text-center"
-            />
-          ):<Uik.Text
-          text={`DECIMALS`}
-          type="light"
-          className="text-sm"
-        />}
-          </div>
-      
-  </Uik.Container>
-  }
-
-
   return (
     <Uik.Card condensed className="admin-container">
       <Uik.Text
@@ -570,7 +497,62 @@ export const Admin: React.FC = () => {
         <Uik.Text>Please check the Upcoming IDO tab.</Uik.Text>
       </Uik.Modal>
       <Uik.Form>
-      {getTokenDetails()}
+        <Uik.Divider text="Project token details" />
+        <Uik.Container className="algin-top">
+          <div>
+            <Uik.Input
+              label="Project token address"
+              value={projectTokenAddress}
+              onInput={(e) => setProjectTokenAddress(e.target.value)}
+              onBlur={checkAllowance}
+            />
+            <label className="uik-button" style={{ marginTop: "20px" }}>
+              <input
+                type="file"
+                hidden
+                disabled={projectTokenImage.uploadingFile}
+                onChange={handleFileUpload}
+              />
+              {projectTokenImage.uploadingFile
+                ? "Uploading..."
+                : "Upload token image"}
+            </label>
+          </div>
+          <div>
+            <Uik.Label text="Project Token Details" />
+            <Uik.Container className="margin10 flex-column">
+              {projectTokenImage.previewImgUrl && (
+                <img
+                  src={projectTokenImage.previewImgUrl}
+                  alt="project token"
+                  style={{ width: "30px", marginBottom: "10px" }}
+                />
+              )}
+              {projectTokenDetails.name && (
+                <Uik.Text
+                  type="headline"
+                  text={projectTokenDetails.name}
+                  className="font20 margin10"
+                />
+              )}
+              <Uik.Container className="margin10">
+                {projectTokenDetails.symbol && (
+                  <Uik.Text
+                    text={`( ${projectTokenDetails.symbol} )`}
+                    type="lead"
+                  />
+                )}
+                {projectTokenDetails.decimals && (
+                  <Uik.Text
+                    text={`${projectTokenDetails.decimals} Decimals`}
+                    type="lead"
+                    className="text-center"
+                  />
+                )}
+              </Uik.Container>
+            </Uik.Container>
+          </div>
+        </Uik.Container>
         <Uik.Divider text="Input token details" />
         <Uik.Input
           label="Input token rate"
