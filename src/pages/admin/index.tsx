@@ -21,6 +21,7 @@ import {getNetworkConfig} from "../../config";
 import { LaunchPadFactory } from "../../abis/LaunchPadFactory";
 import { ERC20 } from "../../abis/ERC20";
 import { getNetworkCrowdsaleUrl, infuraApiSecret, infuraProjectId, infuraSubDomainBaseUrl } from "../../environment";
+import Hero from "../../common/Hero";
 
 const auth = `Basic ${Buffer.from(
   `${infuraProjectId}:${infuraApiSecret}`
@@ -468,7 +469,7 @@ export const Admin: React.FC = () => {
 
 
   const getTokenDetails = ()=>{
-    return <Uik.Container className="algin-top">
+    return <Uik.Container className="algin-top token-details">
 
       <Uik.Input
         label="Project token address"
@@ -487,7 +488,6 @@ export const Admin: React.FC = () => {
           ? "Uploading..."
           : "Upload token image"}
       </label>
-
           <div className="token-details-placeholder">
 
           {projectTokenImage.previewImgUrl ? (
@@ -539,12 +539,13 @@ export const Admin: React.FC = () => {
 
 
   return (
-    <Uik.Card condensed className="admin-container">
-      <Uik.Text
-        type="headline"
-        text="Create an IDO"
-        className="admin-headline"
+    <div>
+        <Hero title='Create an IDO'
+           subtitle='Paste your token address below' 
+           imgsrc='token-details.jpg'
       />
+    <Uik.Card condensed className="admin-container">
+          
       <Uik.Modal
         title="Transaction Successful!"
         isOpen={isOpen}
@@ -570,6 +571,7 @@ export const Admin: React.FC = () => {
         <Uik.Text>Please check the Upcoming IDO tab.</Uik.Text>
       </Uik.Modal>
       <Uik.Form>
+
       {getTokenDetails()}
         <Uik.Divider text="Input token details" />
         <Uik.Input
@@ -849,5 +851,6 @@ export const Admin: React.FC = () => {
         </Uik.Container>
       </Uik.Form>
     </Uik.Card>
+    </div>
   );
 };
