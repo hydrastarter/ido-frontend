@@ -530,7 +530,7 @@ export const Admin: React.FC = () => {
   return (
     <div>
         <Hero title='Create an IDO'
-           subtitle='Paste your token address below' 
+           subtitle='One step closer to a smooth launch' 
            imgsrc='token-details.jpg'
       />
     <Uik.Card condensed className="admin-container">
