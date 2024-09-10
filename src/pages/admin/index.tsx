@@ -571,7 +571,7 @@ export const Admin: React.FC = () => {
           onInput={(e) => setInputTokenRate(e.target.value)}
         />
         {inputTokens.map((eachInputToken, index) => (
-          <Uik.Container key={`inputToken+${index}`}>
+          <div key={`inputToken+${index}`} className="input-token-address">
             <Uik.Input
               label="Input token address"
               key={`inputTokenField+${index}`}
@@ -580,14 +580,13 @@ export const Admin: React.FC = () => {
               onInput={(e) => handleInputTokenChange(e, index)}
             />
             {index > 0 && (
-              // eslint-disable-next-line jsx-a11y/no-static-element-interactions
               <span
                 onClick={() => removeInputToken(eachInputToken.tokenAddress)}
               >
                 <Uik.Icon icon={faTrashCan} className="delete-icon" />
               </span>
             )}
-          </Uik.Container>
+          </div>
         ))}
         <Uik.Button onClick={addToken}>Add new token</Uik.Button>
 

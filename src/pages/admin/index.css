@@ -18,6 +18,11 @@
 
 .delete-icon {
     max-width: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    margin-top: 1rem;
 }
 
 .upload-container {
@@ -112,4 +117,10 @@ flex-direction: column;
 
 .small-headline{
   font-size: larger;
+}
+
+.input-token-address{
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
