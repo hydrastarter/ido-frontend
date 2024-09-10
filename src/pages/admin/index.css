@@ -25,6 +25,11 @@
     margin-top: 1rem;
 }
 
+.delete-icon:hover{
+  cursor: pointer;
+  color: red;
+}
+
 .upload-container {
     align-items: center;
     border: 2px dashed #ccc;
