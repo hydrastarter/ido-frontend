@@ -507,12 +507,12 @@ export const Admin: React.FC = () => {
   
         <div style={{ flex: 2 }}>
           <Uik.Input
-            label="Project token address"
+            placeholder="Project token address"
             value={projectTokenAddress}
             onInput={(e) => setProjectTokenAddress(e.target.value)}
             onBlur={checkAllowance}
           />
-          <label className="uik-button" style={{ marginTop: "20px" }}>
+          <label className="uik-button uik-button--fill" style={{ marginTop: "20px" }}>
             <input
               type="file"
               hidden
