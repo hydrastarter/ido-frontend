@@ -526,6 +526,291 @@ export const Admin: React.FC = () => {
     );
   };
 
+  const buildForm = ()=>{
+    return ( 
+    <>
+  
+    <Uik.Text text="Token Details" type="headline" className="small-headline"/>
+    <Uik.Input
+      label="Input token rate"
+      type="number"
+      key="inputTokenRateField"
+      value={inputTokenRate}
+      onInput={(e) => setInputTokenRate(e.target.value)}
+    />
+    {inputTokens.map((eachInputToken, index) => (
+      <div key={`inputToken+${index}`} className="input-token-address">
+        <Uik.Input
+          label="Input token address"
+          key={`inputTokenField+${index}`}
+          value={eachInputToken.tokenAddress}
+          onBlur={() => handleBlurInputToken(index)}
+          onInput={(e) => handleInputTokenChange(e, index)}
+        />
+        {index > 0 && (
+          <span
+            onClick={() => removeInputToken(eachInputToken.tokenAddress)}
+          >
+            <Uik.Icon icon={faTrashCan} className="delete-icon" />
+          </span>
+        )}
+      </div>
+    ))}
+    <Uik.Button onClick={addToken}>Add new token</Uik.Button>
+
+    <Uik.Divider text="Token sale details" />
+    <Uik.Container>
+      <DatePicker
+        selected={formatUTC(startTimeInUTC, true)}
+        wrapperClassName="display-flex"
+        showTimeSelect
+        minDate={new Date(Date.now())}
+        timeFormat="HH:mm"
+        timeIntervals={15}
+        dateFormat="dd/MM/yyyy HH:mm"
+        onChange={(date: Date) => setStartTimeInUTC(() => formatUTC(date))}
+        customInput={<Uik.Input label="Start time" />}
+      />
+
+      <DatePicker
+        selected={formatUTC(endTimeInUTC, true)}
+        wrapperClassName="display-flex"
+        showTimeSelect
+        minDate={new Date(Date.now())}
+        timeFormat="HH:mm"
+        timeIntervals={15}
+        dateFormat="dd/MM/yyyy HH:mm"
+        onChange={(date: Date) => setEndTimeInUTC(() => formatUTC(date))}
+        customInput={<Uik.Input label="End time" />}
+      />
+    </Uik.Container>
+
+<div className="amount-to-sell">
+<Uik.Input
+      type="number"
+      label="Hardcap ( Maximum amount to sell )"
+      value={amountOfTokensToSell}
+      onChange={(e) => setAmountOfTokensToSell(e.target.value)}
+    />
+
+    <Uik.Input
+      type="number"
+      label="Softcap"
+      value={softcap}
+      onChange={(e) => setSoftcap(e.target.value)}
+    />
+
+</div>
+    
+    <Uik.Input
+      type="number"
+      label="Max user allocation"
+      value={maxUserAllocation}
+      onChange={(e) => setMaxUserAllocation(e.target.value)}
+    />
+
+    <Uik.Toggle
+      label="Enable Whitelisting"
+      onText="Enabled whitelisted addresses"
+      offText="No addresses whitelisted"
+      value={enableWhitelisting}
+      onChange={() => setEnableWhitelisting(!enableWhitelisting)}
+    />
+    {enableWhitelisting && (
+      <>
+        <Uik.Input
+          value={whitelistedAddresses}
+          onChange={(e) => setWhitelistedAddress(e.target.value)}
+          label="Enter addresses to whitelist"
+          textarea
+        />
+
+        <CSVReader
+          onUploadAccepted={(results: any) => {
+            bulkUpload(results);
+          }}
+          onDragOver={(event: DragEvent) => {
+            event.preventDefault();
+            setZoneHover(true);
+          }}
+          onDragLeave={(event: DragEvent) => {
+            event.preventDefault();
+            setZoneHover(false);
+          }}
+        >
+          {({
+            getRootProps,
+            acceptedFile,
+            ProgressBar,
+            getRemoveFileProps,
+            Remove,
+          }: any) => (
+            <>
+              <div
+                // eslint-disable-next-line react/jsx-props-no-spreading
+                {...getRootProps()}
+                className="upload-container"
+                style={{
+                  ...(zoneHover && CSVStyles.zoneHover),
+                }}
+              >
+                {acceptedFile ? (
+                  <>
+                    <div className="file-container">
+                      <div>
+                        <Uik.Text>
+                          {formatFileSize(acceptedFile.size)}
+                        </Uik.Text>
+                        <Uik.Text>{acceptedFile.name}</Uik.Text>
+                      </div>
+                      <div className="progress-bar">
+                        <ProgressBar />
+                      </div>
+                      {/* eslint-disable-next-line jsx-a11y/mouse-events-have-key-events */}
+                      <div
+                        // eslint-disable-next-line react/jsx-props-no-spreading
+                        {...getRemoveFileProps()}
+                        // className="CSVStyles-remove"
+                        onMouseOver={(event: Event) => {
+                          event.preventDefault();
+                          setRemoveHoverColor(REMOVE_HOVER_COLOR_LIGHT);
+                        }}
+                        onMouseOut={(event: Event) => {
+                          event.preventDefault();
+                          setRemoveHoverColor(DEFAULT_REMOVE_HOVER_COLOR);
+                        }}
+                      >
+                        <Remove color={removeHoverColor} />
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  "Drop CSV file here or click to upload"
+                )}
+              </div>
+            </>
+          )}
+        </CSVReader>
+        <Uik.Container className="csv-footer">
+          <Uik.Text type="mini">Accepted: CSV / Excel</Uik.Text>
+          <Uik.Text type="mini">
+            <a href="/files/whitelist.csv">Get Example</a>
+          </Uik.Text>
+        </Uik.Container>
+      </>
+    )}
+    <Uik.Divider text="Vesting details" />
+    <Uik.Container>
+      <DatePicker
+        selected={formatUTC(vestingStartTimeInUTC, true)}
+        wrapperClassName="display-flex"
+        showTimeSelect
+        minDate={new Date(Date.now())}
+        timeFormat="HH:mm"
+        timeIntervals={15}
+        dateFormat="dd/MM/yyyy HH:mm"
+        onChange={(date: Date) =>
+          setVestingStartTimeInUTC(() => formatUTC(date))
+        }
+        customInput={<Uik.Input label="Vesting start time" />}
+      />
+
+      <DatePicker
+        selected={formatUTC(vestingEndTimeInUTC, true)}
+        wrapperClassName="display-flex"
+        showTimeSelect
+        minDate={new Date(Date.now())}
+        timeFormat="HH:mm"
+        timeIntervals={15}
+        dateFormat="dd/MM/yyyy HH:mm"
+        onChange={(date: Date) =>
+          setVestingEndTimeInUTC(() => formatUTC(date))
+        }
+        customInput={<Uik.Input label="Vesting end time" />}
+      />
+    </Uik.Container>
+
+    <Uik.Container>
+      <Uik.Toggle
+        label="Enable Cliff Period"
+        onText="Enabled"
+        offText="No Cliff Period"
+        value={enableCliffPeriod}
+        onChange={() => setEnableCliffPeriod(!enableCliffPeriod)}
+      />
+      {enableCliffPeriod && (
+        <DatePicker
+          selected={formatUTC(cliffPeriodInUTC, true)}
+          wrapperClassName="display-flex"
+          showTimeSelect
+          minDate={new Date(Date.now())}
+          timeFormat="HH:mm"
+          timeIntervals={15}
+          dateFormat="dd/MM/yyyy HH:mm"
+          onChange={(date: Date) =>
+            setCliffPeriodInUTC(() => formatUTC(date))
+          }
+          customInput={<Uik.Input label="Cliff period" />}
+        />
+      )}
+    </Uik.Container>
+    <Uik.Divider text="IDO Details" />
+    <Uik.Container>
+      <Uik.Input
+        label="Twitter Url"
+        value={twitterUrl}
+        onChange={(e) => setTwitterUrl(e.target.value)}
+      />
+      <Uik.Input
+        label="Telegram Url"
+        value={telegramUrl}
+        onChange={(e) => setTelegramUrl(e.target.value)}
+      />
+    </Uik.Container>
+    <Uik.Container>
+      <Uik.Input
+        label="Website Url"
+        value={websiteUrl}
+        onChange={(e) => setWebsiteUrl(e.target.value)}
+      />
+      <Uik.Input
+        label="Miscellaneous Url"
+        value={miscellaneousUrl}
+        onChange={(e) => setMiscellaneousUrl(e.target.value)}
+      />
+    </Uik.Container>
+    <Uik.Input
+      label="Description"
+      textarea
+      value={description}
+      onChange={(e) => setDescription(e.target.value)}
+    />
+    <Uik.Container flow="stretch">
+      <Uik.Button
+        disabled={allowance.isGreaterThan(amountOfTokensToSell)}
+        size="large"
+        loading={approveLoading}
+        onClick={approveProjectToken}
+      >
+        Approve
+      </Uik.Button>
+      <Uik.Button
+        disabled={
+          disableCreateButton ||
+          isCreatingIDO ||
+          allowance.isLessThan(amountOfTokensToSell)
+        }
+        onClick={()=>createIdo(selectedNetwork.name)}
+        size="large"
+        fill
+        loading={isCreatingIDO}
+      >
+        Create IDO
+      </Uik.Button>
+      </Uik.Container>
+      </>);
+  }
+
 
   return (
     <div>
@@ -562,284 +847,8 @@ export const Admin: React.FC = () => {
       <Uik.Form>
 
       {getTokenDetails()}
-        <Uik.Text text="Token Details" type="headline" className="small-headline"/>
-        <Uik.Input
-          label="Input token rate"
-          type="number"
-          key="inputTokenRateField"
-          value={inputTokenRate}
-          onInput={(e) => setInputTokenRate(e.target.value)}
-        />
-        {inputTokens.map((eachInputToken, index) => (
-          <div key={`inputToken+${index}`} className="input-token-address">
-            <Uik.Input
-              label="Input token address"
-              key={`inputTokenField+${index}`}
-              value={eachInputToken.tokenAddress}
-              onBlur={() => handleBlurInputToken(index)}
-              onInput={(e) => handleInputTokenChange(e, index)}
-            />
-            {index > 0 && (
-              <span
-                onClick={() => removeInputToken(eachInputToken.tokenAddress)}
-              >
-                <Uik.Icon icon={faTrashCan} className="delete-icon" />
-              </span>
-            )}
-          </div>
-        ))}
-        <Uik.Button onClick={addToken}>Add new token</Uik.Button>
-
-        <Uik.Divider text="Token sale details" />
-        <Uik.Container>
-          <DatePicker
-            selected={formatUTC(startTimeInUTC, true)}
-            wrapperClassName="display-flex"
-            showTimeSelect
-            minDate={new Date(Date.now())}
-            timeFormat="HH:mm"
-            timeIntervals={15}
-            dateFormat="dd/MM/yyyy HH:mm"
-            onChange={(date: Date) => setStartTimeInUTC(() => formatUTC(date))}
-            customInput={<Uik.Input label="Start time" />}
-          />
-
-          <DatePicker
-            selected={formatUTC(endTimeInUTC, true)}
-            wrapperClassName="display-flex"
-            showTimeSelect
-            minDate={new Date(Date.now())}
-            timeFormat="HH:mm"
-            timeIntervals={15}
-            dateFormat="dd/MM/yyyy HH:mm"
-            onChange={(date: Date) => setEndTimeInUTC(() => formatUTC(date))}
-            customInput={<Uik.Input label="End time" />}
-          />
-        </Uik.Container>
-
-<div className="amount-to-sell">
-<Uik.Input
-          type="number"
-          label="Hardcap ( Maximum amount to sell )"
-          value={amountOfTokensToSell}
-          onChange={(e) => setAmountOfTokensToSell(e.target.value)}
-        />
-
-        <Uik.Input
-          type="number"
-          label="Softcap"
-          value={softcap}
-          onChange={(e) => setSoftcap(e.target.value)}
-        />
-
-</div>
-        
-        <Uik.Input
-          type="number"
-          label="Max user allocation"
-          value={maxUserAllocation}
-          onChange={(e) => setMaxUserAllocation(e.target.value)}
-        />
-
-        <Uik.Toggle
-          label="Enable Whitelisting"
-          onText="Enabled whitelisted addresses"
-          offText="No addresses whitelisted"
-          value={enableWhitelisting}
-          onChange={() => setEnableWhitelisting(!enableWhitelisting)}
-        />
-        {enableWhitelisting && (
-          <>
-            <Uik.Input
-              value={whitelistedAddresses}
-              onChange={(e) => setWhitelistedAddress(e.target.value)}
-              label="Enter addresses to whitelist"
-              textarea
-            />
-
-            <CSVReader
-              onUploadAccepted={(results: any) => {
-                bulkUpload(results);
-              }}
-              onDragOver={(event: DragEvent) => {
-                event.preventDefault();
-                setZoneHover(true);
-              }}
-              onDragLeave={(event: DragEvent) => {
-                event.preventDefault();
-                setZoneHover(false);
-              }}
-            >
-              {({
-                getRootProps,
-                acceptedFile,
-                ProgressBar,
-                getRemoveFileProps,
-                Remove,
-              }: any) => (
-                <>
-                  <div
-                    // eslint-disable-next-line react/jsx-props-no-spreading
-                    {...getRootProps()}
-                    className="upload-container"
-                    style={{
-                      ...(zoneHover && CSVStyles.zoneHover),
-                    }}
-                  >
-                    {acceptedFile ? (
-                      <>
-                        <div className="file-container">
-                          <div>
-                            <Uik.Text>
-                              {formatFileSize(acceptedFile.size)}
-                            </Uik.Text>
-                            <Uik.Text>{acceptedFile.name}</Uik.Text>
-                          </div>
-                          <div className="progress-bar">
-                            <ProgressBar />
-                          </div>
-                          {/* eslint-disable-next-line jsx-a11y/mouse-events-have-key-events */}
-                          <div
-                            // eslint-disable-next-line react/jsx-props-no-spreading
-                            {...getRemoveFileProps()}
-                            // className="CSVStyles-remove"
-                            onMouseOver={(event: Event) => {
-                              event.preventDefault();
-                              setRemoveHoverColor(REMOVE_HOVER_COLOR_LIGHT);
-                            }}
-                            onMouseOut={(event: Event) => {
-                              event.preventDefault();
-                              setRemoveHoverColor(DEFAULT_REMOVE_HOVER_COLOR);
-                            }}
-                          >
-                            <Remove color={removeHoverColor} />
-                          </div>
-                        </div>
-                      </>
-                    ) : (
-                      "Drop CSV file here or click to upload"
-                    )}
-                  </div>
-                </>
-              )}
-            </CSVReader>
-            <Uik.Container className="csv-footer">
-              <Uik.Text type="mini">Accepted: CSV / Excel</Uik.Text>
-              <Uik.Text type="mini">
-                <a href="/files/whitelist.csv">Get Example</a>
-              </Uik.Text>
-            </Uik.Container>
-          </>
-        )}
-        <Uik.Divider text="Vesting details" />
-        <Uik.Container>
-          <DatePicker
-            selected={formatUTC(vestingStartTimeInUTC, true)}
-            wrapperClassName="display-flex"
-            showTimeSelect
-            minDate={new Date(Date.now())}
-            timeFormat="HH:mm"
-            timeIntervals={15}
-            dateFormat="dd/MM/yyyy HH:mm"
-            onChange={(date: Date) =>
-              setVestingStartTimeInUTC(() => formatUTC(date))
-            }
-            customInput={<Uik.Input label="Vesting start time" />}
-          />
-
-          <DatePicker
-            selected={formatUTC(vestingEndTimeInUTC, true)}
-            wrapperClassName="display-flex"
-            showTimeSelect
-            minDate={new Date(Date.now())}
-            timeFormat="HH:mm"
-            timeIntervals={15}
-            dateFormat="dd/MM/yyyy HH:mm"
-            onChange={(date: Date) =>
-              setVestingEndTimeInUTC(() => formatUTC(date))
-            }
-            customInput={<Uik.Input label="Vesting end time" />}
-          />
-        </Uik.Container>
-
-        <Uik.Container>
-          <Uik.Toggle
-            label="Enable Cliff Period"
-            onText="Enabled"
-            offText="No Cliff Period"
-            value={enableCliffPeriod}
-            onChange={() => setEnableCliffPeriod(!enableCliffPeriod)}
-          />
-          {enableCliffPeriod && (
-            <DatePicker
-              selected={formatUTC(cliffPeriodInUTC, true)}
-              wrapperClassName="display-flex"
-              showTimeSelect
-              minDate={new Date(Date.now())}
-              timeFormat="HH:mm"
-              timeIntervals={15}
-              dateFormat="dd/MM/yyyy HH:mm"
-              onChange={(date: Date) =>
-                setCliffPeriodInUTC(() => formatUTC(date))
-              }
-              customInput={<Uik.Input label="Cliff period" />}
-            />
-          )}
-        </Uik.Container>
-        <Uik.Divider text="IDO Details" />
-        <Uik.Container>
-          <Uik.Input
-            label="Twitter Url"
-            value={twitterUrl}
-            onChange={(e) => setTwitterUrl(e.target.value)}
-          />
-          <Uik.Input
-            label="Telegram Url"
-            value={telegramUrl}
-            onChange={(e) => setTelegramUrl(e.target.value)}
-          />
-        </Uik.Container>
-        <Uik.Container>
-          <Uik.Input
-            label="Website Url"
-            value={websiteUrl}
-            onChange={(e) => setWebsiteUrl(e.target.value)}
-          />
-          <Uik.Input
-            label="Miscellaneous Url"
-            value={miscellaneousUrl}
-            onChange={(e) => setMiscellaneousUrl(e.target.value)}
-          />
-        </Uik.Container>
-        <Uik.Input
-          label="Description"
-          textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-        <Uik.Container flow="stretch">
-          <Uik.Button
-            disabled={allowance.isGreaterThan(amountOfTokensToSell)}
-            size="large"
-            loading={approveLoading}
-            onClick={approveProjectToken}
-          >
-            Approve
-          </Uik.Button>
-          <Uik.Button
-            disabled={
-              disableCreateButton ||
-              isCreatingIDO ||
-              allowance.isLessThan(amountOfTokensToSell)
-            }
-            onClick={()=>createIdo(selectedNetwork.name)}
-            size="large"
-            fill
-            loading={isCreatingIDO}
-          >
-            Create IDO
-          </Uik.Button>
-        </Uik.Container>
+   
+  
       </Uik.Form>
     </Uik.Card>
     </div>

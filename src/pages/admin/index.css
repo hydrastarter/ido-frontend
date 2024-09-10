@@ -1,9 +1,12 @@
 .admin-container {
-    width: 100%;
-    max-width: 70vw;
-    margin: auto;
-    position: relative;
-    top: -4rem;
+  width: 100%;
+  max-width: 70vw;
+  margin: auto;
+  position: relative;
+  top: -4rem;
+  background: linear-gradient(180deg, white, #edebf6);
+  backdrop-filter: none;
+  box-shadow: none;
 }
 
 .admin-headline {
@@ -76,7 +79,7 @@ flex-direction: column;
   border-radius: 100%;
   margin-bottom: 0.6rem;
   margin-right: 0.5rem;
-  border: 1px solid #d9dfea;
+  border: 2px dashed #d9dfea;
 }
 
 .token-details-placeholder{
@@ -99,11 +102,11 @@ flex-direction: column;
   position: absolute;
   bottom: -5px;
   right: -5px;
-  background-color: white;
+  background-color: #f4f5f8;
   padding: 7px 14px;
   border-radius: 10px;
   z-index: 10;
-  border: 2px solid #a93085;
+  border: 2px dashed white;
   display: flex;
   align-items: center;
   justify-content: center;
