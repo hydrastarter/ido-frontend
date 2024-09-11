@@ -137,3 +137,19 @@ flex-direction: column;
   display: flex;
   align-items: center;
 }
+
+.buttons-group{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  justify-items: center;
+}
+
+.next-btn{
+  margin-top: 20px;
+  margin-left: 10px;
+}
+
+.margin-right-10{
+  margin-right: 10px;
+}

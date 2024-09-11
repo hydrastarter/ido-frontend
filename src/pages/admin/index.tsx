@@ -99,6 +99,7 @@ export const Admin: React.FC = () => {
   const [enableWhitelisting, setEnableWhitelisting] = useState(false);
   const [twitterUrl, setTwitterUrl] = useState("");
   const [isOpen, setOpen] = useState(false);
+  const [currentPage,setCurrentPage] = useState(0);
   const [telegramUrl, setTelegramUrl] = useState("");
   const [websiteUrl, setWebsiteUrl] = useState("");
   const [miscellaneousUrl, setMiscellaneousUrl] = useState("");
@@ -512,7 +513,8 @@ export const Admin: React.FC = () => {
             onInput={(e) => setProjectTokenAddress(e.target.value)}
             onBlur={checkAllowance}
           />
-          <label className="uik-button uik-button--fill" style={{ marginTop: "20px" }}>
+          <div className="buttons-group">
+          <label className="uik-button uik-button--fill" style={{ marginTop: "20px",    flex: 1 }}>
             <input
               type="file"
               hidden
@@ -521,15 +523,20 @@ export const Admin: React.FC = () => {
             />
             {projectTokenImage.uploadingFile ? "Uploading..." : "Upload token image"}
           </label>
+          {projectTokenAddress && projectTokenAddress.length==42 && <Uik.Button text="Next" onClick={()=>{
+            setCurrentPage(1);
+          }} className="next-btn" />}
+          </div>
         </div>
       </Uik.Container>
     );
   };
 
-  const buildForm = ()=>{
+  
+
+  const buildTokenDetails = ()=>{
     return ( 
     <>
-  
     <Uik.Text text="Token Details" type="headline" className="small-headline"/>
     <Uik.Input
       label="Input token rate"
@@ -556,9 +563,14 @@ export const Admin: React.FC = () => {
         )}
       </div>
     ))}
-    <Uik.Button onClick={addToken}>Add new token</Uik.Button>
+    <Uik.Button onClick={addToken} fill>Add new token</Uik.Button>
+    <Uik.Button onClick={()=>{setCurrentPage(2)}}>Next</Uik.Button>
+      </>);
+  }
 
-    <Uik.Divider text="Token sale details" />
+  const buildTokenSaleDetails = ()=>{
+    return (<>
+    <Uik.Text text="Sale Details" type="headline" className="small-headline"/>
     <Uik.Container>
       <DatePicker
         selected={formatUTC(startTimeInUTC, true)}
@@ -591,6 +603,7 @@ export const Admin: React.FC = () => {
       label="Hardcap ( Maximum amount to sell )"
       value={amountOfTokensToSell}
       onChange={(e) => setAmountOfTokensToSell(e.target.value)}
+      className="margin-right-10"
     />
 
     <Uik.Input
@@ -699,7 +712,14 @@ export const Admin: React.FC = () => {
         </Uik.Container>
       </>
     )}
-    <Uik.Divider text="Vesting details" />
+    <Uik.Button text="Next" onClick={()=>{setCurrentPage(3)}}/>
+    </>);
+
+  }
+
+  const buildVestingDetails = ()=>{
+    return (<>
+    <Uik.Text text="Vesting Details" type="headline" className="small-headline"/>
     <Uik.Container>
       <DatePicker
         selected={formatUTC(vestingStartTimeInUTC, true)}
@@ -753,8 +773,15 @@ export const Admin: React.FC = () => {
           customInput={<Uik.Input label="Cliff period" />}
         />
       )}
+      <Uik.Button text="Next" onClick={()=>setCurrentPage(4)}/>
     </Uik.Container>
-    <Uik.Divider text="IDO Details" />
+    </>);
+  }
+
+  const buildFinalForm = ()=>{
+    return (
+      <>
+    <Uik.Text text="IDO Details" type="headline" className="small-headline"/>
     <Uik.Container>
       <Uik.Input
         label="Twitter Url"
@@ -808,9 +835,9 @@ export const Admin: React.FC = () => {
         Create IDO
       </Uik.Button>
       </Uik.Container>
-      </>);
+     </>
+    )
   }
-
 
   return (
     <div>
@@ -847,7 +874,10 @@ export const Admin: React.FC = () => {
       <Uik.Form>
 
       {getTokenDetails()}
-   
+      {currentPage==1 && buildTokenDetails()}
+      {currentPage==2 && buildTokenSaleDetails()}
+      {currentPage==3 && buildVestingDetails()}
+      {currentPage==4 && buildFinalForm()}   
   
       </Uik.Form>
     </Uik.Card>
