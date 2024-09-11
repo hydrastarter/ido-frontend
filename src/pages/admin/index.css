@@ -153,3 +153,16 @@ flex-direction: column;
 .margin-right-10{
   margin-right: 10px;
 }
+
+.navigation-btns-group{
+  display: flex;
+}
+
+.navigation-btns-prev{
+  flex: 1;
+  margin-right: 10px;
+}
+
+.navigation-btns-next{
+  flex: 1;
+}

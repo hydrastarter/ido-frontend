@@ -532,7 +532,24 @@ export const Admin: React.FC = () => {
     );
   };
 
-  
+  const buildButtonsGroup = (isOnlyNext?:boolean)=>{
+    if(isOnlyNext){
+      return (
+        <Uik.Button onClick={()=>setCurrentPage(currentPage+1)} text="Next" className="navigation-btns-next"/>
+      );
+    }else{
+      return (<>
+      <div className="navigation-btns-group">
+
+        <Uik.Button onClick={()=>setCurrentPage(currentPage-1)} text="Previous" className="navigation-btns-prev"/>
+   
+        <Uik.Button onClick={()=>setCurrentPage(currentPage+1)} text="Next" fill className="navigation-btns-next"/>
+
+
+      </div>
+      </>)
+    }
+  }
 
   const buildTokenDetails = ()=>{
     return ( 
@@ -773,8 +790,9 @@ export const Admin: React.FC = () => {
           customInput={<Uik.Input label="Cliff period" />}
         />
       )}
-      <Uik.Button text="Next" onClick={()=>setCurrentPage(4)}/>
+      
     </Uik.Container>
+    <Uik.Button text="Next" onClick={()=>setCurrentPage(4)}/>
     </>);
   }
 
@@ -882,6 +900,8 @@ export const Admin: React.FC = () => {
 
       {getTokenDetails()}
       {currentPage>0 && formResolver[currentPage-1]()}
+
+      {buildButtonsGroup()}
   
       </Uik.Form>
     </Uik.Card>
