@@ -523,21 +523,24 @@ export const Admin: React.FC = () => {
             />
             {projectTokenImage.uploadingFile ? "Uploading..." : "Upload token image"}
           </label>
-          {projectTokenAddress && projectTokenAddress.length==42 && <Uik.Button text="Next" onClick={()=>{
-            setCurrentPage(1);
-          }} className="next-btn" />}
+          {projectTokenAddress && projectTokenAddress.length==42 && currentPage==0 &&buildButtonsGroup(true)}
           </div>
         </div>
       </Uik.Container>
     );
   };
 
-  const buildButtonsGroup = (isOnlyNext?:boolean)=>{
+  const buildButtonsGroup = (isOnlyNext?:boolean,isOnlyPrev?:boolean)=>{
     if(isOnlyNext){
       return (
-        <Uik.Button onClick={()=>setCurrentPage(currentPage+1)} text="Next" className="navigation-btns-next"/>
+        <Uik.Button onClick={()=>setCurrentPage(currentPage+1)} text="Next" className="navigation-btns-next margin-top-10 margin-left-10"/>
       );
-    }else{
+    }else if(isOnlyPrev){
+      return (
+        <Uik.Button onClick={()=>setCurrentPage(currentPage-1)} text="Previous" className="navigation-btns-next margin-top-10 margin-left-10"/>
+      );
+    }
+    else{
       return (<>
       <div className="navigation-btns-group">
 
@@ -581,7 +584,7 @@ export const Admin: React.FC = () => {
       </div>
     ))}
     <Uik.Button onClick={addToken} fill>Add new token</Uik.Button>
-    <Uik.Button onClick={()=>{setCurrentPage(2)}}>Next</Uik.Button>
+   {buildButtonsGroup()}
       </>);
   }
 
@@ -729,7 +732,7 @@ export const Admin: React.FC = () => {
         </Uik.Container>
       </>
     )}
-    <Uik.Button text="Next" onClick={()=>{setCurrentPage(3)}}/>
+   {buildButtonsGroup()}
     </>);
 
   }
@@ -792,7 +795,7 @@ export const Admin: React.FC = () => {
       )}
       
     </Uik.Container>
-    <Uik.Button text="Next" onClick={()=>setCurrentPage(4)}/>
+    {buildButtonsGroup()}
     </>);
   }
 
@@ -830,6 +833,7 @@ export const Admin: React.FC = () => {
       value={description}
       onChange={(e) => setDescription(e.target.value)}
     />
+    {buildButtonsGroup(false,true)}
     <Uik.Container flow="stretch">
       <Uik.Button
         disabled={allowance.isGreaterThan(amountOfTokensToSell)}
@@ -900,9 +904,6 @@ export const Admin: React.FC = () => {
 
       {getTokenDetails()}
       {currentPage>0 && formResolver[currentPage-1]()}
-
-      {buildButtonsGroup()}
-  
       </Uik.Form>
     </Uik.Card>
     </div>
