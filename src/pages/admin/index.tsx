@@ -839,6 +839,13 @@ export const Admin: React.FC = () => {
     )
   }
 
+  const formResolver = [
+    buildTokenDetails,
+    buildTokenSaleDetails,
+    buildVestingDetails,
+    buildFinalForm
+  ]
+
   return (
     <div>
         <Hero title='Create an IDO'
@@ -874,10 +881,7 @@ export const Admin: React.FC = () => {
       <Uik.Form>
 
       {getTokenDetails()}
-      {currentPage==1 && buildTokenDetails()}
-      {currentPage==2 && buildTokenSaleDetails()}
-      {currentPage==3 && buildVestingDetails()}
-      {currentPage==4 && buildFinalForm()}   
+      {currentPage>0 && formResolver[currentPage-1]()}
   
       </Uik.Form>
     </Uik.Card>
