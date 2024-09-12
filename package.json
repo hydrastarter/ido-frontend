@@ -44,7 +44,9 @@
     "build": "webpack --mode production",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "eslint --fix --ext .ts,.tsx ./src/"
+    "lint": "eslint --fix --ext .ts,.tsx ./src/",
+    "clean": "rm -rf node_modules&&rm -f yarn.lock&&yarn install",
+    "start:clean": "yarn clean && yarn start"
   },
   "eslintConfig": {
     "extends": [
