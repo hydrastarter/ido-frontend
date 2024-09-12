@@ -90,6 +90,7 @@ export const Admin: React.FC = () => {
   });
   const [inputTokens, setInputTokens] = useState([
     {
+      key:0,
       tokenAddress: "",
       tokenName: "",
       tokenSymbol: "",
@@ -171,6 +172,7 @@ export const Admin: React.FC = () => {
   };
   const addToken = async () => {
     const newToken = {
+      key:inputTokens.length,
       tokenAddress: "",
       tokenName: "",
       tokenDecimals: "",
@@ -179,9 +181,9 @@ export const Admin: React.FC = () => {
     const tokens = [...inputTokens, newToken];
     setInputTokens(tokens);
   };
-  const removeInputToken = (tokenAddress: string) => {
+  const removeInputToken = (tokenKey: number) => {
     const updatedTokens = inputTokens.filter(
-      (eachToken) => eachToken.tokenAddress !== tokenAddress
+      (eachToken) => eachToken.key !== tokenKey
     );
     setInputTokens(updatedTokens);
   };
@@ -576,7 +578,7 @@ export const Admin: React.FC = () => {
         />
         {index > 0 && (
           <span
-            onClick={() => removeInputToken(eachInputToken.tokenAddress)}
+            onClick={() => removeInputToken(eachInputToken.key)}
           >
             <Uik.Icon icon={faTrashCan} className="delete-icon" />
           </span>
