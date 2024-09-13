@@ -13,9 +13,9 @@
     "@mui/styled-engine-sc": "^5.12.0",
     "@polkadot/extension-dapp": "^0.40.3",
     "@popperjs/core": "^2.11.7",
+    "@reef-chain/ui-kit": "^3.0.2",
     "@reef-defi/extension-dapp": "^1.0.14",
     "@reef-defi/react-lib": "^1.3.1",
-    "@reef-chain/ui-kit": "^3.0.2",
     "@types/node": "^12.0.0",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
@@ -37,6 +37,7 @@
     "stream-browserify": "^3.0.0",
     "styled-components": "^5.3.9",
     "typescript": "^4.3.2",
+    "vm-browserify": "^1.1.2",
     "web-vitals": "^1.0.1"
   },
   "scripts": {
