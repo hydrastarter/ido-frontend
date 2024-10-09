@@ -21,7 +21,6 @@ import {getNetworkConfig} from "../../config";
 import { LaunchPadFactory } from "../../abis/LaunchPadFactory";
 import { ERC20 } from "../../abis/ERC20";
 import { getNetworkCrowdsaleUrl, infuraApiSecret, infuraProjectId, infuraSubDomainBaseUrl } from "../../environment";
-import Hero from "../../common/Hero";
 
 const auth = `Basic ${Buffer.from(
   `${infuraProjectId}:${infuraApiSecret}`
@@ -90,7 +89,6 @@ export const Admin: React.FC = () => {
   });
   const [inputTokens, setInputTokens] = useState([
     {
-      key:0,
       tokenAddress: "",
       tokenName: "",
       tokenSymbol: "",
@@ -100,7 +98,6 @@ export const Admin: React.FC = () => {
   const [enableWhitelisting, setEnableWhitelisting] = useState(false);
   const [twitterUrl, setTwitterUrl] = useState("");
   const [isOpen, setOpen] = useState(false);
-  const [currentPage,setCurrentPage] = useState(0);
   const [telegramUrl, setTelegramUrl] = useState("");
   const [websiteUrl, setWebsiteUrl] = useState("");
   const [miscellaneousUrl, setMiscellaneousUrl] = useState("");
@@ -172,7 +169,6 @@ export const Admin: React.FC = () => {
   };
   const addToken = async () => {
     const newToken = {
-      key:inputTokens.length,
       tokenAddress: "",
       tokenName: "",
       tokenDecimals: "",
@@ -181,9 +177,9 @@ export const Admin: React.FC = () => {
     const tokens = [...inputTokens, newToken];
     setInputTokens(tokens);
   };
-  const removeInputToken = (tokenKey: number) => {
+  const removeInputToken = (tokenAddress: string) => {
     const updatedTokens = inputTokens.filter(
-      (eachToken) => eachToken.key !== tokenKey
+      (eachToken) => eachToken.tokenAddress !== tokenAddress
     );
     setInputTokens(updatedTokens);
   };
@@ -469,415 +465,13 @@ export const Admin: React.FC = () => {
   ) {
     disableCreateButton = false;
   }
-
-
-  const getTokenDetails = () => {
-    return (
-      <Uik.Container className="align-top token-details card-create-ido">
-        <div className="token-details-placeholder">
-          <div style={{ position: "relative" }}>
-            {projectTokenImage.previewImgUrl ? (
-              <img
-                src={projectTokenImage.previewImgUrl}
-                alt="project token"
-                style={{ width: "30px", marginBottom: "10px" }}
-              />
-            ) : (
-              <div className="empty-image"></div>
-            )}
-  
-            <div
-              className="project-details"
-            >
-              {projectTokenDetails.name ? (
-                <Uik.Text type="headline" text={projectTokenDetails.name} className="font20 margin10" />
-              ) : (
-                <Uik.Text text={`TOKEN NAME`} type="light" />
-              )}
-              {projectTokenDetails.symbol ? (
-                <Uik.Text text={`( ${projectTokenDetails.symbol} )`} type="light" />
-              ) : (
-                <Uik.Text text={`( TOKEN SYMBOL )`} type="light" className="text-sm" />
-              )}
-              {projectTokenDetails.decimals ? (
-                <Uik.Text text={`${projectTokenDetails.decimals} Decimals`} type="lead" className="text-center" />
-              ) : (
-                <Uik.Text text={`DECIMALS`} type="light" className="text-sm" />
-              )}
-            </div>
-          </div>
-        </div>
-  
-        <div style={{ flex: 2 }}>
-          <Uik.Input
-            placeholder="Project token address"
-            value={projectTokenAddress}
-            onInput={(e) => setProjectTokenAddress(e.target.value)}
-            onBlur={checkAllowance}
-          />
-          <div className="buttons-group">
-          <label className="uik-button uik-button--fill" style={{ marginTop: "20px",    flex: 1 }}>
-            <input
-              type="file"
-              hidden
-              disabled={projectTokenImage.uploadingFile}
-              onChange={handleFileUpload}
-            />
-            {projectTokenImage.uploadingFile ? "Uploading..." : "Upload token image"}
-          </label>
-          {projectTokenAddress && projectTokenAddress.length==42 && currentPage==0 &&buildButtonsGroup(true)}
-          </div>
-        </div>
-      </Uik.Container>
-    );
-  };
-
-  const buildButtonsGroup = (isOnlyNext?:boolean,isOnlyPrev?:boolean)=>{
-    if(isOnlyNext){
-      return (
-        <Uik.Button onClick={()=>setCurrentPage(currentPage+1)} text="Next" className="navigation-btns-next margin-top-10 margin-left-10"/>
-      );
-    }else if(isOnlyPrev){
-      return (
-        <Uik.Button onClick={()=>setCurrentPage(currentPage-1)} text="Previous" className="navigation-btns-next margin-top-10 margin-left-10"/>
-      );
-    }
-    else{
-      return (<>
-      <div className="navigation-btns-group">
-
-        <Uik.Button onClick={()=>setCurrentPage(currentPage-1)} text="Previous" className="navigation-btns-prev"/>
-   
-        <Uik.Button onClick={()=>setCurrentPage(currentPage+1)} text="Next" fill className="navigation-btns-next"/>
-
-
-      </div>
-      </>)
-    }
-  }
-
-  const buildTokenDetails = ()=>{
-    return ( 
-    <>
-    <Uik.Text text="Token Details" type="headline" className="small-headline"/>
-    <Uik.Input
-      label="Input token rate"
-      type="number"
-      key="inputTokenRateField"
-      value={inputTokenRate}
-      onInput={(e) => setInputTokenRate(e.target.value)}
-    />
-    {inputTokens.map((eachInputToken, index) => (
-      <div key={`inputToken+${index}`} className="input-token-address">
-        <Uik.Input
-          label="Input token address"
-          key={`inputTokenField+${index}`}
-          value={eachInputToken.tokenAddress}
-          onBlur={() => handleBlurInputToken(index)}
-          onInput={(e) => handleInputTokenChange(e, index)}
-        />
-        {index > 0 && (
-          <span
-            onClick={() => removeInputToken(eachInputToken.key)}
-          >
-            <Uik.Icon icon={faTrashCan} className="delete-icon" />
-          </span>
-        )}
-      </div>
-    ))}
-    <Uik.Button onClick={addToken} fill>Add new token</Uik.Button>
-   {buildButtonsGroup()}
-      </>);
-  }
-
-  const buildTokenSaleDetails = ()=>{
-    return (<>
-    <Uik.Text text="Sale Details" type="headline" className="small-headline"/>
-    <Uik.Container>
-      <DatePicker
-        selected={formatUTC(startTimeInUTC, true)}
-        wrapperClassName="display-flex"
-        showTimeSelect
-        minDate={new Date(Date.now())}
-        timeFormat="HH:mm"
-        timeIntervals={15}
-        dateFormat="dd/MM/yyyy HH:mm"
-        onChange={(date: Date) => setStartTimeInUTC(() => formatUTC(date))}
-        customInput={<Uik.Input label="Start time" />}
-      />
-
-      <DatePicker
-        selected={formatUTC(endTimeInUTC, true)}
-        wrapperClassName="display-flex"
-        showTimeSelect
-        minDate={new Date(Date.now())}
-        timeFormat="HH:mm"
-        timeIntervals={15}
-        dateFormat="dd/MM/yyyy HH:mm"
-        onChange={(date: Date) => setEndTimeInUTC(() => formatUTC(date))}
-        customInput={<Uik.Input label="End time" />}
-      />
-    </Uik.Container>
-
-<div className="amount-to-sell">
-<Uik.Input
-      type="number"
-      label="Hardcap ( Maximum amount to sell )"
-      value={amountOfTokensToSell}
-      onChange={(e) => setAmountOfTokensToSell(e.target.value)}
-      className="margin-right-10"
-    />
-
-    <Uik.Input
-      type="number"
-      label="Softcap"
-      value={softcap}
-      onChange={(e) => setSoftcap(e.target.value)}
-    />
-
-</div>
-    
-    <Uik.Input
-      type="number"
-      label="Max user allocation"
-      value={maxUserAllocation}
-      onChange={(e) => setMaxUserAllocation(e.target.value)}
-    />
-
-    <Uik.Toggle
-      label="Enable Whitelisting"
-      onText="Enabled whitelisted addresses"
-      offText="No addresses whitelisted"
-      value={enableWhitelisting}
-      onChange={() => setEnableWhitelisting(!enableWhitelisting)}
-    />
-    {enableWhitelisting && (
-      <>
-        <Uik.Input
-          value={whitelistedAddresses}
-          onChange={(e) => setWhitelistedAddress(e.target.value)}
-          label="Enter addresses to whitelist"
-          textarea
-        />
-
-        <CSVReader
-          onUploadAccepted={(results: any) => {
-            bulkUpload(results);
-          }}
-          onDragOver={(event: DragEvent) => {
-            event.preventDefault();
-            setZoneHover(true);
-          }}
-          onDragLeave={(event: DragEvent) => {
-            event.preventDefault();
-            setZoneHover(false);
-          }}
-        >
-          {({
-            getRootProps,
-            acceptedFile,
-            ProgressBar,
-            getRemoveFileProps,
-            Remove,
-          }: any) => (
-            <>
-              <div
-                // eslint-disable-next-line react/jsx-props-no-spreading
-                {...getRootProps()}
-                className="upload-container"
-                style={{
-                  ...(zoneHover && CSVStyles.zoneHover),
-                }}
-              >
-                {acceptedFile ? (
-                  <>
-                    <div className="file-container">
-                      <div>
-                        <Uik.Text>
-                          {formatFileSize(acceptedFile.size)}
-                        </Uik.Text>
-                        <Uik.Text>{acceptedFile.name}</Uik.Text>
-                      </div>
-                      <div className="progress-bar">
-                        <ProgressBar />
-                      </div>
-                      {/* eslint-disable-next-line jsx-a11y/mouse-events-have-key-events */}
-                      <div
-                        // eslint-disable-next-line react/jsx-props-no-spreading
-                        {...getRemoveFileProps()}
-                        // className="CSVStyles-remove"
-                        onMouseOver={(event: Event) => {
-                          event.preventDefault();
-                          setRemoveHoverColor(REMOVE_HOVER_COLOR_LIGHT);
-                        }}
-                        onMouseOut={(event: Event) => {
-                          event.preventDefault();
-                          setRemoveHoverColor(DEFAULT_REMOVE_HOVER_COLOR);
-                        }}
-                      >
-                        <Remove color={removeHoverColor} />
-                      </div>
-                    </div>
-                  </>
-                ) : (
-                  "Drop CSV file here or click to upload"
-                )}
-              </div>
-            </>
-          )}
-        </CSVReader>
-        <Uik.Container className="csv-footer">
-          <Uik.Text type="mini">Accepted: CSV / Excel</Uik.Text>
-          <Uik.Text type="mini">
-            <a href="/files/whitelist.csv">Get Example</a>
-          </Uik.Text>
-        </Uik.Container>
-      </>
-    )}
-   {buildButtonsGroup()}
-    </>);
-
-  }
-
-  const buildVestingDetails = ()=>{
-    return (<>
-    <Uik.Text text="Vesting Details" type="headline" className="small-headline"/>
-    <Uik.Container>
-      <DatePicker
-        selected={formatUTC(vestingStartTimeInUTC, true)}
-        wrapperClassName="display-flex"
-        showTimeSelect
-        minDate={new Date(Date.now())}
-        timeFormat="HH:mm"
-        timeIntervals={15}
-        dateFormat="dd/MM/yyyy HH:mm"
-        onChange={(date: Date) =>
-          setVestingStartTimeInUTC(() => formatUTC(date))
-        }
-        customInput={<Uik.Input label="Vesting start time" />}
-      />
-
-      <DatePicker
-        selected={formatUTC(vestingEndTimeInUTC, true)}
-        wrapperClassName="display-flex"
-        showTimeSelect
-        minDate={new Date(Date.now())}
-        timeFormat="HH:mm"
-        timeIntervals={15}
-        dateFormat="dd/MM/yyyy HH:mm"
-        onChange={(date: Date) =>
-          setVestingEndTimeInUTC(() => formatUTC(date))
-        }
-        customInput={<Uik.Input label="Vesting end time" />}
-      />
-    </Uik.Container>
-
-    <Uik.Container>
-      <Uik.Toggle
-        label="Enable Cliff Period"
-        onText="Enabled"
-        offText="No Cliff Period"
-        value={enableCliffPeriod}
-        onChange={() => setEnableCliffPeriod(!enableCliffPeriod)}
-      />
-      {enableCliffPeriod && (
-        <DatePicker
-          selected={formatUTC(cliffPeriodInUTC, true)}
-          wrapperClassName="display-flex"
-          showTimeSelect
-          minDate={new Date(Date.now())}
-          timeFormat="HH:mm"
-          timeIntervals={15}
-          dateFormat="dd/MM/yyyy HH:mm"
-          onChange={(date: Date) =>
-            setCliffPeriodInUTC(() => formatUTC(date))
-          }
-          customInput={<Uik.Input label="Cliff period" />}
-        />
-      )}
-      
-    </Uik.Container>
-    {buildButtonsGroup()}
-    </>);
-  }
-
-  const buildFinalForm = ()=>{
-    return (
-      <>
-    <Uik.Text text="IDO Details" type="headline" className="small-headline"/>
-    <Uik.Container>
-      <Uik.Input
-        label="Twitter Url"
-        value={twitterUrl}
-        onChange={(e) => setTwitterUrl(e.target.value)}
-      />
-      <Uik.Input
-        label="Telegram Url"
-        value={telegramUrl}
-        onChange={(e) => setTelegramUrl(e.target.value)}
-      />
-    </Uik.Container>
-    <Uik.Container>
-      <Uik.Input
-        label="Website Url"
-        value={websiteUrl}
-        onChange={(e) => setWebsiteUrl(e.target.value)}
-      />
-      <Uik.Input
-        label="Miscellaneous Url"
-        value={miscellaneousUrl}
-        onChange={(e) => setMiscellaneousUrl(e.target.value)}
-      />
-    </Uik.Container>
-    <Uik.Input
-      label="Description"
-      textarea
-      value={description}
-      onChange={(e) => setDescription(e.target.value)}
-    />
-    {buildButtonsGroup(false,true)}
-    <Uik.Container flow="stretch">
-      <Uik.Button
-        disabled={allowance.isGreaterThan(amountOfTokensToSell)}
-        size="large"
-        loading={approveLoading}
-        onClick={approveProjectToken}
-      >
-        Approve
-      </Uik.Button>
-      <Uik.Button
-        disabled={
-          disableCreateButton ||
-          isCreatingIDO ||
-          allowance.isLessThan(amountOfTokensToSell)
-        }
-        onClick={()=>createIdo(selectedNetwork.name)}
-        size="large"
-        fill
-        loading={isCreatingIDO}
-      >
-        Create IDO
-      </Uik.Button>
-      </Uik.Container>
-     </>
-    )
-  }
-
-  const formResolver = [
-    buildTokenDetails,
-    buildTokenSaleDetails,
-    buildVestingDetails,
-    buildFinalForm
-  ]
-
   return (
-    <div>
-        <Hero title='Create an IDO'
-           subtitle='One step closer to a smooth launch' 
-           imgsrc='token-details.jpg'
-      />
     <Uik.Card condensed className="admin-container">
-          
+      <Uik.Text
+        type="headline"
+        text="Create an IDO"
+        className="admin-headline"
+      />
       <Uik.Modal
         title="Transaction Successful!"
         isOpen={isOpen}
@@ -903,11 +497,339 @@ export const Admin: React.FC = () => {
         <Uik.Text>Please check the Upcoming IDO tab.</Uik.Text>
       </Uik.Modal>
       <Uik.Form>
+        <Uik.Divider text="Project token details" />
+        <Uik.Container className="algin-top">
+          <div>
+            <Uik.Input
+              label="Project token address"
+              value={projectTokenAddress}
+              onInput={(e) => setProjectTokenAddress(e.target.value)}
+              onBlur={checkAllowance}
+            />
+            <label className="uik-button" style={{ marginTop: "20px" }}>
+              <input
+                type="file"
+                hidden
+                disabled={projectTokenImage.uploadingFile}
+                onChange={handleFileUpload}
+              />
+              {projectTokenImage.uploadingFile
+                ? "Uploading..."
+                : "Upload token image"}
+            </label>
+          </div>
+          <div>
+            <Uik.Label text="Project Token Details" />
+            <Uik.Container className="margin10 flex-column">
+              {projectTokenImage.previewImgUrl && (
+                <img
+                  src={projectTokenImage.previewImgUrl}
+                  alt="project token"
+                  style={{ width: "30px", marginBottom: "10px" }}
+                />
+              )}
+              {projectTokenDetails.name && (
+                <Uik.Text
+                  type="headline"
+                  text={projectTokenDetails.name}
+                  className="font20 margin10"
+                />
+              )}
+              <Uik.Container className="margin10">
+                {projectTokenDetails.symbol && (
+                  <Uik.Text
+                    text={`( ${projectTokenDetails.symbol} )`}
+                    type="lead"
+                  />
+                )}
+                {projectTokenDetails.decimals && (
+                  <Uik.Text
+                    text={`${projectTokenDetails.decimals} Decimals`}
+                    type="lead"
+                    className="text-center"
+                  />
+                )}
+              </Uik.Container>
+            </Uik.Container>
+          </div>
+        </Uik.Container>
+        <Uik.Divider text="Input token details" />
+        <Uik.Input
+          label="Input token rate"
+          type="number"
+          key="inputTokenRateField"
+          value={inputTokenRate}
+          onInput={(e) => setInputTokenRate(e.target.value)}
+        />
+        {inputTokens.map((eachInputToken, index) => (
+          <Uik.Container key={`inputToken+${index}`}>
+            <Uik.Input
+              label="Input token address"
+              key={`inputTokenField+${index}`}
+              value={eachInputToken.tokenAddress}
+              onBlur={() => handleBlurInputToken(index)}
+              onInput={(e) => handleInputTokenChange(e, index)}
+            />
+            {index > 0 && (
+              // eslint-disable-next-line jsx-a11y/no-static-element-interactions
+              <span
+                onClick={() => removeInputToken(eachInputToken.tokenAddress)}
+              >
+                <Uik.Icon icon={faTrashCan} className="delete-icon" />
+              </span>
+            )}
+          </Uik.Container>
+        ))}
+        <Uik.Button onClick={addToken}>Add new token</Uik.Button>
 
-      {getTokenDetails()}
-      {currentPage>0 && formResolver[currentPage-1]()}
+        <Uik.Divider text="Token sale details" />
+        <Uik.Container>
+          <DatePicker
+            selected={formatUTC(startTimeInUTC, true)}
+            wrapperClassName="display-flex"
+            showTimeSelect
+            minDate={new Date(Date.now())}
+            timeFormat="HH:mm"
+            timeIntervals={15}
+            dateFormat="dd/MM/yyyy HH:mm"
+            onChange={(date: Date) => setStartTimeInUTC(() => formatUTC(date))}
+            customInput={<Uik.Input label="Start time" />}
+          />
+
+          <DatePicker
+            selected={formatUTC(endTimeInUTC, true)}
+            wrapperClassName="display-flex"
+            showTimeSelect
+            minDate={new Date(Date.now())}
+            timeFormat="HH:mm"
+            timeIntervals={15}
+            dateFormat="dd/MM/yyyy HH:mm"
+            onChange={(date: Date) => setEndTimeInUTC(() => formatUTC(date))}
+            customInput={<Uik.Input label="End time" />}
+          />
+        </Uik.Container>
+
+        <Uik.Input
+          type="number"
+          label="Amount of tokens to sell (Hardcap)"
+          value={amountOfTokensToSell}
+          onChange={(e) => setAmountOfTokensToSell(e.target.value)}
+        />
+
+        <Uik.Input
+          type="number"
+          label="Softcap"
+          value={softcap}
+          onChange={(e) => setSoftcap(e.target.value)}
+        />
+
+        <Uik.Input
+          type="number"
+          label="Max user allocation"
+          value={maxUserAllocation}
+          onChange={(e) => setMaxUserAllocation(e.target.value)}
+        />
+
+        <Uik.Toggle
+          label="Enable Whitelisting"
+          onText="Enabled"
+          offText="No addresses whitelisted"
+          value={enableWhitelisting}
+          onChange={() => setEnableWhitelisting(!enableWhitelisting)}
+        />
+        {enableWhitelisting && (
+          <>
+            <Uik.Input
+              value={whitelistedAddresses}
+              onChange={(e) => setWhitelistedAddress(e.target.value)}
+              label="Enter addresses to whitelist"
+              textarea
+            />
+
+            <CSVReader
+              onUploadAccepted={(results: any) => {
+                bulkUpload(results);
+              }}
+              onDragOver={(event: DragEvent) => {
+                event.preventDefault();
+                setZoneHover(true);
+              }}
+              onDragLeave={(event: DragEvent) => {
+                event.preventDefault();
+                setZoneHover(false);
+              }}
+            >
+              {({
+                getRootProps,
+                acceptedFile,
+                ProgressBar,
+                getRemoveFileProps,
+                Remove,
+              }: any) => (
+                <>
+                  <div
+                    // eslint-disable-next-line react/jsx-props-no-spreading
+                    {...getRootProps()}
+                    className="upload-container"
+                    style={{
+                      ...(zoneHover && CSVStyles.zoneHover),
+                    }}
+                  >
+                    {acceptedFile ? (
+                      <>
+                        <div className="file-container">
+                          <div>
+                            <Uik.Text>
+                              {formatFileSize(acceptedFile.size)}
+                            </Uik.Text>
+                            <Uik.Text>{acceptedFile.name}</Uik.Text>
+                          </div>
+                          <div className="progress-bar">
+                            <ProgressBar />
+                          </div>
+                          {/* eslint-disable-next-line jsx-a11y/mouse-events-have-key-events */}
+                          <div
+                            // eslint-disable-next-line react/jsx-props-no-spreading
+                            {...getRemoveFileProps()}
+                            // className="CSVStyles-remove"
+                            onMouseOver={(event: Event) => {
+                              event.preventDefault();
+                              setRemoveHoverColor(REMOVE_HOVER_COLOR_LIGHT);
+                            }}
+                            onMouseOut={(event: Event) => {
+                              event.preventDefault();
+                              setRemoveHoverColor(DEFAULT_REMOVE_HOVER_COLOR);
+                            }}
+                          >
+                            <Remove color={removeHoverColor} />
+                          </div>
+                        </div>
+                      </>
+                    ) : (
+                      "Drop CSV file here or click to upload"
+                    )}
+                  </div>
+                </>
+              )}
+            </CSVReader>
+            <Uik.Container className="csv-footer">
+              <Uik.Text type="mini">Accepted: CSV / Excel</Uik.Text>
+              <Uik.Text type="mini">
+                <a href="/files/whitelist.csv">Get Example</a>
+              </Uik.Text>
+            </Uik.Container>
+          </>
+        )}
+        <Uik.Divider text="Vesting details" />
+        <Uik.Container>
+          <DatePicker
+            selected={formatUTC(vestingStartTimeInUTC, true)}
+            wrapperClassName="display-flex"
+            showTimeSelect
+            minDate={new Date(Date.now())}
+            timeFormat="HH:mm"
+            timeIntervals={15}
+            dateFormat="dd/MM/yyyy HH:mm"
+            onChange={(date: Date) =>
+              setVestingStartTimeInUTC(() => formatUTC(date))
+            }
+            customInput={<Uik.Input label="Vesting start time" />}
+          />
+
+          <DatePicker
+            selected={formatUTC(vestingEndTimeInUTC, true)}
+            wrapperClassName="display-flex"
+            showTimeSelect
+            minDate={new Date(Date.now())}
+            timeFormat="HH:mm"
+            timeIntervals={15}
+            dateFormat="dd/MM/yyyy HH:mm"
+            onChange={(date: Date) =>
+              setVestingEndTimeInUTC(() => formatUTC(date))
+            }
+            customInput={<Uik.Input label="Vesting end time" />}
+          />
+        </Uik.Container>
+
+        <Uik.Container>
+          <Uik.Toggle
+            label="Enable Cliff Period"
+            onText="Enabled"
+            offText="No Cliff Period"
+            value={enableCliffPeriod}
+            onChange={() => setEnableCliffPeriod(!enableCliffPeriod)}
+          />
+          {enableCliffPeriod && (
+            <DatePicker
+              selected={formatUTC(cliffPeriodInUTC, true)}
+              wrapperClassName="display-flex"
+              showTimeSelect
+              minDate={new Date(Date.now())}
+              timeFormat="HH:mm"
+              timeIntervals={15}
+              dateFormat="dd/MM/yyyy HH:mm"
+              onChange={(date: Date) =>
+                setCliffPeriodInUTC(() => formatUTC(date))
+              }
+              customInput={<Uik.Input label="Cliff period" />}
+            />
+          )}
+        </Uik.Container>
+        <Uik.Divider text="IDO Details" />
+        <Uik.Container>
+          <Uik.Input
+            label="Twitter Url"
+            value={twitterUrl}
+            onChange={(e) => setTwitterUrl(e.target.value)}
+          />
+          <Uik.Input
+            label="Telegram Url"
+            value={telegramUrl}
+            onChange={(e) => setTelegramUrl(e.target.value)}
+          />
+        </Uik.Container>
+        <Uik.Container>
+          <Uik.Input
+            label="Website Url"
+            value={websiteUrl}
+            onChange={(e) => setWebsiteUrl(e.target.value)}
+          />
+          <Uik.Input
+            label="Miscellaneous Url"
+            value={miscellaneousUrl}
+            onChange={(e) => setMiscellaneousUrl(e.target.value)}
+          />
+        </Uik.Container>
+        <Uik.Input
+          label="Description"
+          textarea
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
+        <Uik.Container flow="stretch">
+          <Uik.Button
+            disabled={allowance.isGreaterThan(amountOfTokensToSell)}
+            size="large"
+            loading={approveLoading}
+            onClick={approveProjectToken}
+          >
+            Approve
+          </Uik.Button>
+          <Uik.Button
+            disabled={
+              disableCreateButton ||
+              isCreatingIDO ||
+              allowance.isLessThan(amountOfTokensToSell)
+            }
+            onClick={()=>createIdo(selectedNetwork.name)}
+            size="large"
+            fill
+            loading={isCreatingIDO}
+          >
+            Create IDO
+          </Uik.Button>
+        </Uik.Container>
       </Uik.Form>
     </Uik.Card>
-    </div>
   );
 };

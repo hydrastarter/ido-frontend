@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Uik from "@reef-defi/ui-kit";
+import Uik from "@reef-chain/ui-kit";
 import { Link, useParams } from "react-router-dom";
 import BigNumber from "bignumber.js";
 import { appState, hooks, Network, ReefSigner } from "@reef-defi/react-lib";

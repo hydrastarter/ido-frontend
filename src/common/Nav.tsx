@@ -9,9 +9,9 @@ import {
 } from "@reef-defi/react-lib";
 import "./Nav.css";
 import { Link, useHistory, useLocation } from "react-router-dom";
-import Uik from "@reef-defi/ui-kit";
+import Uik from "@reef-chain/ui-kit";
 import { saveSignerLocalPointer } from "../store/internalStore";
-import { DASHBOARD_URL } from "../urls";
+import { ADMIN_URL, DASHBOARD_URL } from "../urls";
 import { appAvailableNetworks } from "../environment";
 import NetworkSwitch from "../context/NetworkSwitch";
 
@@ -33,7 +33,10 @@ const Nav = ({ display }: Nav): JSX.Element => {
   );
   const mainnetSelected =
     network == null || network?.rpcUrl === availableNetworks.mainnet.rpcUrl;
-  const menuItems = [{ title: "Dashboard", url: DASHBOARD_URL }];
+  const menuItems = [
+    { title: "Dashboard", url: DASHBOARD_URL },
+    { title: "Launch IDO", url: ADMIN_URL },
+  ];
   const networkSwitch = useContext(NetworkSwitch);
 
   const selectAccount = (index: number): void => {

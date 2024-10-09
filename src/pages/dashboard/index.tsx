@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Uik from "@reef-defi/ui-kit";
+import Uik from "@reef-chain/ui-kit";
 import "./index.css";
 import { idoType } from "../../assets/ido";
 import { IdoCard } from "./IdoCard";
@@ -11,8 +11,11 @@ import { getNetworkCrowdsaleUrl } from "../../environment";
 
 export const Dashboard: React.FC = () => {
   const [allIdos, setAllIdos] = useState<idoType[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorStatus, setErrorStatus] = useState({
+    status:false,
+    message:undefined
+  });
   const selectedNetwork: Network | undefined | null =
     hooks.useObservableState(appState.currentNetwork$);
 
@@ -36,35 +39,50 @@ export const Dashboard: React.FC = () => {
     }
     getAllIdos(selectedNetwork.name).catch((e) => {
       setIsLoading(() => false);
-      setIsError(() => true);
+      setErrorStatus({
+        status:true,
+        message:e.message
+      });
       console.log("Error in getAllIdos: ", e);
     });
   }, [selectedNetwork]);
 
+
   return (
     <div style={{ width: "100%" }}>
-      {isLoading && <Uik.Loading text="Fetching all IDOs..." />}
-      {isError && <Uik.Alert type="danger" text="An error has occurred." />}
-      {!isLoading && !isError && allIdos && <TabsData allIdos={allIdos} />}
-      {/*{<TabsData allIdos={idos} />}*/}
+      {isLoading ? 
+      <div className="loader">
+        <Uik.Loading text="fetching all IDOs"/>
+      </div>
+      :errorStatus.status ?
+      <div className="error-block">
+        <Uik.Text className="error-block-title" text={"Encountered an error"} type="light"/>
+        <Uik.Text className="error-block-desc" text={errorStatus.message} type="light" />
+      </div>:allIdos && <TabsData allIdos={allIdos} />}
     </div>
   );
 };
 
-export const Tab1 = "Active Presales";
-export const Tab2 = "Upcoming Presales";
-export const Tab3 = "Completed Presales";
-export const Tab4 = "My Crowdsale";
+const Tabs = [
+  "Active Presales",
+  "Upcoming Presales",
+  "Completed Presales",
+  "My Crowdsale"
+]
 
 const TabsData = ({ allIdos }: { allIdos: idoType[] }) => {
-  const [firstTab, setFirstTab] = useState(Tab1);
-
-  // const [isSorting, setIsSorting] = useState(false);
-
+  const [selectedTab, setSelectedTab] = useState(Tabs[0]);
   const [activePresales, setActivePresales] = useState<idoType[]>([]);
   const [upcomingPresales, setUpcomingPresales] = useState<idoType[]>([]);
   const [completedPresales, setCompletedPresales] = useState<idoType[]>([]);
   const [myCrowdsales, setMyCrowdsales] = useState<idoType[]>([]);
+  
+  const TabsIdent = [
+    activePresales,
+    upcomingPresales,
+    completedPresales,
+    myCrowdsales
+  ]
 
   const selectedSigner: ReefSigner | undefined | null =
     hooks.useObservableState(appState.selectedSigner$);
@@ -73,8 +91,6 @@ const TabsData = ({ allIdos }: { allIdos: idoType[] }) => {
     allTypesOfIdos: idoType[],
     selectedSigner: ReefSigner
   ) => {
-    // setIsSorting(() => true);
-
     const idos = allTypesOfIdos;
     if (idos && idos.length > 0) {
       let activeIdos = [] as idoType[];
@@ -118,53 +134,35 @@ const TabsData = ({ allIdos }: { allIdos: idoType[] }) => {
       setUpcomingPresales(() => upcomingIdos);
       setCompletedPresales(() => completedIdos);
       setMyCrowdsales(() => myIdos);
-
-      // setIsSorting(() => false);
     }
-    // setIsSorting(() => false);
   };
 
   useEffect(() => {
     if (selectedSigner) {
       sortAllIdos(allIdos, selectedSigner).catch((e) => {
-        // setIsSorting(() => false);
         console.log("Error in sortAllIdos: ", e);
       });
     }
   }, [allIdos, selectedSigner]);
 
+  const getTabsContainer = ()=>{
+    return TabsIdent[Tabs.indexOf(selectedTab)].map((ido) => (
+      <IdoCard key={ido.id} ido={ido} typeOfPresale={selectedTab} />
+    ))
+  }
+
   return (
     <div className="dashboard-container">
-      {/* {isSorting && <Uik.Loading text="Sorting all IDOs..." />} */}
-      {/* {!isSorting && ( */}
       <>
         <div className="tabs-container">
           <Uik.Tabs
-            value={firstTab}
-            onChange={(value) => setFirstTab(value)}
-            options={[Tab1, Tab2, Tab3, Tab4]}
+            value={selectedTab}
+            onChange={(value) => setSelectedTab(value)}
+            options={Tabs}
           />
         </div>
         <div className="idos-container">
-          {firstTab === Tab1 &&
-            activePresales.map((ido) => (
-              <IdoCard key={ido.id} ido={ido} typeOfPresale={Tab1} />
-            ))}
-
-          {firstTab === Tab2 &&
-            upcomingPresales.map((ido) => (
-              <IdoCard key={ido.id} ido={ido} typeOfPresale={Tab2} />
-            ))}
-
-          {firstTab === Tab3 &&
-            completedPresales.map((ido) => (
-              <IdoCard key={ido.id} ido={ido} typeOfPresale={Tab3} />
-            ))}
-
-          {firstTab === Tab4 &&
-            myCrowdsales.map((ido) => (
-              <IdoCard key={ido.id} ido={ido} typeOfPresale={Tab4} />
-            ))}
+          {getTabsContainer()}
         </div>
       </>
       {/* )} */}
