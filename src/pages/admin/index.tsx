@@ -400,7 +400,6 @@ export const Admin: React.FC = () => {
           0,
           launchCrowdSaleData
         );
-        console.log("here i am");
         await txObject.wait();
         setTxHash(txObject.hash);
         setOpen(true);
