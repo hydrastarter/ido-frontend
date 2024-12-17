@@ -1197,10 +1197,10 @@ export const Admin: React.FC = () => {
       </Uik.Button>
       <Uik.Button
         disabled={
-          false
-          // disableCreateButton ||
-          // isCreatingIDO ||
-          // allowance.isLessThan(amountOfTokensToSell)
+          // false
+          disableCreateButton ||
+          isCreatingIDO ||
+          allowance.isLessThan(amountOfTokensToSell)
         }
         onClick={()=>createIdo(selectedNetwork.name)}
         size="large"
