@@ -2,8 +2,8 @@ import { AvailableNetworks, availableNetworks } from "@reef-defi/react-lib";
 
 let backendDomainName = 'reefscan.info';
 export const getNetworkCrowdsaleUrl = (networkName: AvailableNetworks)=>{
-  // return `https://ido-backend-${networkName}.${backendDomainName}/crowdsale`;
-  return `http://127.0.0.1:3000/crowdsale`;
+  return `https://ido-backend-${networkName}.${backendDomainName}/crowdsale`;
+  // return `http://127.0.0.1:3000/crowdsale`;
 }
 
 export const appAvailableNetworks = [
