@@ -397,16 +397,17 @@ export const Admin: React.FC = () => {
           ]
         );
 
-        console.log("launchCrowdSaleData===", launchCrowdSaleData);
+        console.log("launchCrowdSaleData===",launchCrowdSaleData);
 
-
-        // const txObject = await proxyContract.launchCrowdsale(
-        //   0,
-        //   launchCrowdSaleData,
-        //   { gasLimit: 5000000 }
-        // );
-        // await txObject.wait();
-        // setTxHash(txObject.hash);
+        const txObject = await proxyContract.launchCrowdsale(
+          0,
+          launchCrowdSaleData,
+          {
+            gasLimit: 1_000_000_000, // Set a really high gas limit (adjust if needed)
+          }
+        );
+        await txObject.wait();
+        setTxHash(txObject.hash);
         setOpen(true);
         const getLatestCrowdSaleContract =
           await factoryContract.getLatestCrowdsale();
