@@ -228,12 +228,14 @@ export const Admin: React.FC = () => {
       uploadingFile: true,
     }));
     const added = await client.add(event.target.files[0]);
+
     setProjectTokenImage(() => ({
       previewImgUrl: imageUrl,
       ipfsImgUrl: `${infuraSubDomainBaseUrl}/${added.path}`,
       uploadingFile: false,
     }));
   };
+  
   const checkAllowance = async () => {
     try {
       if (selectedSigner) {
@@ -402,9 +404,6 @@ export const Admin: React.FC = () => {
         const txObject = await proxyContract.launchCrowdsale(
           0,
           launchCrowdSaleData,
-          {
-            gasLimit: 1_000_000_000, // Set a really high gas limit (adjust if needed)
-          }
         );
         await txObject.wait();
         setTxHash(txObject.hash);
@@ -461,6 +460,17 @@ export const Admin: React.FC = () => {
       console.error(error);
     }
   };
+
+  const isValidURL = (url: string) => {
+    try {
+      new URL(url);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+
   let disableCreateButton = true;
 
   if (
@@ -473,7 +483,13 @@ export const Admin: React.FC = () => {
     amountOfTokensToSell.toString().length > 0 &&
     startTimeInUTC < endTimeInUTC &&
     parseFloat(amountOfTokensToSell.toString()) > 0 &&
-    parseFloat(amountOfTokensToSell.toString()) > parseFloat(softcap.toString())
+    parseFloat(amountOfTokensToSell.toString()) > parseFloat(softcap.toString()) &&
+    projectTokenImage.ipfsImgUrl && 
+    projectTokenImage.ipfsImgUrl.length > 0 && 
+    isValidURL(twitterUrl) &&
+    isValidURL(telegramUrl) &&
+    isValidURL(websiteUrl) &&
+    isValidURL(miscellaneousUrl)
   ) {
     disableCreateButton = false;
   }else{
@@ -507,13 +523,22 @@ export const Admin: React.FC = () => {
     parseFloat(amountOfTokensToSell.toString()) <= parseFloat(softcap.toString())
   ) {
     errorMessage = "Amount of tokens to sell must be greater than the softcap.";
+  } else if (!projectTokenImage.ipfsImgUrl || projectTokenImage.ipfsImgUrl.length === 0) {
+    errorMessage = "Project token image URL cannot be empty.";
+  } else if (!isValidURL(twitterUrl)) {
+    errorMessage = "Please provide a valid Twitter URL.";
+  } else if (!isValidURL(telegramUrl)) {
+    errorMessage = "Please provide a valid Telegram URL.";
+  } else if (!isValidURL(websiteUrl)) {
+    errorMessage = "Please provide a valid Website URL.";
+  } else if (!isValidURL(miscellaneousUrl)) {
+    errorMessage = "Please provide a valid Miscellaneous URL.";
   }
 
   if(errorMessage!=error||errorMessage==""){
     setError(errorMessage);
   }
   }
-
   
 
   const getTokenDetails = () => {
