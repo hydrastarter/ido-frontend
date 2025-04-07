@@ -221,13 +221,16 @@ export const Admin: React.FC = () => {
   ) => {
     if (!event.target.files) return;
 
-    const imageUrl = URL.createObjectURL(event.target.files[0]);
+    // const imageUrl = URL.createObjectURL(event.target.files[0]);
     setProjectTokenImage(() => ({
       ...projectTokenImage,
-      previewImgUrl: imageUrl,
+      // previewImgUrl: imageUrl,
       uploadingFile: true,
     }));
     const added = await client.add(event.target.files[0]);
+    const imageUrl = `${infuraSubDomainBaseUrl}/${added.path}`;
+
+    console.log("imageUrl===",imageUrl);
 
     setProjectTokenImage(() => ({
       previewImgUrl: imageUrl,
