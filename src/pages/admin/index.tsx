@@ -77,7 +77,7 @@ const CSVStyles = {
 export const Admin: React.FC = () => {
   const [projectTokenAddress, setProjectTokenAddress] = useState("");
   const [txHash, setTxHash] = useState(null);
-  const [error,setError] = useState("");
+  const [error, setError] = useState("");
   const [projectTokenDetails, setProjectTokenDetails] = useState({
     name: "",
     decimals: "",
@@ -221,19 +221,24 @@ export const Admin: React.FC = () => {
   ) => {
     if (!event.target.files) return;
 
-    const imageUrl = URL.createObjectURL(event.target.files[0]);
+    // const imageUrl = URL.createObjectURL(event.target.files[0]);
     setProjectTokenImage(() => ({
       ...projectTokenImage,
-      previewImgUrl: imageUrl,
+      // previewImgUrl: imageUrl,
       uploadingFile: true,
     }));
     const added = await client.add(event.target.files[0]);
+    const imageUrl = `${infuraSubDomainBaseUrl}/${added.path}`;
+
+    console.log("imageUrl===", imageUrl);
+
     setProjectTokenImage(() => ({
       previewImgUrl: imageUrl,
       ipfsImgUrl: `${infuraSubDomainBaseUrl}/${added.path}`,
       uploadingFile: false,
     }));
   };
+
   const checkAllowance = async () => {
     try {
       if (selectedSigner) {
@@ -397,14 +402,11 @@ export const Admin: React.FC = () => {
           ]
         );
 
-        console.log("launchCrowdSaleData===",launchCrowdSaleData);
+        console.log("launchCrowdSaleData===", launchCrowdSaleData);
 
         const txObject = await proxyContract.launchCrowdsale(
           0,
           launchCrowdSaleData,
-          {
-            gasLimit: 1_000_000_000, // Set a really high gas limit (adjust if needed)
-          }
         );
         await txObject.wait();
         setTxHash(txObject.hash);
@@ -461,6 +463,17 @@ export const Admin: React.FC = () => {
       console.error(error);
     }
   };
+
+  const isValidURL = (url: string) => {
+    try {
+      new URL(url);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+
   let disableCreateButton = true;
 
   if (
@@ -473,48 +486,63 @@ export const Admin: React.FC = () => {
     amountOfTokensToSell.toString().length > 0 &&
     startTimeInUTC < endTimeInUTC &&
     parseFloat(amountOfTokensToSell.toString()) > 0 &&
-    parseFloat(amountOfTokensToSell.toString()) > parseFloat(softcap.toString())
+    parseFloat(amountOfTokensToSell.toString()) > parseFloat(softcap.toString()) &&
+    projectTokenImage.ipfsImgUrl &&
+    projectTokenImage.ipfsImgUrl.length > 0 &&
+    isValidURL(twitterUrl) &&
+    isValidURL(telegramUrl) &&
+    isValidURL(websiteUrl) &&
+    isValidURL(miscellaneousUrl)
   ) {
     disableCreateButton = false;
-  }else{
+  } else {
     let errorMessage = "";
 
-  if (
-    !projectTokenAddress || projectTokenAddress.length === 0
-  ) {
-    errorMessage = "Project token address is required.";
-  } else if (
-    !inputTokens || inputTokens.length === 0
-  ) {
-    errorMessage = "At least one input token is required.";
-  } else if (
-    !inputTokens[0].tokenAddress || inputTokens[0].tokenAddress.length === 0
-  ) {
-    errorMessage = "Token address for the input token is required.";
-  } else if (
-    amountOfTokensToSell.toString().length === 0
-  ) {
-    errorMessage = "Amount of tokens to sell is required.";
-  } else if (
-    startTimeInUTC >= endTimeInUTC
-  ) {
-    errorMessage = "Start time must be earlier than end time.";
-  } else if (
-    parseFloat(amountOfTokensToSell.toString()) <= 0
-  ) {
-    errorMessage = "Amount of tokens to sell must be greater than zero.";
-  } else if (
-    parseFloat(amountOfTokensToSell.toString()) <= parseFloat(softcap.toString())
-  ) {
-    errorMessage = "Amount of tokens to sell must be greater than the softcap.";
+    if (
+      !projectTokenAddress || projectTokenAddress.length === 0
+    ) {
+      errorMessage = "Project token address is required.";
+    } else if (
+      !inputTokens || inputTokens.length === 0
+    ) {
+      errorMessage = "At least one input token is required.";
+    } else if (
+      !inputTokens[0].tokenAddress || inputTokens[0].tokenAddress.length === 0
+    ) {
+      errorMessage = "Token address for the input token is required.";
+    } else if (
+      amountOfTokensToSell.toString().length === 0
+    ) {
+      errorMessage = "Amount of tokens to sell is required.";
+    } else if (
+      startTimeInUTC >= endTimeInUTC
+    ) {
+      errorMessage = "Start time must be earlier than end time.";
+    } else if (
+      parseFloat(amountOfTokensToSell.toString()) <= 0
+    ) {
+      errorMessage = "Amount of tokens to sell must be greater than zero.";
+    } else if (
+      parseFloat(amountOfTokensToSell.toString()) <= parseFloat(softcap.toString())
+    ) {
+      errorMessage = "Amount of tokens to sell must be greater than the softcap.";
+    } else if (!projectTokenImage.ipfsImgUrl || projectTokenImage.ipfsImgUrl.length === 0) {
+      errorMessage = "Project token image URL cannot be empty.";
+    } else if (!isValidURL(twitterUrl)) {
+      errorMessage = "Please provide a valid Twitter URL.";
+    } else if (!isValidURL(telegramUrl)) {
+      errorMessage = "Please provide a valid Telegram URL.";
+    } else if (!isValidURL(websiteUrl)) {
+      errorMessage = "Please provide a valid Website URL.";
+    } else if (!isValidURL(miscellaneousUrl)) {
+      errorMessage = "Please provide a valid Miscellaneous URL.";
+    }
+
+    if (errorMessage != error || errorMessage == "") {
+      setError(errorMessage);
+    }
   }
 
-  if(errorMessage!=error||errorMessage==""){
-    setError(errorMessage);
-  }
-  }
-
-  
 
   const getTokenDetails = () => {
     return (
@@ -525,8 +553,15 @@ export const Admin: React.FC = () => {
               <img
                 src={projectTokenImage.previewImgUrl}
                 alt="project token"
-                style={{ width: "30px", marginBottom: "10px" }}
+                style={{
+                  marginBottom: "10px",
+                  width: "175px",
+                  height: "175px",
+                  objectFit: "cover",
+                  borderRadius: "50%",
+                }}
               />
+
             ) : (
               <div className="empty-image"></div>
             )}
@@ -899,17 +934,17 @@ export const Admin: React.FC = () => {
             }
             onClick={() => createIdo(selectedNetwork.name)}
             size="large"
-            
-            fill={ !(disableCreateButton ||
+
+            fill={!(disableCreateButton ||
               isCreatingIDO ||
               allowance.isLessThan(amountOfTokensToSell))}
             loading={isCreatingIDO}
           >
-           {disableCreateButton ||
+            {disableCreateButton ||
               isCreatingIDO ||
-              allowance.isLessThan(amountOfTokensToSell)? error:"Create IDO"} 
+              allowance.isLessThan(amountOfTokensToSell) ? error : "Create IDO"}
           </Uik.Button>
-          
+
         </Uik.Container>
       </>
     )
@@ -922,11 +957,11 @@ export const Admin: React.FC = () => {
     buildFinalForm
   ]
 
-const endpoint = 'https://squid.subsquid.io/reef-explorer/graphql';
+  const endpoint = 'https://squid.subsquid.io/reef-explorer/graphql';
 
-async function fetchBlockHeight() {
-  try {
-    const query = `
+  async function fetchBlockHeight() {
+    try {
+      const query = `
     query FetchBlockHeight {
       transfers(limit: 1, where: {AND: {extrinsicHash_eq: "${txHash}"}}, orderBy: blockHeight_DESC) {
         extrinsicId
@@ -934,36 +969,36 @@ async function fetchBlockHeight() {
     }
     `;
 
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        query: query,
-      }),
-    });
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: query,
+        }),
+      });
 
-    const data = await response.json();
+      const data = await response.json();
 
-    if (data.errors) {
-      console.error('Error fetching data:', data.errors);
+      if (data.errors) {
+        console.error('Error fetching data:', data.errors);
+        return null;
+      }
+
+      const extrinsicId = data.data.transfers[0]?.extrinsicId;
+
+      if (extrinsicId) {
+        const blockHeightHex = extrinsicId.split("-")[1]
+        return blockHeightHex;
+      } else {
+        console.error('No blockHeight data found');
+        return null;
+      }
+    } catch (error) {
+      console.error('Request failed', error);
       return null;
     }
-
-    const extrinsicId = data.data.transfers[0]?.extrinsicId;
-
-    if (extrinsicId) {
-      const blockHeightHex = extrinsicId.split("-")[1]
-      return blockHeightHex;
-    } else {
-      console.error('No blockHeight data found');
-      return null;
-    }
-  } catch (error) {
-    console.error('Request failed', error);
-    return null;
-  }
   }
 
   return (
@@ -985,7 +1020,7 @@ async function fetchBlockHeight() {
                 text="Check Transactions"
                 success
                 fill
-                onClick={async() =>{
+                onClick={async () => {
                   const getBlockHeight = await fetchBlockHeight();
                   window.open(
                     `https://reefscan.com/extrinsic/${txHash}-${getBlockHeight}`,

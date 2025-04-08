@@ -12,9 +12,9 @@ export const appAvailableNetworks = [
 ];
 
 export const appSelectedNetwork = availableNetworks.mainnet;
-export const infuraProjectId = process.env.REACT_APP_INFURA_PROJECT_ID;
+export const infuraProjectId =  process.env.REACT_APP_INFURA_PROJECT_ID;
 export const infuraApiSecret = process.env.REACT_APP_INFURA_API_SECRET;
-export const infuraSubDomainBaseUrl = process.env.REACT_APP_INFURA_SUBDOMAIN_LINK;
+export const infuraSubDomainBaseUrl = process.env.REACT_APP_INFURA_SUBDOMAIN_LINK??"https://reef.infura-ipfs.io/ipfs";
 
 export const networkConfig={
   mainnet:{
