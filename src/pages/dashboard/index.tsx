@@ -29,7 +29,7 @@ export const Dashboard: React.FC = () => {
       },
     });
     const res = await resp.json();
-    setAllIdos(() => res.data);
+    setAllIdos(res.data);
     setIsLoading(() => false);
   };
 
@@ -54,7 +54,7 @@ export const Dashboard: React.FC = () => {
       <div className="loader">
         <Uik.Loading text="fetching all IDOs"/>
       </div>
-      : !isLoading ? <Uik.Text text={"No IDOs found"} type="light"/>: errorStatus.status ?
+      : !isLoading && allIdos.length==0 ? <Uik.Text text={"No IDOs found"} type="light"/>: errorStatus.status ?
       <div className="error-block">
         <Uik.Text className="error-block-title" text={"Encountered an error"} type="light"/>
         <Uik.Text className="error-block-desc" text={errorStatus.message} type="light" />
