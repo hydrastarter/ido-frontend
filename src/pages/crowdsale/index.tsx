@@ -42,20 +42,6 @@ function parseDate(str: any) {
   return new Date(mdy[2], mdy[0] - 1, mdy[1]);
 }
 
-const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
-  height: 28,
-  borderRadius: 9,
-  marginTop: "20px",
-  marginBottom: "20px",
-  border: "2px solid white",
-  [`&.${linearProgressClasses.colorPrimary}`]: {
-    backgroundColor: "#e4e0ef",
-  },
-  [`& .${linearProgressClasses.bar}`]: {
-    borderRadius: 9,
-    background: "linear-gradient(to right,#5d3bad ,#a93185)",
-  },
-}));
 const PresaleStartsInCountdown = ({
   // @ts-ignore
   days,
@@ -212,6 +198,7 @@ export default function CrowdsaleDetails() {
       }
     }
   };
+
   useEffect(() => {
     const getIdoDetails = async () => {
       const username = "adminUser";
@@ -246,6 +233,8 @@ export default function CrowdsaleDetails() {
       getIdoDetails();
     }
   }, [params.address, selectedNetwork]);
+
+
   useEffect(() => {
     const getAllContractDetails = async (
       crowdsaleContractAddress: string,
@@ -467,37 +456,24 @@ export default function CrowdsaleDetails() {
                 </div>
               </div>
               <div style={{ position: "relative" }}>
-                {/* <BorderLinearProgress
-                variant="determinate"
-                value={percentCompleted}
-              />
-              <div
-                style={{
-                  position: "absolute",
-                  right: "7px",
-                  top: "3px",
-                }}
-              > */}
                 <Uik.Text
                   text={`${tokensThatHaveBeenSold}/${ido.crowdsaleTokenAllocated}`}
                   type="light"
                 />
 
-            <div>
-              <Uik.Slider
-                                value={(tokensThatHaveBeenSold / Number(ido.crowdsaleTokenAllocated)) * 100}
-                                tooltip={`${((tokensThatHaveBeenSold / Number(ido.crowdsaleTokenAllocated)) * 100).toFixed(2)}%`}
-                                helpers={[
-                                  { position: 0, text: "0%" },
-                                  { position: 25 },
-                                  { position: 50, text: "50%" },
-                                  { position: 75 },
-                                  { position: 100, text: "100%" },
-                                ]}
-                              />
-            </div>
-
-               
+                <div className="mb-20">
+                  <Uik.Slider
+                    value={(tokensThatHaveBeenSold / Number(ido.crowdsaleTokenAllocated)) * 100}
+                    tooltip={`${((tokensThatHaveBeenSold / Number(ido.crowdsaleTokenAllocated)) * 100).toFixed(2)}%`}
+                    helpers={[
+                      { position: 0, text: "0%" },
+                      { position: 25 },
+                      { position: 50, text: "50%" },
+                      { position: 75 },
+                      { position: 100, text: "100%" },
+                    ]}
+                  />
+                </div>
 
                 {/* </div> */}
               </div>
