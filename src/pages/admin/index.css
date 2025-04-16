@@ -174,3 +174,10 @@ flex-direction: column;
 .margin-left-10{
   margin-left: 1.2rem;
 }
+
+.check-tx-btn{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1rem;
+}
