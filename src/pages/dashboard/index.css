@@ -21,6 +21,10 @@
   margin-bottom: 10px;
 }
 
+.mb-20{
+  margin-bottom: 20px;
+}
+
 .error-block{
   display: flex;
   align-items: center;

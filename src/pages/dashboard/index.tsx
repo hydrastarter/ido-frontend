@@ -29,7 +29,7 @@ export const Dashboard: React.FC = () => {
       },
     });
     const res = await resp.json();
-    setAllIdos(() => res.data);
+    setAllIdos(res.data);
     setIsLoading(() => false);
   };
 
@@ -54,7 +54,7 @@ export const Dashboard: React.FC = () => {
       <div className="loader">
         <Uik.Loading text="fetching all IDOs"/>
       </div>
-      : !isLoading ? <Uik.Text text={"No IDOs found"} type="light"/>: errorStatus.status ?
+      : !isLoading && allIdos.length==0 ? <Uik.Text text={"No IDOs found"} type="light"/>: errorStatus.status ?
       <div className="error-block">
         <Uik.Text className="error-block-title" text={"Encountered an error"} type="light"/>
         <Uik.Text className="error-block-desc" text={errorStatus.message} type="light" />
@@ -145,11 +145,17 @@ const TabsData = ({ allIdos }: { allIdos: idoType[] }) => {
     }
   }, [allIdos, selectedSigner]);
 
-  const getTabsContainer = ()=>{
-    return TabsIdent[Tabs.indexOf(selectedTab)].map((ido) => (
-      <IdoCard key={ido.id} ido={ido} typeOfPresale={selectedTab} />
-    ))
-  }
+  const getTabsContainer = () => {
+    const currentTabData = TabsIdent[Tabs.indexOf(selectedTab)];
+    if (currentTabData.length > 0) {
+      return currentTabData.map((ido) => (
+        <IdoCard key={ido.id} ido={ido} typeOfPresale={selectedTab} />
+      ));
+    } else {
+      return <Uik.Text text="No IDOs" type="light"/>;
+    }
+  };
+  
 
   return (
     <div className="dashboard-container">

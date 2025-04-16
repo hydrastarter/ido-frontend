@@ -22,6 +22,7 @@ import "../dashboard/index.css";
 import "../dashboard/idoCard.css";
 import { DASHBOARD_URL } from "../../urls";
 import { getNetworkCrowdsaleUrl } from "../../environment";
+import "./index.css";
 
 /**
  * Take the difference between the dates and divide by milliseconds per day.
@@ -41,20 +42,6 @@ function parseDate(str: any) {
   return new Date(mdy[2], mdy[0] - 1, mdy[1]);
 }
 
-const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
-  height: 28,
-  borderRadius: 9,
-  marginTop: "20px",
-  marginBottom: "20px",
-  border: "2px solid white",
-  [`&.${linearProgressClasses.colorPrimary}`]: {
-    backgroundColor: "#e4e0ef",
-  },
-  [`& .${linearProgressClasses.bar}`]: {
-    borderRadius: 9,
-    background: "linear-gradient(to right,#5d3bad ,#a93185)",
-  },
-}));
 const PresaleStartsInCountdown = ({
   // @ts-ignore
   days,
@@ -211,10 +198,13 @@ export default function CrowdsaleDetails() {
       }
     }
   };
+
   useEffect(() => {
     const getIdoDetails = async () => {
       const username = "adminUser";
       const password = "password";
+
+
       const resp = await fetch(
         `${getNetworkCrowdsaleUrl(selectedNetwork.name)}/${params.address}`,
         {
@@ -239,10 +229,12 @@ export default function CrowdsaleDetails() {
         setTypeofPresale("Completed Presales");
       }
     };
-    if (params && params.address) {
+    if (params && params.address && selectedNetwork) {
       getIdoDetails();
     }
   }, [params.address, selectedNetwork]);
+
+
   useEffect(() => {
     const getAllContractDetails = async (
       crowdsaleContractAddress: string,
@@ -309,7 +301,7 @@ export default function CrowdsaleDetails() {
     percentCompleted = Math.floor(
       (tokensThatHaveBeenSold / parseFloat(ido.crowdsaleTokenAllocated)) * 100
     );
-      idoVestingStart = new Date(
+    idoVestingStart = new Date(
       parseFloat(ido.vestingStart) * 1000
     ).toLocaleDateString("en-US");
     idoVestingEnd = new Date(
@@ -377,6 +369,7 @@ export default function CrowdsaleDetails() {
           </Uik.Text>
         </Uik.Modal>
         <div className="back-button-container">
+          {/* @ts-ignore */}
           <Link to={DASHBOARD_URL} className="link-box">
             <ArrowBackIcon color="inherit" />
             <Uik.Text className="back-button-text">Back to Dashboard</Uik.Text>
@@ -384,7 +377,7 @@ export default function CrowdsaleDetails() {
         </div>
         <div className="crowdsale-container">
           <div className="interaction-box">
-            <div className="gradient-timer">
+            <div className="timer-container">
               <Uik.Text className="white">
                 {typeOfPresale === "Upcoming Presales" && (
                   // @ts-ignore
@@ -405,6 +398,91 @@ export default function CrowdsaleDetails() {
                 {typeOfPresale === "Completed Presales" &&
                   "Presale is completed"}
               </Uik.Text>
+            </div>
+            <div className="information-box">
+              <div className="ido-card-avatar-box">
+                <div className="avatar-social-links-box">
+                  <img src={ido.tokenImageUrl} alt="ido avatar url" className="ido-avatar-url" />
+
+                  <div className="card-header-box">
+                    <div className="card-name-links-box">
+                      <div className="card-name-box">
+                        <Uik.Text
+                          text={ido.tokenName}
+                          className="no-wrap card-token-name"
+                        />
+                        <Uik.Text
+                          text={`(${ido.tokenSymbol})`}
+                          className="no-wrap card-token-symbol"
+                        />
+                      </div>
+                      <div className="card-links-box">
+                        <a
+                          href={`//${ido.twitterUrl}`}
+                          target="_blank"
+                          className="card-link twitter-link"
+                        >
+                          <img src={twitterIcon} alt="twitter" width="30px" />
+                        </a>
+                        <a
+                          href={`//${ido.telegramUrl}`}
+                          target="_blank"
+                          className="card-link telegram-link"
+                        >
+                          <img src={telegramIcon} alt="telegram" width="30px" />
+                        </a>
+                        <a
+                          href={`//${ido.websiteUrl}`}
+                          target="_blank"
+                          className="card-link website-link"
+                        >
+                          <img
+                            src={websiteIcon}
+                            alt="project website"
+                            width="30px"
+                          />
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="card-header-box">
+                  <div className="card-verified-box">
+                    {/* @ts-ignore */}
+                    <Link to="/" target="_blank" style={{ whiteSpace: "nowrap" }}>
+                      <Uik.Text text="Apply for a Verified Tag" type="mini" />
+                    </Link>
+                  </div>
+                </div>
+              </div>
+              <div style={{ position: "relative" }}>
+                <Uik.Text
+                  text={`${tokensThatHaveBeenSold}/${ido.crowdsaleTokenAllocated}`}
+                  type="light"
+                />
+
+                <div className="mb-20">
+                  <Uik.Slider
+                    value={(tokensThatHaveBeenSold / Number(ido.crowdsaleTokenAllocated)) * 100}
+                    tooltip={`${((tokensThatHaveBeenSold / Number(ido.crowdsaleTokenAllocated)) * 100).toFixed(2)}%`}
+                    helpers={[
+                      { position: 0, text: "0%" },
+                      { position: 25 },
+                      { position: 50, text: "50%" },
+                      { position: 75 },
+                      { position: 100, text: "100%" },
+                    ]}
+                  />
+                </div>
+
+                {/* </div> */}
+              </div>
+              <div className="about-description-container">
+                <div className="about-box">
+                  <Uik.Text type="title">About</Uik.Text>
+                </div>
+                <Uik.Text type="light">{ido.description}</Uik.Text>
+              </div>
             </div>
             <Uik.Card className="crowdsale-card">
               <div style={{ width: "100%", marginBottom: "20px" }}>
@@ -578,9 +656,9 @@ export default function CrowdsaleDetails() {
                     </div>
                   </div>
                   {typeOfPresale === "Completed Presales" &&
-                  new BigNumber(
-                    ido.minimumTokenSaleAmount
-                  ).isGreaterThanOrEqualTo(tokensThatHaveBeenSold) ? (
+                    new BigNumber(
+                      ido.minimumTokenSaleAmount
+                    ).isGreaterThanOrEqualTo(tokensThatHaveBeenSold) ? (
                     <div className="softcap-not-met-box">
                       <div className="softcap-not-met-text">
                         <Uik.Text>
@@ -631,88 +709,6 @@ export default function CrowdsaleDetails() {
                 </Uik.Container>
               )}
             </Uik.Card>
-          </div>
-          <div className="information-box">
-            <div className="ido-card-avatar-box">
-              <div className="avatar-social-links-box">
-                <Uik.Avatar image={ido.tokenImageUrl} size="extra-large" />
-
-                <div className="card-header-box">
-                  <div className="card-name-links-box">
-                    <div className="card-name-box">
-                      <Uik.Text
-                        text={ido.tokenName}
-                        className="no-wrap card-token-name"
-                      />
-                      <Uik.Text
-                        text={`(${ido.tokenSymbol})`}
-                        className="no-wrap card-token-symbol"
-                      />
-                    </div>
-                    <div className="card-links-box">
-                      <a
-                        href={`//${ido.twitterUrl}`}
-                        target="_blank"
-                        className="card-link twitter-link"
-                      >
-                        <img src={twitterIcon} alt="twitter" width="30px" />
-                      </a>
-                      <a
-                        href={`//${ido.telegramUrl}`}
-                        target="_blank"
-                        className="card-link telegram-link"
-                      >
-                        <img src={telegramIcon} alt="telegram" width="30px" />
-                      </a>
-                      <a
-                        href={`//${ido.websiteUrl}`}
-                        target="_blank"
-                        className="card-link website-link"
-                      >
-                        <img
-                          src={websiteIcon}
-                          alt="project website"
-                          width="30px"
-                        />
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="card-header-box">
-                <div className="card-verified-box">
-                  <Link to="/" target="_blank" style={{ whiteSpace: "nowrap" }}>
-                    <Uik.Text text="Apply for a Verified Tag" type="mini" />
-                  </Link>
-                </div>
-              </div>
-            </div>
-            <div style={{ position: "relative" }}>
-              <BorderLinearProgress
-                variant="determinate"
-                value={percentCompleted}
-              />
-              <div
-                style={{
-                  position: "absolute",
-                  right: "7px",
-                  top: "3px",
-                }}
-              >
-                <Uik.Text
-                  text={`${tokensThatHaveBeenSold}/${ido.crowdsaleTokenAllocated}`}
-                  type="mini"
-                />
-              </div>
-            </div>
-            <div className="about-description-container">
-              <div className="about-box">
-                <Uik.Text type="title">About</Uik.Text>
-              </div>
-              <div className="description-box">
-                <Uik.Text type="mini">{ido.description}</Uik.Text>
-              </div>
-            </div>
           </div>
         </div>
       </div>
