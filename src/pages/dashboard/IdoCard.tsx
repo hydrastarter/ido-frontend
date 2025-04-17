@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Uik from "@reef-chain/ui-kit";
 import "./idoCard.css";
 import { Link } from "react-router-dom";
 import { idoType } from "../../assets/ido";
-import { appState, hooks, ReefSigner } from "@reef-defi/react-lib";
+import { appState, hooks, ReefSigner } from "@reef-chain/react-lib";
 import { Contract } from "ethers";
 import { Crowdsale } from "../../abis/Crowdsale";
 import Countdown from "react-countdown";
 import BigNumber from "bignumber.js";
+import ReefSigners from "../../context/ReefSigners";
 
 const PresaleStartsOnCard = ({
   // @ts-ignore
@@ -58,8 +59,7 @@ export const IdoCard = ({
   ido: idoType;
   typeOfPresale:string;
 }): JSX.Element => {
-  const selectedSigner: ReefSigner | undefined | null =
-    hooks.useObservableState(appState.selectedSigner$);
+  const { selectedSigner } = useContext(ReefSigners);
 
   const [contractDetails, setContractDetails] = useState({
     tokensRemainingForSale: "0",
@@ -76,6 +76,7 @@ export const IdoCard = ({
     const crowdsaleContract = new Contract(
       crowdsaleContractAddress,
       Crowdsale,
+           //@ts-ignore
       selectedSigner.signer
     );
 

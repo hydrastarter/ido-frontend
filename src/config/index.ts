@@ -1,5 +1,4 @@
-import { AvailableNetworks } from "@reef-defi/react-lib";
-import { networkConfig } from "../environment";
+import { AvailableNetworks, networkConfig } from "../environment";
 
 
 export const getNetworkConfig = (networkName: AvailableNetworks)=>{

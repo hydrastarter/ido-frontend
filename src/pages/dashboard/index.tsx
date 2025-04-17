@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Uik from "@reef-chain/ui-kit";
 import "./index.css";
 import { idoType } from "../../assets/ido";
 import { IdoCard } from "./IdoCard";
-import { appState, AvailableNetworks, hooks, Network, ReefSigner } from "@reef-defi/react-lib";
+import { appState, hooks,  ReefSigner } from "@reef-chain/react-lib";
 import BigNumber from "bignumber.js";
 import { Crowdsale } from "../../abis/Crowdsale";
 import { Contract } from "ethers";
-import { getNetworkCrowdsaleUrl } from "../../environment";
+import { AvailableNetworks, getNetworkCrowdsaleUrl } from "../../environment";
+import ReefSigners from "../../context/ReefSigners";
 
 export const Dashboard: React.FC = () => {
   const [allIdos, setAllIdos] = useState<idoType[]>([]);
@@ -16,8 +17,7 @@ export const Dashboard: React.FC = () => {
     status:false,
     message:undefined
   });
-  const selectedNetwork: Network | undefined | null =
-    hooks.useObservableState(appState.currentNetwork$);
+  const { selectedSigner,network:selectedNetwork } = useContext(ReefSigners);
 
   const getAllIdos = async (networkName: AvailableNetworks) => {
     setIsLoading(() => true);
@@ -54,7 +54,7 @@ export const Dashboard: React.FC = () => {
       <div className="loader">
         <Uik.Loading text="fetching all IDOs"/>
       </div>
-      : !isLoading && allIdos.length==0 ? <Uik.Text text={"No IDOs found"} type="light"/>: errorStatus.status ?
+      : !isLoading && allIdos&& allIdos?.length==0 ? <Uik.Text text={"No IDOs found"} type="light"/>: errorStatus.status ?
       <div className="error-block">
         <Uik.Text className="error-block-title" text={"Encountered an error"} type="light"/>
         <Uik.Text className="error-block-desc" text={errorStatus.message} type="light" />
@@ -84,8 +84,7 @@ const TabsData = ({ allIdos }: { allIdos: idoType[] }) => {
     myCrowdsales
   ]
 
-  const selectedSigner: ReefSigner | undefined | null =
-    hooks.useObservableState(appState.selectedSigner$);
+  const { selectedSigner } = useContext(ReefSigners);
 
   const sortAllIdos = async (
     allTypesOfIdos: idoType[],
@@ -114,6 +113,7 @@ const TabsData = ({ allIdos }: { allIdos: idoType[] }) => {
           const crowdsaleContract = new Contract(
             ido.crowdsaleAddress,
             Crowdsale,
+            //@ts-ignore
             selectedSigner.signer
           );
 
@@ -147,7 +147,7 @@ const TabsData = ({ allIdos }: { allIdos: idoType[] }) => {
 
   const getTabsContainer = () => {
     const currentTabData = TabsIdent[Tabs.indexOf(selectedTab)];
-    if (currentTabData.length > 0) {
+    if (currentTabData && currentTabData.length > 0) {
       return currentTabData.map((ido) => (
         <IdoCard key={ido.id} ido={ido} typeOfPresale={selectedTab} />
       ));

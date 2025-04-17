@@ -1,11 +1,11 @@
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Uik from "@reef-chain/ui-kit";
 import { Contract, ethers } from "ethers";
 import "./index.css";
 // @ts-ignore
-import { appState, AvailableNetworks, hooks, Network, ReefSigner } from "@reef-defi/react-lib";
+import { appState, AvailableNetworks, hooks, Network, ReefSigner } from "@reef-chain/react-lib";
 import BigNumber from "bignumber.js";
 import { getNetworkConfig } from "../../config";
 import { LaunchPadFactory } from "../../abis/LaunchPadFactory";
@@ -26,6 +26,7 @@ import { buildFinalForm } from "./fragments/buildFinalPage";
 import { validateIDOInputs } from "./fragments/validateIdoInputs";
 import { bulkUpload as bulkUploadHelper } from "./fragments/bulkUpload";
 import { createIdo as createIdoHelper } from "./fragments/createIdo";
+import ReefSigners from "../../context/ReefSigners";
 
 export const Admin: React.FC = () => {
   const [projectTokenAddress, setProjectTokenAddress] = useState("");
@@ -86,10 +87,7 @@ export const Admin: React.FC = () => {
   const [isCreatingIDO, setIsCreatingIdo] = useState(false);
 
 
-  const selectedSigner: ReefSigner | undefined | null =
-    hooks.useObservableState(appState.selectedSigner$);
-  const selectedNetwork: Network | undefined | null =
-    hooks.useObservableState(appState.currentNetwork$);
+  const { selectedSigner,network:selectedNetwork } = useContext(ReefSigners);
 
   const handleInputTokenChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -108,6 +106,7 @@ export const Admin: React.FC = () => {
           const erc20Contract = new Contract(
             tokenDetails[index].tokenAddress,
             ERC20,
+            //@ts-ignore
             selectedSigner.signer
           );
           const name = await erc20Contract.name();
@@ -150,11 +149,12 @@ export const Admin: React.FC = () => {
         const erc20Contract = new Contract(
           projectTokenAddress,
           ERC20,
+          //@ts-ignore
           selectedSigner.signer
         );
         const allowanceAmount = await erc20Contract.allowance(
           selectedSigner.evmAddress,
-          getNetworkConfig(selectedNetwork.name).PROXY_CONTRACT_MULTIOWNER
+          getNetworkConfig(selectedNetwork!.name).PROXY_CONTRACT_MULTIOWNER
         );
         const tokenDecimals = await erc20Contract.decimals();
         const tokenName = await erc20Contract.name();
