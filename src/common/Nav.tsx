@@ -1,38 +1,27 @@
 import React, { useContext, useMemo } from "react";
 import {
-  appState,
-  availableNetworks,
   Components,
-  hooks,
-  Network,
-  ReefSigner,
-} from "@reef-defi/react-lib";
+} from "@reef-chain/react-lib";
+import {network as reefNw} from "@reef-chain/util-lib";
 import "./Nav.css";
-import { Link, useHistory, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Uik from "@reef-chain/ui-kit";
 import { saveSignerLocalPointer } from "../store/internalStore";
 import { ADMIN_URL, DASHBOARD_URL } from "../urls";
 import { appAvailableNetworks } from "../environment";
 import NetworkSwitch from "../context/NetworkSwitch";
+import ReefSigners from "../context/ReefSigners";
 
 export interface Nav {
   display: boolean;
 }
 
 const Nav = ({ display }: Nav): JSX.Element => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const { pathname } = useLocation();
-  const signer: ReefSigner | undefined | null = hooks.useObservableState(
-    appState.selectedSigner$
-  );
-  const accounts: ReefSigner[] | undefined | null = hooks.useObservableState(
-    appState.signers$
-  );
-  const network: Network | undefined = hooks.useObservableState(
-    appState.currentNetwork$
-  );
+  const { selectedSigner,network,accounts,reefState } = useContext(ReefSigners);
   const mainnetSelected =
-    network == null || network?.rpcUrl === availableNetworks.mainnet.rpcUrl;
+    network == null || network?.rpcUrl === reefNw.AVAILABLE_NETWORKS.mainnet.rpcUrl;
   const menuItems = [
     { title: "Dashboard", url: DASHBOARD_URL },
     { title: "Launch IDO", url: ADMIN_URL },
@@ -41,7 +30,7 @@ const Nav = ({ display }: Nav): JSX.Element => {
 
   const selectAccount = (index: number): void => {
     saveSignerLocalPointer(index);
-    appState.setCurrentAddress(
+    reefState!.setSelectedAddress(
       index != null ? accounts?.[index].address : undefined
     );
   };
@@ -49,10 +38,10 @@ const Nav = ({ display }: Nav): JSX.Element => {
   const selectNetwork = (key: "mainnet" | "testnet"): void => {
     const toSelect = appAvailableNetworks.find((item) => item.name === key);
     networkSwitch.setSwitching(true);
-    history.push(DASHBOARD_URL);
+    navigate(DASHBOARD_URL);
 
     if (toSelect) {
-      appState.setCurrentNetwork(toSelect);
+      reefState!.setSelectedNetwork(toSelect);
     }
   };
 
@@ -87,7 +76,7 @@ const Nav = ({ display }: Nav): JSX.Element => {
           type="button"
           className="logo-btn"
           onClick={() => {
-            history.push("/");
+            navigate("/");
           }}
         >
           {mainnetSelected ? (
@@ -103,7 +92,7 @@ const Nav = ({ display }: Nav): JSX.Element => {
             {accounts && !!accounts.length && network && (
               <Components.AccountSelector
                 accounts={accounts}
-                selectedSigner={signer || undefined}
+                selectedSigner={selectedSigner || undefined}
                 selectAccount={selectAccount}
                 onNetworkSelect={selectNetwork}
                 selectedNetwork={selectedNetwork}

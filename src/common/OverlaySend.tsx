@@ -1,4 +1,4 @@
-import { appState, Components, hooks } from "@reef-defi/react-lib";
+import { appState, Components, hooks } from "@reef-chain/react-lib";
 import React, { useContext } from "react";
 import TokenContext from "../context/TokenContext";
 import { notify } from "../utils/utils";

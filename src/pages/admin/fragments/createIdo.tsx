@@ -1,9 +1,8 @@
-import { AvailableNetworks } from "@reef-defi/react-lib";
 import { Contract, ethers } from "ethers";
 import { getNetworkConfig } from "../../../config";
 import { ERC20 } from "../../../abis/ERC20";
 import BigNumber from "bignumber.js";
-import { getNetworkCrowdsaleUrl } from "../../../environment";
+import { AvailableNetworks, getNetworkCrowdsaleUrl } from "../../../environment";
 import Uik from "@reef-chain/ui-kit";
 
 export const createIdo = async (

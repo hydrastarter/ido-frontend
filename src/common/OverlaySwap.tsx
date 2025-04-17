@@ -4,7 +4,7 @@ import {
   hooks,
   store,
   Token,
-} from "@reef-defi/react-lib";
+} from "@reef-chain/react-lib";
 import React, { useContext, useReducer, useState } from "react";
 import PoolContext from "../context/PoolContext";
 import TokenContext from "../context/TokenContext";

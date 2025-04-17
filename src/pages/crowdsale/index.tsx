@@ -1,14 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Uik from "@reef-chain/ui-kit";
 import { Link, useParams } from "react-router-dom";
 import BigNumber from "bignumber.js";
-import { appState, hooks, Network, ReefSigner } from "@reef-defi/react-lib";
+import { ReefSigner } from "@reef-chain/react-lib";
 import { Contract } from "ethers";
 import Countdown from "react-countdown";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import InfoIcon from "@mui/icons-material/Info";
-import { styled } from "@mui/material/styles";
-import LinearProgress, { linearProgressClasses } from "@mui/material/LinearProgress";
 // @ts-ignore
 import twitterIcon from "../../assets/images/twitter.png";
 // @ts-ignore
@@ -23,6 +21,7 @@ import "../dashboard/idoCard.css";
 import { DASHBOARD_URL } from "../../urls";
 import { getNetworkCrowdsaleUrl } from "../../environment";
 import "./index.css";
+import ReefSigners from "../../context/ReefSigners";
 
 /**
  * Take the difference between the dates and divide by milliseconds per day.
@@ -94,11 +93,8 @@ const PresaleEndsInCountdown = ({
   }
 };
 export default function CrowdsaleDetails() {
-  const params: { address: string } = useParams();
-  const selectedSigner: ReefSigner | undefined | null =
-    hooks.useObservableState(appState.selectedSigner$);
-  const selectedNetwork: Network | undefined | null =
-    hooks.useObservableState(appState.currentNetwork$);
+  const { address } = useParams<{ address: string }>();
+  const { selectedSigner,network:selectedNetwork } = useContext(ReefSigners);
 
   const [isOpen, setOpen] = useState(false);
   const [txHash, setTxHash] = useState(null);
@@ -132,6 +128,7 @@ export default function CrowdsaleDetails() {
           const crowdsaleContract = new Contract(
             crowdsaleContractAddress,
             Crowdsale,
+            //@ts-ignore
             selectedSigner.signer
           );
 
@@ -163,12 +160,14 @@ export default function CrowdsaleDetails() {
           const crowdsaleContract = new Contract(
             crowdsaleContractAddress,
             Crowdsale,
+            //@ts-ignore
             selectedSigner.signer
           );
 
           const erc20Contract = new Contract(
             selectedInputToken.inputTokenAddress,
             ERC20,
+            //@ts-ignore
             selectedSigner.signer
           );
 
@@ -206,7 +205,7 @@ export default function CrowdsaleDetails() {
 
 
       const resp = await fetch(
-        `${getNetworkCrowdsaleUrl(selectedNetwork.name)}/${params.address}`,
+        `${getNetworkCrowdsaleUrl(selectedNetwork!.name)}/${address}`,
         {
           headers: {
             Authorization: `Basic ${btoa(`${username}:${password}`)}`,
@@ -229,10 +228,10 @@ export default function CrowdsaleDetails() {
         setTypeofPresale("Completed Presales");
       }
     };
-    if (params && params.address && selectedNetwork) {
+    if (address && selectedNetwork) {
       getIdoDetails();
     }
-  }, [params.address, selectedNetwork]);
+  }, [address, selectedNetwork]);
 
 
   useEffect(() => {
@@ -243,6 +242,7 @@ export default function CrowdsaleDetails() {
       const crowdsaleContract = new Contract(
         crowdsaleContractAddress,
         Crowdsale,
+             //@ts-ignore
         selectedSigner.signer
       );
 

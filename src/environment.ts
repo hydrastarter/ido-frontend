@@ -1,17 +1,20 @@
-import { AvailableNetworks, availableNetworks } from "@reef-defi/react-lib";
+import {network} from "@reef-chain/util-lib";
+
+export type AvailableNetworks = 'mainnet' | 'testnet' | 'localhost';
 
 let backendDomainName = 'reefscan.info';
+
 export const getNetworkCrowdsaleUrl = (networkName: AvailableNetworks)=>{
   // return `https://ido-backend-${networkName}.${backendDomainName}/crowdsale`;
   return `http://localhost:3000/crowdsale`;
 }
 
 export const appAvailableNetworks = [
-  availableNetworks.mainnet,
-  availableNetworks.testnet,
+  network.AVAILABLE_NETWORKS.mainnet,
+  network.AVAILABLE_NETWORKS.testnet
 ];
 
-export const appSelectedNetwork = availableNetworks.mainnet;
+export const appSelectedNetwork = network.AVAILABLE_NETWORKS.mainnet;
 export const infuraProjectId =  process.env.REACT_APP_INFURA_PROJECT_ID;
 export const infuraApiSecret = process.env.REACT_APP_INFURA_API_SECRET;
 export const infuraSubDomainBaseUrl = process.env.REACT_APP_INFURA_SUBDOMAIN_LINK??"https://reef.infura-ipfs.io/ipfs";
